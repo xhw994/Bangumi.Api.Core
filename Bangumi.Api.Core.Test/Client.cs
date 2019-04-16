@@ -16,7 +16,8 @@ namespace Bangumi.Api.Core.Test
         }
 
         [TestMethod]
-        public void TestMethod1()
+        // √ø»’∑≈ÀÕ
+        public void DailyCalendar()
         {
             List<CalendarResponse> res = _api.CalendarGet();
             Assert.IsTrue(res != null && res.Count > 0, "The response is empty");
