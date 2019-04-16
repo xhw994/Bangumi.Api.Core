@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Bangumi.Api.Core.Model.Definitions;
 
 namespace Bangumi.Api.Core.Model {
 
@@ -96,7 +97,7 @@ namespace Bangumi.Api.Core.Model {
     /// </summary>
     [DataMember(Name="status", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "status")]
-    public Status Status { get; set; }
+    public AiringStatus Status { get; set; }
 
 
     /// <summary>
