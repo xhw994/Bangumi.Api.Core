@@ -14,11 +14,13 @@ namespace Bangumi.Api.Core.Test
             string[] vars = { "9527", "wish" };
             string[] vars_longer = { "9527", "wish", "should_not_exist" };
             string[] vars_shorter = { "9527" };
+            int jweq = 9527;
 
             Assert.AreEqual(string.Empty, string.Empty.ReplacePathVariables(vars));
             Assert.AreEqual(@"/collection/9527/wish", path.ReplacePathVariables(vars));
             Assert.AreEqual(@"/collection/9527/wish", path.ReplacePathVariables(vars_longer));
             Assert.AreEqual(@"/collection/9527/{action}", path.ReplacePathVariables(vars_shorter));
+            Assert.AreEqual(@"/collection/9527/{action}", path.ReplacePathVariables(jweq));
         }
     }
 }

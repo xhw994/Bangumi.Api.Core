@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -19,12 +20,17 @@ namespace Bangumi.Api.Core.Extensions
             {
                 if (parts[i][0] == '{')
                 {
-                    parts[i] = ParameterToString(vars[vc++]);
+                    parts[i] = vars[vc++];
                     if (vc == vars.Length) break;
                 }
             }
 
             return sep + string.Join(sep.ToString(), parts);
+        }
+
+        public static string ReplacePathVariables(this string path, params object[] vars)
+        {
+            return ReplacePathVariables(path, vars.Select(x => ParameterToString(x)).ToArray());
         }
 
         /// <summary>
