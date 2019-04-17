@@ -44,6 +44,9 @@ namespace Bangumi.Api.Core.Test
             SubjectLarge large = (SubjectLarge)_service.GetSubject(id, ResponseGroup.Large);
             Assert.IsTrue(large.Topic.Count > 0, "The character list is empty");
             Assert.IsTrue(large.Blog.Count > 0, "The staff list is empty");
+
+            SubjectEp ep = _service.GetSubjectEps(id);
+            Assert.IsTrue(ep.Eps.Count > 0, "The episode list is empty");
         }
     }
 }

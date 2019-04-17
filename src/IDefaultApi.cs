@@ -43,32 +43,6 @@ namespace Bangumi.Api.Core
         StatusCode EpStatusByIdAndStatusPost(int? id, string status, string epId);
 
         /// <summary>
-        /// 条目搜索 条目搜索
-        /// </summary>
-        /// <param name="keywords">关键词 &lt;br&gt; 需要 URL Encode</param>
-        /// <param name="type">条目类型，参考 [SubjectType](#model-SubjectType)</param>
-        /// <param name="responseGroup">返回数据大小，参考 [ResponseGroup](#model-ResponseGroup) &lt;br&gt; 默认为 small</param>
-        /// <param name="start">开始条数</param>
-        /// <param name="maxResults">每页条数 &lt;br&gt; 最多 25</param>
-        /// <returns>SearchSubjectResponse</returns>
-        SearchSubjectResponse SearchSubjectByKeywordsGet(string keywords, string type, string responseGroup, int? start, int? maxResults);
-
-        /// <summary>
-        /// 条目信息 条目信息
-        /// </summary>
-        /// <param name="subjectId">条目 ID</param>
-        /// <param name="responseGroup">返回数据大小，参考 [ResponseGroup](#model-ResponseGroup) &lt;br&gt; 默认为 small</param>
-        /// <returns>object</returns>
-        object SubjectBySubjectIdGet(int? subjectId, string responseGroup);
-
-        /// <summary>
-        /// 章节数据 章节数据
-        /// </summary>
-        /// <param name="subjectId">条目 ID</param>
-        /// <returns>SubjectEpResponse</returns>
-        SubjectEpResponse SubjectEpBySubjectIdGet(int? subjectId);
-
-        /// <summary>
         /// 批量更新收视进度 批量更新收视进度
         /// </summary>
         /// <param name="subjectId">条目 ID</param>

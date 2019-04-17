@@ -23,5 +23,25 @@ namespace Bangumi.Api.Core
         /// <param name="responseGroup">返回数据大小，参考 [ResponseGroup](#model-ResponseGroup) &lt;br&gt; 默认为 small</param>
         /// <returns>object</returns>
         SubjectBase GetSubject(int id, ResponseGroup group);
+
+        /// <summary>
+        /// 章节数据 章节数据
+        /// </summary>
+        /// <param name="subjectId">条目 ID</param> 
+        /// <returns>SubjectEpResponse</returns>            
+        SubjectEp GetSubjectEps(int id);
+
+        /// <summary>
+        /// 条目搜索 条目搜索
+        /// </summary>
+        /// <param name="keywords">关键词 &lt;br&gt; 需要 URL Encode</param>
+        /// <param name="type">条目类型，参考 [SubjectType](#model-SubjectType)</param>
+        /// <param name="responseGroup">返回数据大小，参考 [ResponseGroup](#model-ResponseGroup) &lt;br&gt; 默认为 small</param>
+        /// <param name="start">开始条数</param>
+        /// <param name="maxResults">每页条数 &lt;br&gt; 最多 25</param>
+        /// <returns>SearchSubjectResponse</returns>
+        SearchSubjectResponse SearchSubjectByKeywords(string keywords, SubjectType type, int? start, int? maxResults, ResponseGroup group);
+
+
     }
 }
