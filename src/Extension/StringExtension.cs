@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Bangumi.Api.Core.Extensions
+namespace Bangumi.Api.Core.Extension
 {
-    public static class StringExtensions
+    public static class StringExtension
     {
         public static string ReplacePathVariables(this string path, params string[] vars)
         {

@@ -1,11 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using Bangumi.Api.Core.Extensions;
+using Bangumi.Api.Core.Extension;
 
 namespace Bangumi.Api.Core.Test
 {
     [TestClass]
-    public class Extensions
+    public class Extension
     {
         [TestMethod]
         public void ReplacePathVariables()

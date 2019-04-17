@@ -7,11 +7,8 @@ namespace Bangumi.Api.Core
         static void Main(string[] args)
         {
             var api = new DefaultApi();
-            var res = api.CalendarGet();
-            foreach (var r in res)
-            {
-                Console.WriteLine(r.ToJson());
-            }
+            var res = api.CollectionBySubjectIdGet(253);
+            Console.WriteLine(res.ToString());
         }
     }
 }

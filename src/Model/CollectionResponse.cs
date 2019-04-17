@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 
 namespace Bangumi.Api.Core.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
