@@ -48,5 +48,13 @@ namespace Bangumi.Api.Core.Test
             SubjectEp ep = _service.GetSubjectEps(id);
             Assert.IsTrue(ep.Eps.Count > 0, "The episode list is empty");
         }
+
+        [TestMethod]
+        public void SearchByMadomagiKeyword()
+        {
+            string xf = "小圆 新房昭之";
+            var res = _service.SearchSubjectByKeywords(xf, SubjectType.Anime);
+            Assert.IsTrue(res.Results > 0 && res.List.Count > 0, "The search result is empty");
+        }
     }
 }
