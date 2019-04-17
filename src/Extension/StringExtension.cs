@@ -68,7 +68,7 @@ namespace Bangumi.Api.Core.Extension
             return attributes.Length > 0 ? attributes[0].Description : string.Empty;
         }
 
-        public static string ListToFormatJson<T>(IList<T> list)
+        public static string ToFormatJson<T>(List<T> list)
         {
             return "";
         }

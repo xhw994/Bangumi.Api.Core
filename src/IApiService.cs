@@ -40,7 +40,7 @@ namespace Bangumi.Api.Core
         /// <param name="start">开始条数</param>
         /// <param name="maxResults">每页条数 &lt;br&gt; 最多 25</param>
         /// <returns>SearchSubjectResponse</returns>
-        SearchSubjectResponse SearchSubjectByKeywords(string keywords, SubjectType type, int? start, int? maxResults, ResponseGroup group);
+        SearchSubjectResponse SearchSubjectByKeywords(string keywords, SubjectType type, ResponseGroup group, int? start, int? maxResults);
 
 
     }

@@ -1,10 +1,12 @@
 using System;
+using System.Linq;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Bangumi.Api.Core.Model.Subjects;
+using Bangumi.Api.Core.Extension;
 
 namespace Bangumi.Api.Core.Model.Subjects
 {
@@ -37,12 +39,12 @@ namespace Bangumi.Api.Core.Model.Subjects
         /// <returns>string presentation of the object</returns>
         public override string ToString()
         {
-            var sb = new StringBuilder();
-            sb.Append("class SearchSubjectResponse {\n");
-            sb.Append("  Results: ").Append(Results).Append("\n");
-            sb.Append("  List: ").Append(List).Append("\n");
-            sb.Append("}\n");
-            return sb.ToString();
+            string s = "{" + Environment.NewLine;
+            s += "Results: " + Results + Environment.NewLine;
+            s += "List: [" + Environment.NewLine;
+            s += string.Join("," + Environment.NewLine, List.Select(x => x.ToString())) + Environment.NewLine;
+            s += "}";
+            return s;
         }
 
         /// <summary>
