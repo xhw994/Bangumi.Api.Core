@@ -60,38 +60,7 @@ namespace Bangumi.Api.Core
         /// </summary>
         /// <value>An instance of the ApiClient</value>
         public ApiClient ApiClient {get; set;}
-    
-        /// <summary>
-        /// 每日放送
-        /// </summary>
-        /// <returns>List&lt;CalendarResponse&gt;</returns>            
-        public List<CalendarResponse> CalendarGet ()
-        {
-            var path = "/calendar";
-                
-            var queryParams = new Dictionary<string, string>();
-            var headerParams = new Dictionary<string, string>();
-            var formParams = new Dictionary<string, string>();
-            var fileParams = new Dictionary<string, FileParameter>();
-            string postBody = null;
-      
-            // authentication setting, if any
-            string[] authSettings = new string[] { "auth" };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-    
-            if ((int)response.StatusCode >= 400)
-            {
-                throw new ApiException ((int)response.StatusCode, "Error calling CalendarGet: " + response.Content, response.Content);
-            }
-            else if (response.StatusCode == 0)
-            {
-                throw new ApiException ((int)response.StatusCode, "Error calling CalendarGet: " + response.ErrorMessage, response.ErrorMessage);
-            }
-
-            return (List<CalendarResponse>) ApiClient.Deserialize(response.Content, typeof(List<CalendarResponse>), response.Headers);
-        }
+   
     
         /// <summary>
         /// 管理收藏 管理收藏
@@ -145,44 +114,6 @@ namespace Bangumi.Api.Core
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CollectionBySubjectIdAndActionPost: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (CollectionResponse) ApiClient.Deserialize(response.Content, typeof(CollectionResponse), response.Headers);
-        }
-    
-        /// <summary>
-        /// 获取指定条目收藏信息
-        /// </summary>
-        /// <param name="subjectId">条目 ID</param> 
-        /// <returns>CollectionResponse</returns>            
-        public CollectionResponse CollectionBySubjectIdGet (int? subjectId)
-        {
-            // verify the required parameter 'subjectId' is set
-            if (subjectId == null) throw new ApiException(400, "Missing required parameter 'subjectId' when calling CollectionBySubjectIdGet");
-            
-            var path = "/collection/{subject_id}";
-            path = path.ReplacePathVariables(subjectId);
-    
-            var queryParams = new Dictionary<string, string>();
-            var headerParams = new Dictionary<string, string>();
-            var formParams = new Dictionary<string, string>();
-            var fileParams = new Dictionary<string, FileParameter>();
-            string postBody = null;
-    
-                                                    
-            // authentication setting, if any
-            string[] authSettings = new string[] { "auth" };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-    
-            if ((int)response.StatusCode >= 400)
-            {
-                throw new ApiException ((int)response.StatusCode, "Error calling CollectionBySubjectIdGet: " + response.Content, response.Content);
-            }
-            else if ((int)response.StatusCode == 0)
-            {
-                throw new ApiException ((int)response.StatusCode, "Error calling CollectionBySubjectIdGet: " + response.ErrorMessage, response.ErrorMessage);
-            }
-
             return (CollectionResponse) ApiClient.Deserialize(response.Content, typeof(CollectionResponse), response.Headers);
         }
     

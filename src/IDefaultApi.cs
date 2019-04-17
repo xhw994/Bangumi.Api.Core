@@ -13,12 +13,6 @@ namespace Bangumi.Api.Core
     public interface IDefaultApi
     {
         /// <summary>
-        /// 每日放送 每日放送
-        /// </summary>
-        /// <returns>List&lt;CalendarResponse&gt;</returns>
-        List<CalendarResponse> CalendarGet();
-
-        /// <summary>
         /// 管理收藏 管理收藏
         /// </summary>
         /// <param name="subjectId">条目 ID</param>
@@ -30,13 +24,6 @@ namespace Bangumi.Api.Core
         /// <param name="privacy">收藏隐私 &lt;br&gt; 0 &#x3D; 公开 &lt;br&gt; 1 &#x3D; 私密</param>
         /// <returns>CollectionResponse</returns>
         CollectionResponse CollectionBySubjectIdAndActionPost(int? subjectId, string action, string status, string comment, string tags, int? rating, string privacy);
-
-        /// <summary>
-        /// 获取指定条目收藏信息1 获取指定条目收藏信息
-        /// </summary>
-        /// <param name="subjectId">条目 ID</param>
-        /// <returns>CollectionResponse</returns>
-        CollectionResponse CollectionBySubjectIdGet(int? subjectId);
 
         /// <summary>
         /// 更新收视进度 更新收视进度

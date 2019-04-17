@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace Bangumi.Api.Core.Model
+namespace Bangumi.Api.Core.Model.Subjects
 {
     /// <summary>
     /// 章节状态 &lt;br&gt; 2 &#x3D; watched &#x3D; 看过 &lt;br&gt; 1 &#x3D; queue &#x3D; 想看 &lt;br&gt; 3 &#x3D; drop &#x3D; 抛弃 &lt;br&gt; ? &#x3D; remove &#x3D; 撤销

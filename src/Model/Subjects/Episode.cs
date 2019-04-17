@@ -4,16 +4,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Bangumi.Api.Core.Model.Definition;
-using Bangumi.Api.Core.Model.Episode;
+using Bangumi.Api.Core.Model.Users;
+using Bangumi.Api.Core.Model.Subjects;
 
-namespace Bangumi.Api.Core.Model.Episode
+namespace Bangumi.Api.Core.Model.Subjects
 {
     /// <summary>
     /// 章节信息
     /// </summary>
     [DataContract]
-    public class Ep
+    public class Episode
     {
         /// <summary>
         /// 章节 ID

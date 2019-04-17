@@ -4,7 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Bangumi.Api.Core.Model.Definition;
+using Bangumi.Api.Core.Model.Users;
+using Bangumi.Api.Core.Model.Subjects;
 
 namespace Bangumi.Api.Core.Model.Subjects
 {
@@ -20,7 +21,7 @@ namespace Bangumi.Api.Core.Model.Subjects
         /// <value>各集信息</value>
         [DataMember(Name = "eps", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "eps")]
-        new public List<Episode.Ep> Eps { get; set; }
+        new public List<Episode> Eps { get; set; }
 
         /// <summary>
         /// 讨论版

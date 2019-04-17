@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Bangumi.Api.Core.Model.Definition;
+using Bangumi.Api.Core.Model.Users;
 using Bangumi.Api.Core.Model.Subjects;
 
 namespace Bangumi.Api.Core.Model {
