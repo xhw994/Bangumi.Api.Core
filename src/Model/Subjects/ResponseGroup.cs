@@ -6,9 +6,8 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using System.ComponentModel;
 
-namespace Bangumi.Api.Core.Model.Definition
+namespace Bangumi.Api.Core.Model.Subjects
 {
-
     /// <summary>
     /// 返回数据大小
     /// </summary>
