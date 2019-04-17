@@ -62,7 +62,7 @@ namespace Bangumi.Api.Core.Client
         /// <param name="fileParams">File parameters.</param>
         /// <param name="authSettings">Authentication settings.</param>
         /// <returns>object</returns>
-        public object CallApi(string path, RestSharp.Method method, Dictionary<string, string> queryParams, string postBody,
+        public object CallApi(string path, Method method, Dictionary<string, string> queryParams, string postBody,
             Dictionary<string, string> headerParams, Dictionary<string, string> formParams,
             Dictionary<string, FileParameter> fileParams, string[] authSettings)
         {
