@@ -22,6 +22,6 @@ namespace Bangumi.Api.Core
         /// <param name="subjectId">条目 ID</param>
         /// <param name="responseGroup">返回数据大小，参考 [ResponseGroup](#model-ResponseGroup) &lt;br&gt; 默认为 small</param>
         /// <returns>object</returns>
-        SubjectResponseBase GetSubject(int id, ResponseGroup group);
+        SubjectBase GetSubject(int id, ResponseGroup group);
     }
 }

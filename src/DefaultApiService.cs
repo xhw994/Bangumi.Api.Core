@@ -49,7 +49,7 @@ namespace Bangumi.Api.Core
             return (IEnumerable<CalendarResponse>)ApiClient.Deserialize(response.Content, typeof(List<CalendarResponse>), response.Headers);
         }
 
-        public SubjectResponseBase GetSubject(int id, ResponseGroup group = ResponseGroup.Small)
+        public SubjectBase GetSubject(int id, ResponseGroup group = ResponseGroup.Small)
         {
             if (id < 1)
             {
@@ -97,7 +97,7 @@ namespace Bangumi.Api.Core
             {
                 throw new ApiException((int)response.StatusCode, "Error calling SubjectBySubjectIdGet: " + response.ErrorMessage, response.ErrorMessage);
             }
-            return (SubjectResponseBase)ApiClient.Deserialize(response.Content, rgroupType, response.Headers);
+            return (SubjectBase)ApiClient.Deserialize(response.Content, rgroupType, response.Headers);
         }
     }
 }

@@ -6,8 +6,8 @@ namespace Bangumi.Api.Core
     {
         static void Main(string[] args)
         {
-            var api = new DefaultApi();
-            var res = api.CollectionBySubjectIdGet(253);
+            var api = new DefaultApiService();
+            var res = api.GetSubject(253, Model.Subjects.ResponseGroup.Large);
             Console.WriteLine(res.ToString());
         }
     }
