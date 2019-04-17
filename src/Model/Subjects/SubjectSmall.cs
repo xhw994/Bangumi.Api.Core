@@ -16,6 +16,36 @@ namespace Bangumi.Api.Core.Model.Subjects
     public class SubjectSmall : SubjectBase
     {
         /// <summary>
+        /// 三方
+        /// </summary>
+        /// <value>三方</value>
+        [DataMember(Name = "eps_count", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "eps_count")]
+        public int? EpsCount { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Rating
+        /// </summary>
+        [DataMember(Name = "rating", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "rating")]
+        public Rating Rating { get; set; }
+
+        /// <summary>
+        /// 電兆
+        /// </summary>
+        /// <value>電兆</value>
+        [DataMember(Name = "rank", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "rank")]
+        public int? Rank { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Collection
+        /// </summary>
+        [DataMember(Name = "collection", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "collection")]
+        public SubjectCollection Collection { get; set; }
+
+        /// <summary>
         /// Get the string presentation of the object
         /// </summary>
         /// <returns>string presentation of the object</returns>

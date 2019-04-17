@@ -66,14 +66,6 @@ namespace Bangumi.Api.Core.Model.Subjects
         public int? Eps { get; set; }
 
         /// <summary>
-        /// 话数
-        /// </summary>
-        /// <value>话数</value>
-        [DataMember(Name = "eps_count", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "eps_count")]
-        public int? EpsCount { get; set; }
-
-        /// <summary>
         /// 放送开始日期
         /// </summary>
         /// <value>放送开始日期</value>
@@ -90,33 +82,11 @@ namespace Bangumi.Api.Core.Model.Subjects
         public int? AirWeekday { get; set; }
 
         /// <summary>
-        /// Gets or Sets Rating
-        /// </summary>
-        [DataMember(Name = "rating", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "rating")]
-        public Rating Rating { get; set; }
-
-        /// <summary>
-        /// 排名
-        /// </summary>
-        /// <value>排名</value>
-        [DataMember(Name = "rank", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "rank")]
-        public int? Rank { get; set; }
-
-        /// <summary>
         /// Gets or Sets Images
         /// </summary>
         [DataMember(Name = "images", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "images")]
         public Images4 Images { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Collection
-        /// </summary>
-        [DataMember(Name = "collection", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "collection")]
-        public SubjectCollection Collection { get; set; }
 
 
         /// <summary>
