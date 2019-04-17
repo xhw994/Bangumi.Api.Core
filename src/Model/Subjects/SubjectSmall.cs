@@ -13,7 +13,7 @@ namespace Bangumi.Api.Core.Model.Subjects
     /// Default subject response
     /// </summary>
     [DataContract]
-    public class SubjectSmall : SubjectResponseBase
+    public class SubjectSmall : SubjectBase
     {
         /// <summary>
         /// Get the string presentation of the object

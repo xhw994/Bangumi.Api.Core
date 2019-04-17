@@ -8,7 +8,7 @@ using Bangumi.Api.Core.Model.Definition;
 
 namespace Bangumi.Api.Core.Model.Subjects
 {
-    public abstract class SubjectResponseBase
+    public abstract class SubjectBase
     {
         /// <summary>
         /// 条目 ID
@@ -58,7 +58,7 @@ namespace Bangumi.Api.Core.Model.Subjects
         public string Summary { get; set; }
 
         /// <summary>
-        /// 话数
+        /// 话数，此处值等同于eps_count。如果是<see cref="SubjectLarge"/>则为<see cref="List{Episode.Ep}"/>。
         /// </summary>
         /// <value>话数</value>
         [DataMember(Name = "eps", EmitDefaultValue = false)]

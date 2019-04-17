@@ -15,6 +15,14 @@ namespace Bangumi.Api.Core.Model.Subjects
     public class SubjectLarge : SubjectMedium
     {
         /// <summary>
+        /// 各集信息
+        /// </summary>
+        /// <value>各集信息</value>
+        [DataMember(Name = "eps", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "eps")]
+        new public List<Episode.Ep> Eps { get; set; }
+
+        /// <summary>
         /// 讨论版
         /// </summary>
         /// <value>讨论版</value>

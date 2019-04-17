@@ -67,5 +67,10 @@ namespace Bangumi.Api.Core.Extension
                 .GetCustomAttributes(typeof(DescriptionAttribute), false);
             return attributes.Length > 0 ? attributes[0].Description : string.Empty;
         }
+
+        public static string ListToFormatJson<T>(IList<T> list)
+        {
+            return "";
+        }
     }
 }

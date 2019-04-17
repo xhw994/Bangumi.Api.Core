@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Bangumi.Api.Core.Model.Definition;
+using Bangumi.Api.Core.Model.Subjects;
 
 namespace Bangumi.Api.Core.Model {
 
@@ -32,7 +33,7 @@ namespace Bangumi.Api.Core.Model {
     /// </summary>
     [DataMember(Name="list", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "list")]
-    public List<List> List { get; set; }
+    public List<SubjectBase> List { get; set; }
 
 
     /// <summary>

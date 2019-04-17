@@ -89,7 +89,7 @@ namespace Bangumi.Api.Core.Model {
     /// <value>章节列表</value>
     [DataMember(Name="eps", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "eps")]
-    public List<Episode> Eps { get; set; }
+    public List<Episode.Ep> Eps { get; set; }
 
 
     /// <summary>
