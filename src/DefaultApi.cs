@@ -4,6 +4,7 @@ using RestSharp;
 using Bangumi.Api.Core.Client;
 using Bangumi.Api.Core.Model;
 using Bangumi.Api.Core.Extension;
+using Bangumi.Api.Core.Model.Subjects;
 
 namespace Bangumi.Api.Core
 { 
