@@ -6,23 +6,35 @@ using Bangumi.Api.Core.Client;
 using Bangumi.Api.Core.Model;
 using Bangumi.Api.Core.Extension;
 using Bangumi.Api.Core.Model.Subjects;
+using Bangumi.Api.Core.Model.Users;
 
 namespace Bangumi.Api.Core
 {
     public class DefaultApiService : IApiService
     {
-        /// <summary>
-        /// Gets or sets the API client.
-        /// </summary>
-        /// <value>An instance of the ApiClient</value>
-        public ApiClient ApiClient { get; }
         private readonly BangumiClient _client;
 
         public DefaultApiService()
         {
-            ApiClient = Configuration.DefaultApiClient;
             _client = new BangumiClient();
         }
+
+        #region 用户
+
+        public User GetUser(string username)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                throw new ApiException(400, "Missing required parameter 'username' when calling GetUser");
+            }
+
+            string path = $"/user/{username}";
+
+            BangumiRequest request = new BangumiRequest(path);
+            return _client.Request<User>(request);
+        }
+
+        #endregion
 
         #region 条目
 
@@ -91,11 +103,11 @@ namespace Bangumi.Api.Core
             };
             if (start != null)
             {
-                queryParams.Add("start", ApiClient.ParameterToString(start));
+                queryParams.Add("start", Convert.ToString(start));
             }
             if (maxResults != null)
             {
-                queryParams.Add("max_results", ApiClient.ParameterToString(maxResults));
+                queryParams.Add("max_results", Convert.ToString(maxResults));
             }
 
             BangumiRequest request = new BangumiRequest(path, Method.GET, false, queryParams);

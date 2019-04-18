@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using System.ComponentModel;
 
 namespace Bangumi.Api.Core.Model.Users
 {
@@ -13,10 +14,15 @@ namespace Bangumi.Api.Core.Model.Users
     [DataContract]
     public enum CollectionStatus
     {
-        Wish = 1, // 想做
-        Collect = 2, //做过
-        Do = 3, // 在做
-        On_Hold = 4, // 搁置
-        Dropped = 5 // 抛弃
+        [Description("wish")] // 想做
+        Wish = 1,
+        [Description("collect")] //做过
+        Collect = 2,
+        [Description("do")] // 在做
+        Do = 3,
+        [Description("on_hold")] // 搁置
+        OnHold = 4,
+        [Description("air")] // 抛弃
+        Dropped = 5
     }
 }

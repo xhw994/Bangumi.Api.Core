@@ -248,43 +248,6 @@ path = path.Replace("{" + "status" + "}", ApiClient.ParameterToString(status));
         }
     
         /// <summary>
-        /// 用户信息 用户信息
-        /// </summary>
-        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param> 
-        /// <returns>User</returns>            
-        public User UserByUsernameGet (string username)
-        {
-            
-            // verify the required parameter 'username' is set
-            if (username == null) throw new ApiException(400, "Missing required parameter 'username' when calling UserByUsernameGet");
-            
-    
-            var path = "/user/{username}";
-            path = path.Replace("{format}", "json");
-            path = path.Replace("{" + "username" + "}", ApiClient.ParameterToString(username));
-    
-            var queryParams = new Dictionary<string, string>();
-            var headerParams = new Dictionary<string, string>();
-            var formParams = new Dictionary<string, string>();
-            var fileParams = new Dictionary<string, FileParameter>();
-            string postBody = null;
-    
-                                                    
-            // authentication setting, if any
-            string[] authSettings = new string[] { "auth" };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-    
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling UserByUsernameGet: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling UserByUsernameGet: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return (User) ApiClient.Deserialize(response.Content, typeof(User), response.Headers);
-        }
-    
-        /// <summary>
         /// 用户收藏 用户收藏
         /// </summary>
         /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param> 

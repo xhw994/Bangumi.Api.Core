@@ -74,6 +74,8 @@ namespace Bangumi.Api.Core.Extension
             return "";
         }
 
-        public static string ToUrlEncode(this string s) => HttpUtility.UrlEncode(s);
+        public static string ToUrlEncode(this string source) => HttpUtility.UrlEncode(source);
+
+        public static bool TryCreateUrl(this string source) => Uri.TryCreate(source, UriKind.Absolute, out Uri url) && (url.Scheme == Uri.UriSchemeHttp || url.Scheme == Uri.UriSchemeHttps);
     }
 }

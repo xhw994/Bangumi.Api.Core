@@ -49,14 +49,7 @@ namespace Bangumi.Api.Core
         /// <param name="watchedEps">如看到 123 话则 POST &#x60;123&#x60; &lt;br&gt; 书籍条目传 watched_eps 与 watched_vols 至少其一</param>
         /// <param name="watchedVols">如看到第 3 卷则 POST &#x60;3&#x60;, 仅对书籍条目有效</param>
         /// <returns>StatusCode</returns>
-        StatusCode SubjectUpdateWatchedEpsBySubjectIdPost(int? subjectId, string watchedEps, string watchedVols);
-
-        /// <summary>
-        /// 用户信息 用户信息
-        /// </summary>
-        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param>
-        /// <returns>User</returns>
-        User UserByUsernameGet(string username);
+        StatusCode SubjectUpdateWatchedEpsBySubjectIdPost(int? subjectId, string watchedEps, string watchedVols);        
 
         /// <summary>
         /// 用户收藏 用户收藏

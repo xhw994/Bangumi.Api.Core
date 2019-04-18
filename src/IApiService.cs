@@ -5,6 +5,7 @@ using RestSharp;
 using Bangumi.Api.Core.Client;
 using Bangumi.Api.Core.Model;
 using Bangumi.Api.Core.Model.Subjects;
+using Bangumi.Api.Core.Model.Users;
 
 namespace Bangumi.Api.Core
 {
@@ -42,6 +43,11 @@ namespace Bangumi.Api.Core
         /// <returns>SearchSubjectResponse</returns>
         SearchSubjectResponse SearchSubjectByKeywords(string keywords, SubjectType type, ResponseGroup group, int? start, int? maxResults);
 
-
+        /// <summary>
+        /// 用户信息 用户信息
+        /// </summary>
+        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param>
+        /// <returns>User</returns>
+        User GetUser(string username);
     }
 }

@@ -4,6 +4,7 @@ using System.Web;
 using Bangumi.Api.Core.Client;
 using Bangumi.Api.Core.Model;
 using Bangumi.Api.Core.Model.Subjects;
+using Bangumi.Api.Core.Model.Users;
 
 namespace Bangumi.Api.Core
 {
@@ -11,19 +12,20 @@ namespace Bangumi.Api.Core
     {
         static void Main(string[] args)
         {
-            DefaultApiService api = new DefaultApiService();
-            BangumiClient client = new BangumiClient();
-            //var res = api.GetSubject(253, Model.Subjects.ResponseGroup.Large);
-            //Console.WriteLine(res.ToString());
-            //string xf = "小圆 新房昭之";
-            //var res = api.SearchSubjectByKeywords(xf, Model.Subjects.SubjectType.Anime);
-            //Console.WriteLine(res);
-            var res = api.GetDailyCalendar();
-            //var res = client.Request<IEnumerable<CalendarResponse>>(new DailyCalendarRequest());
-            foreach (var r in res)
+            BangumiClient _client = new BangumiClient();
+
+            string username = "renkomei";
+
+            if (string.IsNullOrWhiteSpace(username))
             {
-                Console.WriteLine(r);
+                throw new ApiException(400, "Missing required parameter 'username' when calling GetUser");
             }
+
+            string path = $"/user/{username}";
+
+            BangumiRequest request = new BangumiRequest(path);
+            var res = _client.Request<User>(request);
+            Console.WriteLine(res);
         }
     }
 }
