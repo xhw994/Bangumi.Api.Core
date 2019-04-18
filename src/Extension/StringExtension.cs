@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -72,5 +73,7 @@ namespace Bangumi.Api.Core.Extension
         {
             return "";
         }
+
+        public static string ToUrlEncode(this string s) => HttpUtility.UrlEncode(s);
     }
 }

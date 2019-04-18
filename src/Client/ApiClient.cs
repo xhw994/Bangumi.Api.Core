@@ -68,6 +68,7 @@ namespace Bangumi.Api.Core.Client
         {
 
             var request = new RestRequest(path, method);
+            
 
             UpdateParamsForAuth(queryParams, headerParams, authSettings);
 
