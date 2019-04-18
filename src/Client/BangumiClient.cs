@@ -45,7 +45,7 @@ namespace Bangumi.Api.Core.Client
             };
         }
 
-        public TResponse Request<TResponse>(IRequest request)
+        public TResponse Request<TResponse>(BangumiRequest request)
         {
             RestRequest restRequest = new RestRequest(request.Path, request.Method);
 
@@ -60,9 +60,12 @@ namespace Bangumi.Api.Core.Client
                 restRequest.AddHeader(header.Key, header.Value);
             }
             // Add query parameter, if any
-            foreach (var param in request.QueryParams)
+            if (request.QueryParams != null && request.QueryParams.Count > 0)
             {
-                restRequest.AddParameter(param.Key, param.Value, ParameterType.GetOrPost);
+                foreach (var param in request?.QueryParams)
+                {
+                    restRequest.AddParameter(param.Key, param.Value, ParameterType.GetOrPost);
+                }
             }
 
             IRestResponse response = _restClient.Execute(restRequest);

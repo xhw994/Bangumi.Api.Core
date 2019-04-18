@@ -16,40 +16,21 @@ namespace Bangumi.Api.Core
         /// </summary>
         /// <value>An instance of the ApiClient</value>
         public ApiClient ApiClient { get; }
+        private readonly BangumiClient _client;
 
         public DefaultApiService()
         {
             ApiClient = Configuration.DefaultApiClient;
+            _client = new BangumiClient();
         }
 
         #region 条目
 
         public IEnumerable<CalendarResponse> GetDailyCalendar()
         {
-            var path = "/calendar";
+            BangumiRequest request = new BangumiRequest("/calendar");
 
-            var queryParams = new Dictionary<string, string>();
-            var headerParams = new Dictionary<string, string>();
-            var formParams = new Dictionary<string, string>();
-            var fileParams = new Dictionary<string, FileParameter>();
-            string postBody = null;
-
-            // authentication setting, if any
-            string[] authSettings = new string[] { "auth" };
-
-            // make the HTTP request
-            IRestResponse response = (IRestResponse)ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-
-            if ((int)response.StatusCode >= 400)
-            {
-                throw new ApiException((int)response.StatusCode, "Error calling GetDailyCalendar: " + response.Content, response.Content);
-            }
-            else if (response.StatusCode == 0)
-            {
-                throw new ApiException((int)response.StatusCode, "Error calling GetDailyCalendar: " + response.ErrorMessage, response.ErrorMessage);
-            }
-
-            return (IEnumerable<CalendarResponse>)ApiClient.Deserialize(response.Content, typeof(List<CalendarResponse>), response.Headers);
+            return _client.Request<IEnumerable<CalendarResponse>>(request);
         }
 
         public SubjectBase GetSubject(int id, ResponseGroup group = ResponseGroup.Small)
@@ -59,54 +40,27 @@ namespace Bangumi.Api.Core
                 throw new ApiException(400, "Subject Id must be greater than 0");
             }
 
-            // Set request body
-            var queryParams = new Dictionary<string, string>()
+            // Compose the request
+            string path = $"/subject/{id}" + (group == ResponseGroup.Ep ? @"/ep" : string.Empty);
+            var queryParams = group == ResponseGroup.Ep ? null : new Dictionary<string, string>()
             {
                 {"responseGroup", group.ToDescriptionString() }
             };
-            var headerParams = new Dictionary<string, string>();
-            var formParams = new Dictionary<string, string>();
-            var fileParams = new Dictionary<string, FileParameter>();
-            string postBody = null;
+            BangumiRequest request = new BangumiRequest(path, Method.GET, false, queryParams);
 
-            // Set query string and return type
-            string path = $"/subject/{id}";
-            Type rgroupType;
+            // Return based on response group
             switch (group)
             {
-                case ResponseGroup.Small:
-                    rgroupType = typeof(SubjectSmall);
-                    break;
-                case ResponseGroup.Medium:
-                    rgroupType = typeof(SubjectMedium);
-                    break;
-                case ResponseGroup.Large:
-                    rgroupType = typeof(SubjectLarge);
-                    break;
-                case ResponseGroup.Ep:
-                    rgroupType = typeof(SubjectEp);
-                    queryParams.Clear();
-                    path += @"/ep";
-                    break;
                 default:
-                    throw new ApiException(400, "Invalid response group");
+                case ResponseGroup.Small:
+                    return _client.Request<SubjectSmall>(request);
+                case ResponseGroup.Medium:
+                    return _client.Request<SubjectMedium>(request);
+                case ResponseGroup.Large:
+                    return _client.Request<SubjectLarge>(request);
+                case ResponseGroup.Ep:
+                    return _client.Request<SubjectEp>(request);
             }
-
-            // authentication setting, if any
-            string[] authSettings = new string[] { "auth" };
-
-            // make the HTTP request
-            IRestResponse response = (IRestResponse)ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-
-            if ((int)response.StatusCode >= 400)
-            {
-                throw new ApiException((int)response.StatusCode, $"Error calling {(group == ResponseGroup.Ep ? "GetSubject" : "GetSubject")}: " + response.Content, response.Content);
-            }
-            else if (response.StatusCode == 0)
-            {
-                throw new ApiException((int)response.StatusCode, $"Error calling {(group == ResponseGroup.Ep ? "GetSubject" : "GetSubject")}: " + response.ErrorMessage, response.ErrorMessage);
-            }
-            return (SubjectBase)ApiClient.Deserialize(response.Content, rgroupType, response.Headers);
         }
        
         public SubjectEp GetSubjectEps(int id)
@@ -130,34 +84,22 @@ namespace Bangumi.Api.Core
             }
 
             string path = $"/search/subject/{HttpUtility.UrlEncode(keywords)}";
-
             var queryParams = new Dictionary<string, string>()
             {
                 { "type", type.ToDescriptionString() },
                 { "responseGroup", group.ToDescriptionString() }
             };
-            if (start != null) queryParams.Add("start", ApiClient.ParameterToString(start)); // query parameter
-            if (maxResults != null) queryParams.Add("max_results", ApiClient.ParameterToString(maxResults)); // query parameters
-            var headerParams = new Dictionary<string, string>();
-            var formParams = new Dictionary<string, string>();
-            var fileParams = new Dictionary<string, FileParameter>();
-            string postBody = null;
-            // authentication setting, if any
-            string[] authSettings = new string[] { "auth" };
-
-            // make the HTTP request
-            IRestResponse response = (IRestResponse)ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-
-            if ((int)response.StatusCode >= 400)
+            if (start != null)
             {
-                throw new ApiException((int)response.StatusCode, "Error calling SearchSubjectByKeywords: " + response.Content, response.Content);
+                queryParams.Add("start", ApiClient.ParameterToString(start));
             }
-            else if (response.StatusCode == 0)
+            if (maxResults != null)
             {
-                throw new ApiException((int)response.StatusCode, "Error calling SearchSubjectByKeywords: " + response.ErrorMessage, response.ErrorMessage);
+                queryParams.Add("max_results", ApiClient.ParameterToString(maxResults));
             }
 
-            return (SearchSubjectResponse)ApiClient.Deserialize(response.Content, typeof(SearchSubjectResponse), response.Headers);
+            BangumiRequest request = new BangumiRequest(path, Method.GET, false, queryParams);
+            return _client.Request<SearchSubjectResponse>(request);
         }
 
         #endregion

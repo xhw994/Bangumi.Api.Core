@@ -5,6 +5,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AssemblyName>Bangumi.Api.Core</AssemblyName>
     <RootNamespace>Bangumi.Api.Core</RootNamespace>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

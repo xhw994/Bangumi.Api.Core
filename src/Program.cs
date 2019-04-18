@@ -11,14 +11,15 @@ namespace Bangumi.Api.Core
     {
         static void Main(string[] args)
         {
-            var api = new DefaultApiService();
+            DefaultApiService api = new DefaultApiService();
+            BangumiClient client = new BangumiClient();
             //var res = api.GetSubject(253, Model.Subjects.ResponseGroup.Large);
             //Console.WriteLine(res.ToString());
             //string xf = "小圆 新房昭之";
             //var res = api.SearchSubjectByKeywords(xf, Model.Subjects.SubjectType.Anime);
             //Console.WriteLine(res);
-            BangumiClient client = new BangumiClient();
-            var res = client.Request<IEnumerable<CalendarResponse>>(new DailyCalendarRequest());
+            var res = api.GetDailyCalendar();
+            //var res = client.Request<IEnumerable<CalendarResponse>>(new DailyCalendarRequest());
             foreach (var r in res)
             {
                 Console.WriteLine(r);
