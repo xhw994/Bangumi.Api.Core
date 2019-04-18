@@ -248,52 +248,6 @@ path = path.Replace("{" + "status" + "}", ApiClient.ParameterToString(status));
         }
     
         /// <summary>
-        /// 用户收藏 用户收藏
-        /// </summary>
-        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param> 
-        /// <param name="cat">收藏类型 &lt;br&gt; watching &#x3D; 在看的动画与三次元条目 &lt;br&gt; all_watching &#x3D; 在看的动画三次元与书籍条目</param> 
-        /// <param name="ids">收藏条目 ID &lt;br&gt; 批量查询收藏状态，将条目 ID 以半角逗号分隔，如 1,2,4,6</param> 
-        /// <param name="responseGroup">medium / small &lt;br&gt; 默认为 medium。small 时不返回条目详细信息</param> 
-        /// <returns>List&lt;UserCollectionResponse&gt;</returns>            
-        public List<UserCollectionResponse> UserCollectionByUsernameGet (string username, string cat, string ids, string responseGroup)
-        {
-            
-            // verify the required parameter 'username' is set
-            if (username == null) throw new ApiException(400, "Missing required parameter 'username' when calling UserCollectionByUsernameGet");
-            
-            // verify the required parameter 'cat' is set
-            if (cat == null) throw new ApiException(400, "Missing required parameter 'cat' when calling UserCollectionByUsernameGet");
-            
-    
-            var path = "/user/{username}/collection";
-            path = path.Replace("{format}", "json");
-            path = path.Replace("{" + "username" + "}", ApiClient.ParameterToString(username));
-    
-            var queryParams = new Dictionary<string, string>();
-            var headerParams = new Dictionary<string, string>();
-            var formParams = new Dictionary<string, string>();
-            var fileParams = new Dictionary<string, FileParameter>();
-            string postBody = null;
-    
-             if (cat != null) queryParams.Add("cat", ApiClient.ParameterToString(cat)); // query parameter
- if (ids != null) queryParams.Add("ids", ApiClient.ParameterToString(ids)); // query parameter
- if (responseGroup != null) queryParams.Add("responseGroup", ApiClient.ParameterToString(responseGroup)); // query parameter
-                                        
-            // authentication setting, if any
-            string[] authSettings = new string[] { "auth" };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-    
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling UserCollectionByUsernameGet: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling UserCollectionByUsernameGet: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return (List<UserCollectionResponse>) ApiClient.Deserialize(response.Content, typeof(List<UserCollectionResponse>), response.Headers);
-        }
-    
-        /// <summary>
         /// 用户收藏概览 用户收藏概览
         /// </summary>
         /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param> 

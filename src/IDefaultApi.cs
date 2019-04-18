@@ -52,16 +52,6 @@ namespace Bangumi.Api.Core
         StatusCode SubjectUpdateWatchedEpsBySubjectIdPost(int? subjectId, string watchedEps, string watchedVols);        
 
         /// <summary>
-        /// 用户收藏 用户收藏
-        /// </summary>
-        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param>
-        /// <param name="cat">收藏类型 &lt;br&gt; watching &#x3D; 在看的动画与三次元条目 &lt;br&gt; all_watching &#x3D; 在看的动画三次元与书籍条目</param>
-        /// <param name="ids">收藏条目 ID &lt;br&gt; 批量查询收藏状态，将条目 ID 以半角逗号分隔，如 1,2,4,6</param>
-        /// <param name="responseGroup">medium / small &lt;br&gt; 默认为 medium。small 时不返回条目详细信息</param>
-        /// <returns>List&lt;UserCollectionResponse&gt;</returns>
-        List<UserCollectionResponse> UserCollectionByUsernameGet(string username, string cat, string ids, string responseGroup);
-
-        /// <summary>
         /// 用户收藏概览 用户收藏概览
         /// </summary>
         /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param>
