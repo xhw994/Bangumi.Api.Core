@@ -14,7 +14,7 @@ namespace Bangumi.Api.Core.Model.Subjects
     /// 条目搜索
     /// </summary>
     [DataContract]
-    public class SearchSubjectResponse
+    public class SubjectSearchResult
     {
         /// <summary>
         /// 总条数

@@ -8,7 +8,7 @@ using Bangumi.Api.Core.Model.Users;
 
 namespace Bangumi.Api.Core.Model.Subjects
 {
-    public abstract class SubjectBase
+    public class SubjectBase
     {
         /// <summary>
         /// 条目 ID

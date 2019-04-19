@@ -26,7 +26,7 @@ namespace Bangumi.Api.Core.Model {
     /// </summary>
     [DataMember(Name="name", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "name")]
-    public SubjectTypeName Name { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
     /// 条目类型中文名

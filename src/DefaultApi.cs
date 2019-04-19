@@ -21,7 +21,7 @@ namespace Bangumi.Api.Core
         public DefaultApi(ApiClient apiClient = null)
         {
             if (apiClient == null) // use the default one in Configuration
-                this.ApiClient = Configuration.DefaultApiClient; 
+                this.ApiClient = Client.Configuration.DefaultApiClient; 
             else
                 this.ApiClient = apiClient;
         }
@@ -247,62 +247,14 @@ path = path.Replace("{" + "status" + "}", ApiClient.ParameterToString(status));
             return (StatusCode) ApiClient.Deserialize(response.Content, typeof(StatusCode), response.Headers);
         }
     
-        /// <summary>
-        /// 用户收藏概览 用户收藏概览
-        /// </summary>
-        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param> 
-        /// <param name="subjectType">条目类型，详见 [SubjectTypeName](#model-SubjectTypeName)</param> 
-        /// <param name="appId">[https://bgm.tv/dev/app](https://bgm.tv/dev/app) 申请到的 App ID</param> 
-        /// <param name="maxResults">显示条数 &lt;br&gt; 最多 25</param> 
-        /// <returns>List&lt;UserCollectionsResponse&gt;</returns>            
-        public List<UserCollectionsResponse> UserCollectionsByUsernameAndSubjectTypeGet (string username, string subjectType, string appId, int? maxResults)
-        {
-            
-            // verify the required parameter 'username' is set
-            if (username == null) throw new ApiException(400, "Missing required parameter 'username' when calling UserCollectionsByUsernameAndSubjectTypeGet");
-            
-            // verify the required parameter 'subjectType' is set
-            if (subjectType == null) throw new ApiException(400, "Missing required parameter 'subjectType' when calling UserCollectionsByUsernameAndSubjectTypeGet");
-            
-            // verify the required parameter 'appId' is set
-            if (appId == null) throw new ApiException(400, "Missing required parameter 'appId' when calling UserCollectionsByUsernameAndSubjectTypeGet");
-            
-    
-            var path = "/user/{username}/collections/{subject_type}";
-            path = path.Replace("{format}", "json");
-            path = path.Replace("{" + "username" + "}", ApiClient.ParameterToString(username));
-path = path.Replace("{" + "subject_type" + "}", ApiClient.ParameterToString(subjectType));
-    
-            var queryParams = new Dictionary<string, string>();
-            var headerParams = new Dictionary<string, string>();
-            var formParams = new Dictionary<string, string>();
-            var fileParams = new Dictionary<string, FileParameter>();
-            string postBody = null;
-    
-             if (appId != null) queryParams.Add("app_id", ApiClient.ParameterToString(appId)); // query parameter
- if (maxResults != null) queryParams.Add("max_results", ApiClient.ParameterToString(maxResults)); // query parameter
-                                        
-            // authentication setting, if any
-            string[] authSettings = new string[] { "auth" };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-    
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling UserCollectionsByUsernameAndSubjectTypeGet: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling UserCollectionsByUsernameAndSubjectTypeGet: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return (List<UserCollectionsResponse>) ApiClient.Deserialize(response.Content, typeof(List<UserCollectionsResponse>), response.Headers);
-        }
-    
+ 
         /// <summary>
         /// 用户收藏统计 用户收藏统计
         /// </summary>
         /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param> 
         /// <param name="appId">[https://bgm.tv/dev/app](https://bgm.tv/dev/app) 申请到的 App ID</param> 
         /// <returns>List&lt;UserCollectionsStatusResponse&gt;</returns>            
-        public List<UserCollectionsStatusResponse> UserCollectionsStatusByUsernameGet (string username, string appId)
+        public IEnumerable<UserCollectionsStatusResponse> UserCollectionsStatusByUsernameGet (string username, string appId)
         {
             
             // verify the required parameter 'username' is set

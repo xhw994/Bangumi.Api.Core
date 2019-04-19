@@ -52,24 +52,6 @@ namespace Bangumi.Api.Core
         StatusCode SubjectUpdateWatchedEpsBySubjectIdPost(int? subjectId, string watchedEps, string watchedVols);        
 
         /// <summary>
-        /// 用户收藏概览 用户收藏概览
-        /// </summary>
-        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param>
-        /// <param name="subjectType">条目类型，详见 [SubjectTypeName](#model-SubjectTypeName)</param>
-        /// <param name="appId">[https://bgm.tv/dev/app](https://bgm.tv/dev/app) 申请到的 App ID</param>
-        /// <param name="maxResults">显示条数 &lt;br&gt; 最多 25</param>
-        /// <returns>List&lt;UserCollectionsResponse&gt;</returns>
-        List<UserCollectionsResponse> UserCollectionsByUsernameAndSubjectTypeGet(string username, string subjectType, string appId, int? maxResults);
-
-        /// <summary>
-        /// 用户收藏统计 用户收藏统计
-        /// </summary>
-        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param>
-        /// <param name="appId">[https://bgm.tv/dev/app](https://bgm.tv/dev/app) 申请到的 App ID</param>
-        /// <returns>List&lt;UserCollectionsStatusResponse&gt;</returns>
-        List<UserCollectionsStatusResponse> UserCollectionsStatusByUsernameGet(string username, string appId);
-
-        /// <summary>
         /// 用户收视进度 用户收视进度
         /// </summary>
         /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param>

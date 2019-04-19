@@ -14,10 +14,26 @@ namespace Bangumi.Api.Core
     public class DefaultBangumiService : IBangumiService
     {
         private readonly BangumiClient _client;
+        public string AppId { get; private set; }
+        public string AppSecret { get; private set; }
 
         public DefaultBangumiService()
         {
             _client = new BangumiClient();
+        }
+
+        public DefaultBangumiService(string appId, string appSecret)
+        {
+            _client = new BangumiClient();
+            _client.Authenticate(appId, appSecret);
+        }
+
+        public DefaultBangumiService Authenticate(string appId, string appSecret)
+        {
+            AppId = appId;
+            AppSecret = appSecret;
+            _client.Authenticate(appId, appSecret);
+            return this;
         }
 
         #region 用户
@@ -67,7 +83,53 @@ namespace Bangumi.Api.Core
             return GetUserCollection(username, allWatching, idstr, group);
         }
 
+        public IEnumerable<CollectionsByType> GetUserCollectionsByType(string username, SubjectType subjectType, string appId, int? maxResults = null)
+        {
+            // Verify the required parameter 'username' is set
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                throw new ArgumentException($"Missing required parameter {nameof(username)}");
+            }
+            // Verify the required parameter 'appId' is set
+            if (string.IsNullOrWhiteSpace(appId))
+            {
+                throw new ArgumentException($"Missing required parameter {nameof(appId)}");
+            }
 
+            // Compose the request
+            string path = $"/user/{username}/collections/{subjectType.ToDescriptionString()}";
+            Dictionary<string, string> queryParams = new Dictionary<string, string>()
+            {
+                { "app_id", appId }
+            };
+            if (maxResults != null)
+            {
+                queryParams.Add("max_results", maxResults.ToString());
+            }
+            BangumiRequest request = new BangumiRequest(path, Method.GET, false, queryParams); // Setting requireAuth = false because appSecret is not a required param
+
+            return _client.Request<IEnumerable<CollectionsByType>>(request);
+        }
+
+        public IEnumerable<CollectionsByType> GetUserCollectionsByType(string username, SubjectType subjectType, int? maxResults = null)
+        {
+            if (AppId == null)
+            {
+                throw new ApiException(401, $"The client needs to be authenticated before calling {nameof(GetUserCollectionsByType)} without a 'appId' argument.");
+            }
+            return GetUserCollectionsByType(username, subjectType, AppId, maxResults);
+        }
+
+        /// <summary>
+        /// 用户收藏统计 用户收藏统计
+        /// </summary>
+        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param>
+        /// <param name="appId">[https://bgm.tv/dev/app](https://bgm.tv/dev/app) 申请到的 App ID</param>
+        /// <returns>List&lt;UserCollectionsStatusResponse&gt;</returns>
+        List<UserCollectionsStatusResponse> UserCollectionsStatusByUsernameGet(string username, string appId)
+        {
+            return null;
+        }
 
         #endregion
 
@@ -88,8 +150,8 @@ namespace Bangumi.Api.Core
             }
 
             // Compose the request
-            string path = $"/subject/{id}" + (group == ResponseGroup.Ep ? @"/ep" : string.Empty);
-            var queryParams = group == ResponseGroup.Ep ? null : new Dictionary<string, string>()
+            string path = $"/subject/{id}";
+            var queryParams = new Dictionary<string, string>()
             {
                 {"responseGroup", group.ToDescriptionString() }
             };
@@ -98,28 +160,35 @@ namespace Bangumi.Api.Core
             // Return based on response group
             switch (group)
             {
+                case ResponseGroup.Large:
+                    return _client.Request<SubjectLarge>(request);
+                case ResponseGroup.Medium:
+                    return _client.Request<SubjectMedium>(request);
                 default:
                 case ResponseGroup.Small:
                     return _client.Request<SubjectSmall>(request);
-                case ResponseGroup.Medium:
-                    return _client.Request<SubjectMedium>(request);
-                case ResponseGroup.Large:
-                    return _client.Request<SubjectLarge>(request);
-                case ResponseGroup.Ep:
-                    return _client.Request<SubjectEp>(request);
             }
         }
        
         public SubjectEp GetSubjectEps(int id)
         {
-            return (SubjectEp)GetSubject(id, ResponseGroup.Ep);
+            if (id < 1)
+            {
+                throw new ArgumentException("Subject Id must be greater than 0");
+            }
+
+            // Compose the request
+            string path = $"/subject/{id}/ep";
+            BangumiRequest request = new BangumiRequest(path);
+
+            return _client.Request<SubjectEp>(request);
         }
 
         #endregion
 
         #region 搜索
 
-        public SearchSubjectResponse SearchSubjectByKeywords(string keywords, SubjectType type, ResponseGroup group = ResponseGroup.Small, int ? start = null, int? maxResults = null)
+        public SubjectSearchResult SearchSubjectByKeywords(string keywords, SubjectType type, ResponseGroup group = ResponseGroup.Small, int ? start = null, int? maxResults = null)
         {
             if (string.IsNullOrWhiteSpace(keywords))
             {
@@ -146,7 +215,7 @@ namespace Bangumi.Api.Core
             }
 
             BangumiRequest request = new BangumiRequest(path, Method.GET, false, queryParams);
-            return _client.Request<SearchSubjectResponse>(request);
+            return _client.Request<SubjectSearchResult>(request);
         }
 
         #endregion

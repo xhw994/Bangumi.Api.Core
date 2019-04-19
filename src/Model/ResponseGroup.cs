@@ -19,8 +19,6 @@ namespace Bangumi.Api.Core.Model
         [Description("medium")]
         Medium,
         [Description("large")]
-        Large,
-        [Description("ep")]
-        Ep
+        Large
     }
 }

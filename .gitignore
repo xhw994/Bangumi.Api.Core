@@ -263,3 +263,4 @@ __pycache__/
 # Custom
 Bangumi.Api/appsettings.json
 /src/appsettings.json
+/src/ConfigurationNotAllowedToUpload.cs

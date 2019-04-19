@@ -12,16 +12,11 @@ namespace Bangumi.Api.Core
     {
         static void Main(string[] args)
         {
-            BangumiClient _client = new BangumiClient();
             DefaultBangumiService _service = new DefaultBangumiService();
+            Configuration config = new Configuration();
 
             string username = "renkomei";
-
-            var res = _service.GetUserCollection(username, false, "1,2,3,4", ResponseGroup.Medium);
-            foreach (var r in res)
-            {
-                Console.WriteLine(r);
-            }
+            
         }
     }
 }

@@ -60,22 +60,10 @@ namespace Bangumi.Api.Core.Extension
             }
         }
 
-        public static string ToDescriptionString(this Enum val)
-        {
-            DescriptionAttribute[] attributes = (DescriptionAttribute[])val
-                .GetType()
-                .GetField(val.ToString())
-                .GetCustomAttributes(typeof(DescriptionAttribute), false);
-            return attributes.Length > 0 ? attributes[0].Description : string.Empty;
-        }
-
-        public static string ToFormatJson<T>(List<T> list)
-        {
-            return "";
-        }
-
         public static string ToUrlEncode(this string source) => HttpUtility.UrlEncode(source);
 
-        public static bool TryCreateUrl(this string source) => Uri.TryCreate(source, UriKind.Absolute, out Uri url) && (url.Scheme == Uri.UriSchemeHttp || url.Scheme == Uri.UriSchemeHttps);
+        public static bool IsHttpOrHttpsUrl(string source) => Uri.TryCreate(source, UriKind.Absolute, out Uri url) && (url.Scheme == Uri.UriSchemeHttp || url.Scheme == Uri.UriSchemeHttps);
+
+        public static bool IsAlphaNumeric(string s) => !string.IsNullOrEmpty(s) && s.All(c => char.IsLetterOrDigit(c) && (c < 128));
     }
 }

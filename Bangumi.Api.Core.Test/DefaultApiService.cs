@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Bangumi.Api.Core.Extension;
+using static Bangumi.Api.Core.Extension.StringExtension;
 using Bangumi.Api.Core;
 using Bangumi.Api.Core.Model;
 using Bangumi.Api.Core.Model.Subjects;
@@ -16,11 +17,14 @@ namespace Bangumi.Api.Core.Test
         private readonly int _cowboy_bebop = 253;
         private readonly string _username = "sai";
         private readonly int _init_epoch = 1167609600; // 2007.1.1 00:00:00
+
         private DefaultBangumiService _service;
+        private readonly Configuration _config;
 
         public ApiService()
         {
             _service = new DefaultBangumiService();
+            _config = new Configuration();
         }
 
         [TestMethod]
@@ -87,7 +91,7 @@ namespace Bangumi.Api.Core.Test
             Assert.AreEqual("Sai", res.Nickname, "Incorrect nickname");
             Assert.AreEqual(UserGroup.SuperAdmin, res.Usergroup, "Incorrect user group");
             Assert.IsFalse(string.IsNullOrEmpty(res.Sign), "Empty user signature");
-            bool validUrl = res.Avatar.Small.TryCreateUrl() && res.Avatar.Medium.TryCreateUrl() && res.Avatar.Large.TryCreateUrl();
+            bool validUrl = IsHttpOrHttpsUrl(res.Avatar.Small) && IsHttpOrHttpsUrl(res.Avatar.Medium) && IsHttpOrHttpsUrl(res.Avatar.Large);
             Assert.IsTrue(validUrl, "One of the image is not a valid url");
             Console.Write(res);
         }
@@ -122,6 +126,40 @@ namespace Bangumi.Api.Core.Test
 
                 Assert.IsNotNull(sj.Subject, "Null subject content");
             }
+        }
+
+        [TestMethod]
+        public void GetUserCollectionsByType()
+        {
+            int maxResult = 5;
+            SubjectType type = SubjectType.Anime;
+
+            var res = _service.GetUserCollectionsByType(_username, SubjectType.Anime, _config.AppId, maxResult);
+            Assert.AreEqual(1, res.Count(), "The outer layer should only contain 1 element.");
+
+            CollectionsByType collections = res.ElementAt(0);
+            Assert.AreEqual(type, collections.Type, "Type enum value mismatch");
+            Assert.AreEqual(type.ToDescriptionString(), collections.Type.ToDescriptionString(), "Type name mismatch");
+            Assert.AreEqual(type.ToCnName(), collections.Type.ToCnName(), "Type CN name mismatch");
+
+            IEnumerable<Collect> collects = collections.Collects;
+            Assert.AreEqual(5, collects.Count(), $"Collection does not contain 5 categories based on {nameof(CollectionStatus)}");
+
+            string msgGt = $"This might be a bug in this package, or it might be caused by the server.";
+            string msgLt = $"You may want to decrease {maxResult}";
+            foreach (Collect collect in collects)
+            {
+                Assert.AreEqual(maxResult, collect.List.Count,
+                    $"The number of collections of {collect.Status.Name} type is {(collect.List.Count > maxResult ? "greater" : "less")} " +
+                    $"than the expected value {maxResult}. {(collect.List.Count > maxResult ? msgGt : msgLt)}"
+                );
+            }
+
+            // Only test <CollectionStatus> on the collected ones
+            CollectionStatus collected = CollectionStatus.Collect;
+            Collect first = collects.First(c => c.Status.Id == collected);
+            Assert.AreEqual(first.Status.Type, collected.ToDescriptionString(), "CollectionStatus type mismatch");
+            // Will not bother validating CN name here because there are too much variants
         }
     }
 }

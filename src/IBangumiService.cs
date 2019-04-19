@@ -41,7 +41,7 @@ namespace Bangumi.Api.Core
         /// <param name="start">开始条数</param>
         /// <param name="maxResults">每页条数 &lt;br&gt; 最多 25</param>
         /// <returns>SearchSubjectResponse</returns>
-        SearchSubjectResponse SearchSubjectByKeywords(string keywords, SubjectType type, ResponseGroup group, int? start, int? maxResults);
+        SubjectSearchResult SearchSubjectByKeywords(string keywords, SubjectType type, ResponseGroup group, int? start, int? maxResults);
 
         /// <summary>
         /// 用户信息 用户信息
@@ -59,5 +59,15 @@ namespace Bangumi.Api.Core
         /// <param name="responseGroup">medium / small &lt;br&gt; 默认为 medium。small 时不返回条目详细信息</param> 
         /// <returns>List&lt;UserCollectionResponse&gt;</returns>            
         IEnumerable<SubjectStatus> GetUserCollection(string username, bool getAllWatching, string ids, ResponseGroup group);
+
+        /// <summary>
+        /// 用户收藏概览 用户收藏概览
+        /// </summary>
+        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param> 
+        /// <param name="subjectType">条目类型，详见 [SubjectTypeName](#model-SubjectTypeName)</param> 
+        /// <param name="appId">[https://bgm.tv/dev/app](https://bgm.tv/dev/app) 申请到的 App ID</param> 
+        /// <param name="maxResults">显示条数 &lt;br&gt; 最多 25</param> 
+        /// <returns>List&lt;UserCollectionsResponse&gt;</returns>            
+        IEnumerable<CollectionsByType> GetUserCollectionsByType(string username, SubjectType subjectType, string appId, int? maxResults);
     }
 }

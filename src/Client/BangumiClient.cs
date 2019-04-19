@@ -1,23 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Text.RegularExpressions;
-using System.IO;
-using System.Web;
 using System.Linq;
-using System.Net;
-using System.Text;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using RestSharp;
-using RestSharp.Extensions;
 using RestSharp.Authenticators;
-using Bangumi.Api.Core.Model;
+using static Bangumi.Api.Core.Extension.StringExtension;
 
 namespace Bangumi.Api.Core.Client
 {
     public class BangumiClient
     {
         public string ApiBasePath { get; } = "https://api.bgm.tv/";
+        public bool Authenticated { get => _restClient?.Authenticator != null; }
 
         /// <summary>
         /// Gets or sets the RestClient.
@@ -39,10 +34,30 @@ namespace Bangumi.Api.Core.Client
 
         public BangumiClient(string appId, string appSecret)
         {
-            _restClient = new RestClient(ApiBasePath)
+            _restClient = new RestClient(ApiBasePath);
+            Headers = new Dictionary<string, string>();
+            Authenticate(appId, appSecret);
+        }
+
+        public BangumiClient Authenticate(string appId, string appSecret)
+        {
+            // To lowercase values
+            appId = appId.ToLower();
+            appSecret = appSecret.ToLower();
+
+            // Value check, future need to check length
+            if (!IsAlphaNumeric(appId) || !appId.StartsWith("bgm"))
             {
-                Authenticator = new HttpBasicAuthenticator(appId, appSecret)
-            };
+                throw new ArgumentException($"Invalid application ID <{appId}>. Application IDs should start with `bgm` followed by alphanumeric values");
+            }
+            if (!IsAlphaNumeric(appSecret))
+            {
+                throw new ArgumentException($"Invalid application secret. Application secrets should only contain alphanumeric values.");
+            }
+
+            // Add Authenticator
+            _restClient.Authenticator = new HttpBasicAuthenticator(appId, appSecret);
+            return this;
         }
 
         public TResponse Request<TResponse>(BangumiRequest request)
@@ -51,7 +66,12 @@ namespace Bangumi.Api.Core.Client
 
             if (request.RequireAuth)
             {
-                // Add authorization
+                if (!Authenticated)
+                {
+                    throw new ApiException(401, $"The client needs to be authenticated for calling {nameof(request)}");
+                }
+
+                // Add auth headers?
             }
 
             // Add default header, if any
