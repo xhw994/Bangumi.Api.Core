@@ -23,6 +23,6 @@ namespace Bangumi.Api.Core.Model.Subjects
         [Description("game")]
         Game = 4,
         [Description("real")]
-        Real = 5
+        Real = 6
     }
 }
