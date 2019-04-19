@@ -47,7 +47,11 @@ namespace Bangumi.Api.Core.Model
             sb.Append("class Collect {\n");
             sb.Append("  Status: ").Append(Status).Append("\n");
             sb.Append("  Count: ").Append(Count).Append("\n");
-            sb.Append("  List: ").Append(List).Append("\n");
+            if (List != null)
+            {
+                sb.Append("  List: ").Append(List).Append("\n");
+                foreach (var l in List) { sb.Append(l); }
+            }
             sb.Append("}\n");
             return sb.ToString();
         }

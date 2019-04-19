@@ -9,16 +9,19 @@ using Bangumi.Api.Core.Model.Users;
 
 namespace Bangumi.Api.Core
 {
+    /// <summary>
+    /// Represents a collection of functions to interact with the API endpoints
+    /// </summary>
     public interface IBangumiService
     {
         /// <summary>
-        /// 每日放送 每日放送
+        /// 每日放送
         /// </summary>
         /// <returns><see cref="IEnumerable{CalendarResponse}"/></returns>
         IEnumerable<CalendarResponse> GetDailyCalendar();
 
         /// <summary>
-        /// 条目信息 条目信息
+        /// 条目信息
         /// </summary>
         /// <param name="subjectId">条目 ID</param>
         /// <param name="responseGroup">返回数据大小，参考 [ResponseGroup](#model-ResponseGroup) &lt;br&gt; 默认为 small</param>
@@ -26,14 +29,14 @@ namespace Bangumi.Api.Core
         SubjectBase GetSubject(int id, ResponseGroup group);
 
         /// <summary>
-        /// 章节数据 章节数据
+        /// 章节数据
         /// </summary>
         /// <param name="subjectId">条目 ID</param> 
         /// <returns>SubjectEpResponse</returns>            
         SubjectEp GetSubjectEps(int id);
 
         /// <summary>
-        /// 条目搜索 条目搜索
+        /// 条目搜索
         /// </summary>
         /// <param name="keywords">关键词 &lt;br&gt; 需要 URL Encode</param>
         /// <param name="type">条目类型，参考 [SubjectType](#model-SubjectType)</param>
@@ -44,14 +47,14 @@ namespace Bangumi.Api.Core
         SubjectSearchResult SearchSubjectByKeywords(string keywords, SubjectType type, ResponseGroup group, int? start, int? maxResults);
 
         /// <summary>
-        /// 用户信息 用户信息
+        /// 用户信息
         /// </summary>
         /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param>
         /// <returns>User</returns>
         User GetUser(string username);
 
         /// <summary>
-        /// 用户收藏 用户收藏
+        /// 用户收藏
         /// </summary>
         /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param> 
         /// <param name="getAllWatching">收藏类型 &lt;br&gt; False - watching &#x3D; 在看的动画与三次元条目 &lt;br&gt; True - all_watching &#x3D; 在看的动画三次元与书籍条目</param> 
@@ -61,7 +64,7 @@ namespace Bangumi.Api.Core
         IEnumerable<SubjectStatus> GetUserCollection(string username, bool getAllWatching, string ids, ResponseGroup group);
 
         /// <summary>
-        /// 用户收藏概览 用户收藏概览
+        /// 用户收藏概览
         /// </summary>
         /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param> 
         /// <param name="subjectType">条目类型，详见 [SubjectTypeName](#model-SubjectTypeName)</param> 
@@ -69,5 +72,13 @@ namespace Bangumi.Api.Core
         /// <param name="maxResults">显示条数 &lt;br&gt; 最多 25</param> 
         /// <returns>List&lt;UserCollectionsResponse&gt;</returns>            
         IEnumerable<CollectionsByType> GetUserCollectionsByType(string username, SubjectType subjectType, string appId, int? maxResults);
+
+        /// <summary>
+        /// 用户收藏统计
+        /// </summary>
+        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param>
+        /// <param name="appId">[https://bgm.tv/dev/app](https://bgm.tv/dev/app) 申请到的 App ID</param>
+        /// <returns>List&lt;UserCollectionsStatusResponse&gt;</returns>
+        IEnumerable<CollectionsByType> GetUserCollectionsStatus(string username, string appId);
     }
 }

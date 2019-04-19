@@ -17,6 +17,8 @@ namespace Bangumi.Api.Core
         public string AppId { get; private set; }
         public string AppSecret { get; private set; }
 
+        #region 初始化 Init
+
         public DefaultBangumiService()
         {
             _client = new BangumiClient();
@@ -36,7 +38,9 @@ namespace Bangumi.Api.Core
             return this;
         }
 
-        #region 用户
+        #endregion
+
+        #region 用户 User
 
         public User GetUser(string username)
         {
@@ -115,25 +119,33 @@ namespace Bangumi.Api.Core
         {
             if (AppId == null)
             {
-                throw new ApiException(401, $"The client needs to be authenticated before calling {nameof(GetUserCollectionsByType)} without a 'appId' argument.");
+                throw new ApiException(401, $"The client needs to be authenticated before calling {nameof(GetUserCollectionsByType)} without an '{nameof(AppId)}' argument.");
             }
             return GetUserCollectionsByType(username, subjectType, AppId, maxResults);
         }
 
-        /// <summary>
-        /// 用户收藏统计 用户收藏统计
-        /// </summary>
-        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param>
-        /// <param name="appId">[https://bgm.tv/dev/app](https://bgm.tv/dev/app) 申请到的 App ID</param>
-        /// <returns>List&lt;UserCollectionsStatusResponse&gt;</returns>
-        List<UserCollectionsStatusResponse> UserCollectionsStatusByUsernameGet(string username, string appId)
+        public IEnumerable<CollectionsByType> GetUserCollectionsStatus(string username, string appId = null)
         {
-            return null;
+            // Verify the required parameter 'username' is set
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                throw new ArgumentException($"Missing required parameter {nameof(username)}");
+            }
+            if (string.IsNullOrEmpty(appId) && string.IsNullOrEmpty(appId))
+            {
+                throw new ApiException(401, $"The client needs to be authenticated before calling {nameof(GetUserCollectionsStatus)} without an '{nameof(AppId)}' argument.");
+            }
+
+            // Compose the request
+            string path = $"/user/{username}/collections/status";
+            BangumiRequest request = new BangumiRequest(path, Method.GET); // Setting requireAuth = false because appSecret is not a required param
+
+            return _client.Request<IEnumerable<CollectionsByType>>(request);
         }
 
         #endregion
 
-        #region 条目
+        #region 条目 Subject
 
         public IEnumerable<CalendarResponse> GetDailyCalendar()
         {
@@ -186,7 +198,7 @@ namespace Bangumi.Api.Core
 
         #endregion
 
-        #region 搜索
+        #region 搜索 Search
 
         public SubjectSearchResult SearchSubjectByKeywords(string keywords, SubjectType type, ResponseGroup group = ResponseGroup.Small, int ? start = null, int? maxResults = null)
         {
