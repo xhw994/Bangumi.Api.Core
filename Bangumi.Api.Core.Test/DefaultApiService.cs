@@ -14,11 +14,13 @@ namespace Bangumi.Api.Core.Test
     public class ApiService
     {
         private readonly int _cowboy_bebop = 253;
-        private DefaultApiService _service;
+        private readonly string _username = "sai";
+        private readonly int _init_epoch = 1167609600; // 2007.1.1 00:00:00
+        private DefaultBangumiService _service;
 
         public ApiService()
         {
-            _service = new DefaultApiService();
+            _service = new DefaultBangumiService();
         }
 
         [TestMethod]
@@ -78,17 +80,48 @@ namespace Bangumi.Api.Core.Test
         [TestMethod]
         public void GetUser()
         {
-            string username = "sai";
-            var res = _service.GetUser(username);
+            var res = _service.GetUser(_username);
             Assert.AreEqual(1, res.Id, "Incorrect Id");
             Assert.AreEqual("http://bgm.tv/user/sai", res.Url, "Incorrect URL");
-            Assert.AreEqual(username, res.Username, "Incorrect username");
+            Assert.AreEqual(_username, res.Username, "Incorrect username");
             Assert.AreEqual("Sai", res.Nickname, "Incorrect nickname");
             Assert.AreEqual(UserGroup.SuperAdmin, res.Usergroup, "Incorrect user group");
             Assert.IsFalse(string.IsNullOrEmpty(res.Sign), "Empty user signature");
             bool validUrl = res.Avatar.Small.TryCreateUrl() && res.Avatar.Medium.TryCreateUrl() && res.Avatar.Large.TryCreateUrl();
             Assert.IsTrue(validUrl, "One of the image is not a valid url");
             Console.Write(res);
+        }
+
+        [TestMethod]
+        public void GetUserCollectionSmall()
+        {
+            var res = _service.GetUserCollection(_username, false, ResponseGroup.Small);
+            Assert.AreNotEqual(0, res.Count(), "Empty response");
+            foreach (var sj in res)
+            {
+                Assert.IsFalse(string.IsNullOrEmpty(sj.Name), "Empty subject name");
+                Assert.IsFalse(sj.SubjectId < 1, "Invalid subject Id: " + sj.SubjectId);
+                Assert.IsFalse(sj.EpStatus < 0, "Invalid episode status: " + sj.EpStatus);
+                Assert.IsFalse(sj.VolStatus < 0, "Invalid volume status: " + sj.VolStatus);
+                Assert.IsFalse(sj.Lasttouch < _init_epoch, "Invalid last touch epoch: " + sj.Lasttouch);
+            }
+        }
+
+        [TestMethod]
+        public void GetUserCollectionMedium()
+        {
+            var res = _service.GetUserCollection(_username, false, ResponseGroup.Medium);
+            Assert.AreNotEqual(0, res.Count(), "Empty response");
+            foreach (var sj in res)
+            {
+                Assert.IsFalse(string.IsNullOrEmpty(sj.Name), "Empty subject name");
+                Assert.IsFalse(sj.SubjectId < 1, "Invalid subject Id: " + sj.SubjectId);
+                Assert.IsFalse(sj.EpStatus < 0, "Invalid episode status: " + sj.EpStatus);
+                Assert.IsFalse(sj.VolStatus < 0, "Invalid volume status: " + sj.VolStatus);
+                Assert.IsFalse(sj.Lasttouch < _init_epoch, "Invalid last touch epoch: " + sj.Lasttouch);
+
+                Assert.IsNotNull(sj.Subject, "Null subject content");
+            }
         }
     }
 }

@@ -64,8 +64,8 @@ namespace Bangumi.Api.Core.Model.Subjects
             sb.Append("  Images: ").Append(Images).Append("\n");
             sb.Append("  Eps: ").Append(Eps).Append("\n");
             sb.Append("  EpsCount: ").Append(EpsCount).Append("\n");
-            sb.Append("  Rating: ").Append(Rating).Append("\n");
-            sb.Append("  Rank: ").Append(Rank).Append("\n");
+            if (Rating != null) sb.Append("  Rating: ").Append(Rating).Append("\n"); // consider SubjectMin?
+            if (Rank != null) sb.Append("  Rank: ").Append(Rank).Append("\n");
             sb.Append("  Collection: ").Append(Collection).Append("\n");
             sb.Append("}\n");
             return sb.ToString();

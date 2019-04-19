@@ -9,7 +9,7 @@ using Bangumi.Api.Core.Model.Users;
 
 namespace Bangumi.Api.Core
 {
-    public interface IApiService
+    public interface IBangumiService
     {
         /// <summary>
         /// 每日放送 每日放送
@@ -58,6 +58,6 @@ namespace Bangumi.Api.Core
         /// <param name="ids">收藏条目 ID &lt;br&gt; 批量查询收藏状态，将条目 ID 以半角逗号分隔，如 1,2,4,6</param> 
         /// <param name="responseGroup">medium / small &lt;br&gt; 默认为 medium。small 时不返回条目详细信息</param> 
         /// <returns>List&lt;UserCollectionResponse&gt;</returns>            
-        IEnumerable<UserCollectionResponse> GetUserCollection(string username, bool getAllWatching, string ids, ResponseGroup group = ResponseGroup.Medium);
+        IEnumerable<SubjectStatus> GetUserCollection(string username, bool getAllWatching, string ids, ResponseGroup group);
     }
 }

@@ -13,19 +13,15 @@ namespace Bangumi.Api.Core
         static void Main(string[] args)
         {
             BangumiClient _client = new BangumiClient();
+            DefaultBangumiService _service = new DefaultBangumiService();
 
             string username = "renkomei";
 
-            if (string.IsNullOrWhiteSpace(username))
+            var res = _service.GetUserCollection(username, false, "1,2,3,4", ResponseGroup.Medium);
+            foreach (var r in res)
             {
-                throw new ApiException(400, "Missing required parameter 'username' when calling GetUser");
+                Console.WriteLine(r);
             }
-
-            string path = $"/user/{username}";
-
-            BangumiRequest request = new BangumiRequest(path);
-            var res = _client.Request<User>(request);
-            Console.WriteLine(res);
         }
     }
 }

@@ -4,15 +4,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Bangumi.Api.Core.Model.Subjects;
 
 namespace Bangumi.Api.Core.Model.Users
 {
-
     /// <summary>
-    /// 
+    /// 用户收藏
     /// </summary>
     [DataContract]
-    public class UserCollectionResponse
+    public class SubjectStatus
     {
         /// <summary>
         /// 番剧标题
@@ -59,7 +59,7 @@ namespace Bangumi.Api.Core.Model.Users
         /// </summary>
         [DataMember(Name = "subject", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "subject")]
-        public Subject1 Subject { get; set; }
+        public SubjectSmall Subject { get; set; }
 
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Bangumi.Api.Core.Model.Users
             sb.Append("  EpStatus: ").Append(EpStatus).Append("\n");
             sb.Append("  VolStatus: ").Append(VolStatus).Append("\n");
             sb.Append("  Lasttouch: ").Append(Lasttouch).Append("\n");
-            sb.Append("  Subject: ").Append(Subject).Append("\n");
+            if (Subject != null) sb.Append("  Subject: ").Append(Subject).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }

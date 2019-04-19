@@ -81,7 +81,7 @@ namespace Bangumi.Api.Core.Model.Users
             sb.Append("  Username: ").Append(Username).Append("\n");
             sb.Append("  Nickname: ").Append(Nickname).Append("\n");
             sb.Append("  Avatar: ").Append(Avatar).Append("\n");
-            sb.Append("  Sign: ").Append(Sign).Append("\n");
+            sb.Append("  Sign: ").Append(Sign).Append("\n"); // Has correct value but does not display correctly in CMD?
             sb.Append("  Usergroup: ").Append((int)Usergroup).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
