@@ -29,14 +29,23 @@ namespace Bangumi.Api.Core.Client
         public BangumiClient()
         {
             _restClient = new RestClient(ApiBasePath);
-            Headers = new Dictionary<string, string>();
+            Headers = DefaultHeaders();
         }
 
         public BangumiClient(string appId, string appSecret)
         {
             _restClient = new RestClient(ApiBasePath);
-            Headers = new Dictionary<string, string>();
+            Headers = DefaultHeaders();
             Authenticate(appId, appSecret);
+        }
+
+        private Dictionary<string, string> DefaultHeaders()
+        {
+            return new Dictionary<string, string>()
+            {
+                { "Accept", "application/json" },
+                { "Content-Type", "application/x-www-form-urlencoded" }
+            };
         }
 
         public BangumiClient Authenticate(string appId, string appSecret)
