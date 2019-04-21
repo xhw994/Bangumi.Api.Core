@@ -246,49 +246,5 @@ path = path.Replace("{" + "status" + "}", ApiClient.ParameterToString(status));
     
             return (StatusCode) ApiClient.Deserialize(response.Content, typeof(StatusCode), response.Headers);
         }
-    
- 
-        /// <summary>
-        /// 用户收藏统计 用户收藏统计
-        /// </summary>
-        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param> 
-        /// <param name="appId">[https://bgm.tv/dev/app](https://bgm.tv/dev/app) 申请到的 App ID</param> 
-        /// <returns>List&lt;UserCollectionsStatusResponse&gt;</returns>            
-        public IEnumerable<UserCollectionsStatusResponse> UserCollectionsStatusByUsernameGet (string username, string appId)
-        {
-            
-            // verify the required parameter 'username' is set
-            if (username == null) throw new ApiException(400, "Missing required parameter 'username' when calling UserCollectionsStatusByUsernameGet");
-            
-            // verify the required parameter 'appId' is set
-            if (appId == null) throw new ApiException(400, "Missing required parameter 'appId' when calling UserCollectionsStatusByUsernameGet");
-            
-    
-            var path = "/user/{username}/collections/status";
-            path = path.Replace("{format}", "json");
-            path = path.Replace("{" + "username" + "}", ApiClient.ParameterToString(username));
-    
-            var queryParams = new Dictionary<string, string>();
-            var headerParams = new Dictionary<string, string>();
-            var formParams = new Dictionary<string, string>();
-            var fileParams = new Dictionary<string, FileParameter>();
-            string postBody = null;
-    
-             if (appId != null) queryParams.Add("app_id", ApiClient.ParameterToString(appId)); // query parameter
-                                        
-            // authentication setting, if any
-            string[] authSettings = new string[] { "auth" };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-    
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling UserCollectionsStatusByUsernameGet: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling UserCollectionsStatusByUsernameGet: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return (List<UserCollectionsStatusResponse>) ApiClient.Deserialize(response.Content, typeof(List<UserCollectionsStatusResponse>), response.Headers);
-        }
-    
     }
 }
