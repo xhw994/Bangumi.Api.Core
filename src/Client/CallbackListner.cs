@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Bangumi.Api.Core.Client
 {
-    internal sealed class CallbackListner
+    public sealed class CallbackListner
     {
         public string DomainName { get; set; }
         public string Ipv4Address { get; set; }
