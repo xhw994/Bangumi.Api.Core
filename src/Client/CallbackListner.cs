@@ -7,12 +7,11 @@ using System.Text;
 
 namespace Bangumi.Api.Core.Client
 {
-    public sealed class CallbackListner
+    internal sealed class CallbackListner
     {
         public string DomainName { get; set; }
         public string Ipv4Address { get; set; }
-        public int Port { get; set; } = 5994;
-        public bool UseHttps { get; set; } = false;
+        public int Port { get; set; }
         public string Route { get; set; }
 
         private readonly HttpListener _listener;
@@ -25,14 +24,23 @@ namespace Bangumi.Api.Core.Client
             }
 
             _listener = new HttpListener();
+            Port = port;
         }
 
         public CallbackListner AddPrefixes()
         {
-            foreach (string pf in ComposePrefixes())
+            // Add domain URL, if exists.
+            if (!string.IsNullOrEmpty(DomainName))
             {
-                _listener.Prefixes.Add(pf);
+                _listener.Prefixes.Add($"http://{DomainName}:{Port}/{Route}");
             }
+            // Add ipv4 URL, if exists.
+            if (!string.IsNullOrEmpty(Ipv4Address))
+            {
+                _listener.Prefixes.Add($"http://{Ipv4Address}:{Port}/{Route}");
+            }
+            // Add default URL, localhost.
+            _listener.Prefixes.Add($"http://localhost:{Port}/{Route}");
 
             return this;
         }
@@ -67,21 +75,6 @@ namespace Bangumi.Api.Core.Client
 
             Console.Write("completed!" + Environment.NewLine);
             return code;
-        }
-
-        private IEnumerable<string> ComposePrefixes()
-        {
-            string protocolPrefix = UseHttps ? "https" : "http";
-
-            if (!string.IsNullOrEmpty(DomainName))
-            {
-                yield return $"{protocolPrefix}://{DomainName}:{Port}/{Route}";
-            }
-            if (!string.IsNullOrEmpty(Ipv4Address))
-            {
-                yield return $"{protocolPrefix}://{Ipv4Address}:{Port}/{Route}";
-            }
-            yield return $"{protocolPrefix}://localhost:{Port}/{Route}";
         }
     }
 }
