@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Bangumi.Api.Core.Extension
 {
-    public static class EnumExtensions
+    public static class EnumExtension
     {
         public static string ToDescriptionString(this Enum val)
         {
