@@ -80,5 +80,13 @@ namespace Bangumi.Api.Core
         /// <param name="appId">[https://bgm.tv/dev/app](https://bgm.tv/dev/app) 申请到的 App ID</param>
         /// <returns>List&lt;UserCollectionsStatusResponse&gt;</returns>
         IEnumerable<CollectionsByType> GetUserCollectionsStatus(string username, string appId);
+
+        /// <summary>
+        /// 用户收视进度 用户收视进度
+        /// </summary>
+        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param>
+        /// <param name="subjectId">条目 ID &lt;br&gt; 获取指定条目收视进度</param>
+        /// <returns>List&lt;UserProgressResponse&gt;</returns>
+        IEnumerable<UserProgress> GetUserProgress(string username, int subjectId);
     }
 }

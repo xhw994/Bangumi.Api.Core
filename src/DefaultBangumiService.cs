@@ -131,6 +131,7 @@ namespace Bangumi.Api.Core
             {
                 throw new ArgumentException($"Missing required parameter {nameof(username)}");
             }
+            // Verify the required parameter 'appId' is set
             if (string.IsNullOrEmpty(appId) && string.IsNullOrEmpty(appId))
             {
                 throw new ApiException(401, $"The client needs to be authenticated before calling {nameof(GetUserCollectionsStatus)} without an '{nameof(AppId)}' argument.");
@@ -138,9 +139,33 @@ namespace Bangumi.Api.Core
 
             // Compose the request
             string path = $"/user/{username}/collections/status";
-            BangumiRequest request = new BangumiRequest(path, Method.GET); // Setting requireAuth = false because appSecret is not a required param
+            BangumiRequest request = new BangumiRequest(path); // Setting requireAuth = false because appSecret is not a required param
 
             return _client.Request<IEnumerable<CollectionsByType>>(request);
+        }
+
+        public IEnumerable<UserProgress> GetUserProgress(string username, int subjectId)
+        {
+            // Verify the required parameter 'username' is set
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                throw new ArgumentException($"Missing required parameter {nameof(username)}");
+            }
+            // Validate the required parameter 'subjectId'
+            if (subjectId < 1)
+            {
+                throw new ArgumentException($"{nameof(subjectId)} must be greater than 0");
+            }
+
+            // Compose the request
+            string path = $"/user/{username}/progress";
+            Dictionary<string, string> queryParams = new Dictionary<string, string>()
+            {
+                { "subject_id", subjectId.ToString() }
+            };
+            BangumiRequest request = new BangumiRequest(path, Method.GET, true, queryParams);
+
+            return _client.Request<IEnumerable<UserProgress>>(request);
         }
 
         #endregion
