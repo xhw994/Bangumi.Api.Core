@@ -290,44 +290,5 @@ path = path.Replace("{" + "status" + "}", ApiClient.ParameterToString(status));
             return (List<UserCollectionsStatusResponse>) ApiClient.Deserialize(response.Content, typeof(List<UserCollectionsStatusResponse>), response.Headers);
         }
     
-        /// <summary>
-        /// 用户收视进度 用户收视进度
-        /// </summary>
-        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param> 
-        /// <param name="subjectId">条目 ID &lt;br&gt; 获取指定条目收视进度</param> 
-        /// <returns>List&lt;UserProgressResponse&gt;</returns>            
-        public List<UserProgressResponse> UserProgressByUsernameGet (string username, int? subjectId)
-        {
-            
-            // verify the required parameter 'username' is set
-            if (username == null) throw new ApiException(400, "Missing required parameter 'username' when calling UserProgressByUsernameGet");
-            
-    
-            var path = "/user/{username}/progress";
-            path = path.Replace("{format}", "json");
-            path = path.Replace("{" + "username" + "}", ApiClient.ParameterToString(username));
-    
-            var queryParams = new Dictionary<string, string>();
-            var headerParams = new Dictionary<string, string>();
-            var formParams = new Dictionary<string, string>();
-            var fileParams = new Dictionary<string, FileParameter>();
-            string postBody = null;
-    
-             if (subjectId != null) queryParams.Add("subject_id", ApiClient.ParameterToString(subjectId)); // query parameter
-                                        
-            // authentication setting, if any
-            string[] authSettings = new string[] { "auth" };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-    
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling UserProgressByUsernameGet: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling UserProgressByUsernameGet: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return (List<UserProgressResponse>) ApiClient.Deserialize(response.Content, typeof(List<UserProgressResponse>), response.Headers);
-        }
-    
     }
 }

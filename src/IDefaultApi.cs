@@ -51,12 +51,6 @@ namespace Bangumi.Api.Core
         /// <returns>StatusCode</returns>
         StatusCode SubjectUpdateWatchedEpsBySubjectIdPost(int? subjectId, string watchedEps, string watchedVols);        
 
-        /// <summary>
-        /// 用户收视进度 用户收视进度
-        /// </summary>
-        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param>
-        /// <param name="subjectId">条目 ID &lt;br&gt; 获取指定条目收视进度</param>
-        /// <returns>List&lt;UserProgressResponse&gt;</returns>
-        List<UserProgressResponse> UserProgressByUsernameGet(string username, int? subjectId);
+        
     }
 }
