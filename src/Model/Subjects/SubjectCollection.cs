@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 
 namespace Bangumi.Api.Core.Model
 {
-
     /// <summary>
     /// 收藏人数
     /// </summary>
@@ -80,6 +79,5 @@ namespace Bangumi.Api.Core.Model
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
 }
