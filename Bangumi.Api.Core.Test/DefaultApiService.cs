@@ -28,6 +28,15 @@ namespace Bangumi.Api.Core.Test
         }
 
         [TestMethod]
+        public void SetupConfiguration()
+        {
+            _service = new DefaultBangumiService();
+            Assert.IsNotNull(_service.Configuration?["Bangumi:AppId"], "Unable to get the configuration");
+            Console.WriteLine("Successfully get the configuration. As an example, the app ID is: " +
+                _service.Configuration["Bangumi:AppId"]);
+        }
+
+        [TestMethod]
         public void DailyCalendar()
         {
             IEnumerable<CalendarResponse> res = _service.GetDailyCalendar();
