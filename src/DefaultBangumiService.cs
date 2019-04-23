@@ -8,34 +8,30 @@ using Bangumi.Api.Core.Extension;
 using Bangumi.Api.Core.Model.Subjects;
 using Bangumi.Api.Core.Model.Users;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace Bangumi.Api.Core
 {
     public class DefaultBangumiService : IBangumiService
     {
         private readonly BangumiClient _client;
-        public string AppId { get; private set; }
-        public string AppSecret { get; private set; }
+
+        public IConfiguration Configuration { get; set; }
+
+        public string AppId { get => Configuration["Bangumi:AppId"]; }
+        public string AppSecret { get => Configuration["Bangumi:AppSecret"]; }
 
         #region 初始化 Init
 
         public DefaultBangumiService()
         {
             _client = new BangumiClient();
-        }
 
-        public DefaultBangumiService(string appId, string appSecret)
-        {
-            _client = new BangumiClient();
-            _client.Authenticate(appId, appSecret);
-        }
-
-        public DefaultBangumiService Authenticate(string appId, string appSecret)
-        {
-            AppId = appId;
-            AppSecret = appSecret;
-            _client.Authenticate(appId, appSecret);
-            return this;
+            Configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true)
+                .Build();
         }
 
         #endregion
