@@ -4,19 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using static Bangumi.Api.Core.Extension.StringExtension;
 
 namespace Bangumi.Api.Core.Client
 {
     public sealed class CallbackListner
     {
-        public string DomainName { get; set; }
-        public string Ipv4Address { get; set; }
-        public int Port { get; set; }
-        public string Route { get; set; }
-
         private readonly HttpListener _listener;
 
-        public CallbackListner(int port)
+        public CallbackListner(params string[] urls)
         {
             if (!HttpListener.IsSupported)
             {
@@ -24,24 +20,22 @@ namespace Bangumi.Api.Core.Client
             }
 
             _listener = new HttpListener();
-            Port = port;
+
+            foreach (string url in urls)
+            {
+                if (IsHttpOrHttpsUrl(url))
+                {
+                    _listener.Prefixes.Add(url);
+                }
+            }
         }
 
-        public CallbackListner AddPrefixes()
+        public CallbackListner AddPrefix(string url)
         {
-            // Add domain URL, if exists.
-            if (!string.IsNullOrEmpty(DomainName))
+            if (IsHttpOrHttpsUrl(url))
             {
-                _listener.Prefixes.Add($"http://{DomainName}:{Port}/{Route}");
+                _listener.Prefixes.Add(url);
             }
-            // Add ipv4 URL, if exists.
-            if (!string.IsNullOrEmpty(Ipv4Address))
-            {
-                _listener.Prefixes.Add($"http://{Ipv4Address}:{Port}/{Route}");
-            }
-            // Add default URL, localhost.
-            _listener.Prefixes.Add($"http://localhost:{Port}/{Route}");
-
             return this;
         }
 
