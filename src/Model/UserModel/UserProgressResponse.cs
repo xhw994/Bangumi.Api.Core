@@ -4,36 +4,31 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Bangumi.Api.Core.Model.SubjectModel;
 
-namespace Bangumi.Api.Core.Model.Users
+namespace Bangumi.Api.Core.Model.UserModel
 {
-
     /// <summary>
-    /// 头像地址
+    /// 用户收视进度
     /// </summary>
     [DataContract]
-    public class Avatar
+    public class UserProgress
     {
         /// <summary>
-        /// Gets or Sets Large
+        /// 条目 ID
         /// </summary>
-        [DataMember(Name = "large", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "large")]
-        public string Large { get; set; }
+        /// <value>条目 ID</value>
+        [DataMember(Name = "subject_id", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "subject_id")]
+        public int? SubjectId { get; set; }
 
         /// <summary>
-        /// Gets or Sets Medium
+        /// 章节列表
         /// </summary>
-        [DataMember(Name = "medium", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "medium")]
-        public string Medium { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Small
-        /// </summary>
-        [DataMember(Name = "small", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "small")]
-        public string Small { get; set; }
+        /// <value>章节列表</value>
+        [DataMember(Name = "eps", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "eps")]
+        public IEnumerable<Episode> Eps { get; set; }
 
 
         /// <summary>
@@ -43,10 +38,9 @@ namespace Bangumi.Api.Core.Model.Users
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class Avatar {\n");
-            sb.Append("  Large: ").Append(Large).Append("\n");
-            sb.Append("  Medium: ").Append(Medium).Append("\n");
-            sb.Append("  Small: ").Append(Small).Append("\n");
+            sb.Append("class UserProgressResponse {\n");
+            sb.Append("  SubjectId: ").Append(SubjectId).Append("\n");
+            sb.Append("  Eps: ").Append(Eps).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }

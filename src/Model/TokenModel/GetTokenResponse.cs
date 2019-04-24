@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace Bangumi.Api.Core.Model.Token
+namespace Bangumi.Api.Core.Model.TokenModel
 {
     /// <summary>
-    /// 授权有效期刷新
+    /// 换取 Access Token
     /// </summary>
     [DataContract]
-    public class RefreshTokenResponse
+    public class GetTokenResponse
     {
         /// <summary>
         /// Gets or Sets AccessToken
@@ -47,6 +47,13 @@ namespace Bangumi.Api.Core.Model.Token
         [JsonProperty(PropertyName = "refresh_token")]
         public string RefreshToken { get; set; }
 
+        /// <summary>
+        /// Gets or Sets UserId
+        /// </summary>
+        [DataMember(Name = "user_id", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "user_id")]
+        public string UserId { get; set; }
+
 
         /// <summary>
         /// Get the string presentation of the object
@@ -61,6 +68,7 @@ namespace Bangumi.Api.Core.Model.Token
             sb.Append("  TokenType: ").Append(TokenType).Append("\n");
             sb.Append("  Scope: ").Append("null").Append("\n");
             sb.Append("  RefreshToken: ").Append(RefreshToken).Append("\n");
+            sb.Append("  UserId: ").Append(UserId).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }

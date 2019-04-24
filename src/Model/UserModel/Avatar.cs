@@ -5,27 +5,35 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace Bangumi.Api.Core.Model.Subjects
+namespace Bangumi.Api.Core.Model.UserModel
 {
+
     /// <summary>
-    /// 每日放送
+    /// 澶村儚鍦板潃
     /// </summary>
     [DataContract]
-    public class CalendarResponse
+    public class Avatar
     {
         /// <summary>
-        /// Gets or Sets Weekday
+        /// Gets or Sets Large
         /// </summary>
-        [DataMember(Name = "weekday", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "weekday")]
-        public Weekday Weekday { get; set; }
+        [DataMember(Name = "large", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "large")]
+        public string Large { get; set; }
 
         /// <summary>
-        /// Gets or Sets Items
+        /// Gets or Sets Medium
         /// </summary>
-        [DataMember(Name = "items", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "items")]
-        public List<SubjectSmall> Items { get; set; }
+        [DataMember(Name = "medium", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "medium")]
+        public string Medium { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Small
+        /// </summary>
+        [DataMember(Name = "small", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "small")]
+        public string Small { get; set; }
 
 
         /// <summary>
@@ -35,9 +43,10 @@ namespace Bangumi.Api.Core.Model.Subjects
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class CalendarResponse {\n");
-            sb.Append("  Weekday: ").Append(Weekday).Append("\n");
-            sb.Append("  Items: ").Append(Items).Append("\n");
+            sb.Append("class Avatar {\n");
+            sb.Append("  Large: ").Append(Large).Append("\n");
+            sb.Append("  Medium: ").Append(Medium).Append("\n");
+            sb.Append("  Small: ").Append(Small).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -50,5 +59,6 @@ namespace Bangumi.Api.Core.Model.Subjects
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
+
     }
 }

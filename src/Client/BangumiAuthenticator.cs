@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using static Bangumi.Api.Core.Extension.StringExtension;
 using static Bangumi.Api.Core.Configuration;
-using Bangumi.Api.Core.Model.Token;
+using Bangumi.Api.Core.Model.TokenModel;
 using Newtonsoft.Json;
 
 namespace Bangumi.Api.Core.Client

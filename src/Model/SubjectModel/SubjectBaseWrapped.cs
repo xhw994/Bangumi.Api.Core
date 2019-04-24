@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace Bangumi.Api.Core.Model.Subjects
+namespace Bangumi.Api.Core.Model.SubjectModel
 {
     [DataContract]
     public class SubjectBaseWrapped

@@ -1,5 +1,5 @@
-﻿using Bangumi.Api.Core.Model.Subjects;
-using Bangumi.Api.Core.Model.Users;
+﻿using Bangumi.Api.Core.Model.SubjectModel;
+using Bangumi.Api.Core.Model.UserModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

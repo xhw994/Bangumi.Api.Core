@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using System.ComponentModel;
 
-namespace Bangumi.Api.Core.Model.Users
+namespace Bangumi.Api.Core.Model.UserModel
 {
     /// <summary>
     /// 收藏状态 &lt;br&gt; 1 &#x3D; wish &#x3D; 想做 &lt;br&gt; 2 &#x3D; collect &#x3D; 做过 &lt;br&gt; 3 &#x3D; do &#x3D; 在做 &lt;br&gt; 4 &#x3D; on_hold &#x3D; 搁置 &lt;br&gt; 5 &#x3D; dropped &#x3D; 抛弃

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace Bangumi.Api.Core.Model.Users
+namespace Bangumi.Api.Core.Model.UserModel
 {
     /// <summary>
     /// 用户信息

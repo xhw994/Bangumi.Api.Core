@@ -4,46 +4,41 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Bangumi.Api.Core.Model.Users;
-using Bangumi.Api.Core.Model.Subjects;
+using Bangumi.Api.Core.Model.UserModel;
+using Bangumi.Api.Core.Model.SubjectModel;
 
-namespace Bangumi.Api.Core.Model.Subjects
+namespace Bangumi.Api.Core.Model.SubjectModel
 {
     /// <summary>
-    /// Default subject response
+    /// Large size subject response
     /// </summary>
     [DataContract]
-    public class SubjectSmall : SubjectBase
+    public class SubjectLarge : SubjectMedium
     {
         /// <summary>
-        /// ª∞ ˝
+        /// ÂêÑÈõÜ‰ø°ÊÅØ
         /// </summary>
-        /// <value>ª∞ ˝</value>
-        [DataMember(Name = "eps_count", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "eps_count")]
-        public int? EpsCount { get; set; }
+        /// <value>ÂêÑÈõÜ‰ø°ÊÅØ</value>
+        [DataMember(Name = "eps", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "eps")]
+        new public List<Episode> Eps { get; set; }
 
         /// <summary>
-        /// Gets or Sets Rating
+        /// ËÆ®ËÆ∫Áâà
         /// </summary>
-        [DataMember(Name = "rating", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "rating")]
-        public Rating Rating { get; set; }
+        /// <value>ËÆ®ËÆ∫Áâà</value>
+        [DataMember(Name = "topic", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "topic")]
+        public List<Topic> Topic { get; set; }
 
         /// <summary>
-        /// ≈≈√˚
+        /// ËØÑËÆ∫Êó•Âøó
         /// </summary>
-        /// <value>≈≈√˚</value>
-        [DataMember(Name = "rank", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "rank")]
-        public int? Rank { get; set; }
+        /// <value>ËØÑËÆ∫Êó•Âøó</value>
+        [DataMember(Name = "blog", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "blog")]
+        public List<Blog> Blog { get; set; }
 
-        /// <summary>
-        /// Gets or Sets Collection
-        /// </summary>
-        [DataMember(Name = "collection", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "collection")]
-        public SubjectCollection Collection { get; set; }
 
         /// <summary>
         /// Get the string presentation of the object
@@ -52,7 +47,7 @@ namespace Bangumi.Api.Core.Model.Subjects
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class SubjectSmall {\n");
+            sb.Append("class SubjectLarge {\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  Url: ").Append(Url).Append("\n");
             sb.Append("  Type: ").Append(Type).Append("\n");
@@ -64,9 +59,13 @@ namespace Bangumi.Api.Core.Model.Subjects
             sb.Append("  Images: ").Append(Images).Append("\n");
             sb.Append("  Eps: ").Append(Eps).Append("\n");
             sb.Append("  EpsCount: ").Append(EpsCount).Append("\n");
-            if (Rating != null) sb.Append("  Rating: ").Append(Rating).Append("\n"); // consider SubjectMin?
-            if (Rank != null) sb.Append("  Rank: ").Append(Rank).Append("\n");
+            sb.Append("  Rating: ").Append(Rating).Append("\n");
+            sb.Append("  Rank: ").Append(Rank).Append("\n");
             sb.Append("  Collection: ").Append(Collection).Append("\n");
+            sb.Append("  Crt: ").Append(Crt).Append("\n");
+            sb.Append("  Staff: ").Append(Staff).Append("\n");
+            sb.Append("  Topic: ").Append(Topic).Append("\n");
+            sb.Append("  Blog: ").Append(Blog).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
-namespace Bangumi.Api.Core.Model.Subjects
+namespace Bangumi.Api.Core.Model.SubjectModel
 {
     public enum AiringStatus
     {

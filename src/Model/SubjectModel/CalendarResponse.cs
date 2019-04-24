@@ -4,31 +4,28 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Bangumi.Api.Core.Model.Subjects;
 
-namespace Bangumi.Api.Core.Model.Users
+namespace Bangumi.Api.Core.Model.SubjectModel
 {
     /// <summary>
-    /// 用户收视进度
+    /// ÿ�շ���
     /// </summary>
     [DataContract]
-    public class UserProgress
+    public class CalendarResponse
     {
         /// <summary>
-        /// 条目 ID
+        /// Gets or Sets Weekday
         /// </summary>
-        /// <value>条目 ID</value>
-        [DataMember(Name = "subject_id", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "subject_id")]
-        public int? SubjectId { get; set; }
+        [DataMember(Name = "weekday", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "weekday")]
+        public Weekday Weekday { get; set; }
 
         /// <summary>
-        /// 章节列表
+        /// Gets or Sets Items
         /// </summary>
-        /// <value>章节列表</value>
-        [DataMember(Name = "eps", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "eps")]
-        public IEnumerable<Episode> Eps { get; set; }
+        [DataMember(Name = "items", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "items")]
+        public List<SubjectSmall> Items { get; set; }
 
 
         /// <summary>
@@ -38,9 +35,9 @@ namespace Bangumi.Api.Core.Model.Users
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class UserProgressResponse {\n");
-            sb.Append("  SubjectId: ").Append(SubjectId).Append("\n");
-            sb.Append("  Eps: ").Append(Eps).Append("\n");
+            sb.Append("class CalendarResponse {\n");
+            sb.Append("  Weekday: ").Append(Weekday).Append("\n");
+            sb.Append("  Items: ").Append(Items).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -53,6 +50,5 @@ namespace Bangumi.Api.Core.Model.Users
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
 }

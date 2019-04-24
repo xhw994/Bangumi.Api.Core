@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace Bangumi.Api.Core.Model.Users
+namespace Bangumi.Api.Core.Model.UserModel
 {
     [DataContract]
     public class CollectionStatusInfo

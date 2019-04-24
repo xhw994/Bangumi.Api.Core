@@ -1,19 +1,19 @@
-using System;
+﻿using System;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Bangumi.Api.Core.Model.Users;
-using Bangumi.Api.Core.Model.Subjects;
+using Bangumi.Api.Core.Model.UserModel;
+using Bangumi.Api.Core.Model.SubjectModel;
 
-namespace Bangumi.Api.Core.Model.Subjects
+namespace Bangumi.Api.Core.Model.SubjectModel
 {
     /// <summary>
-    /// Large size subject response
+    /// Subject response for episodes
     /// </summary>
     [DataContract]
-    public class SubjectLarge : SubjectMedium
+    public class SubjectEp: SubjectBase
     {
         /// <summary>
         /// 各集信息
@@ -22,23 +22,6 @@ namespace Bangumi.Api.Core.Model.Subjects
         [DataMember(Name = "eps", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "eps")]
         new public List<Episode> Eps { get; set; }
-
-        /// <summary>
-        /// 讨论版
-        /// </summary>
-        /// <value>讨论版</value>
-        [DataMember(Name = "topic", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "topic")]
-        public List<Topic> Topic { get; set; }
-
-        /// <summary>
-        /// 评论日志
-        /// </summary>
-        /// <value>评论日志</value>
-        [DataMember(Name = "blog", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "blog")]
-        public List<Blog> Blog { get; set; }
-
 
         /// <summary>
         /// Get the string presentation of the object
@@ -58,14 +41,6 @@ namespace Bangumi.Api.Core.Model.Subjects
             sb.Append("  AirWeekday: ").Append(AirWeekday).Append("\n");
             sb.Append("  Images: ").Append(Images).Append("\n");
             sb.Append("  Eps: ").Append(Eps).Append("\n");
-            sb.Append("  EpsCount: ").Append(EpsCount).Append("\n");
-            sb.Append("  Rating: ").Append(Rating).Append("\n");
-            sb.Append("  Rank: ").Append(Rank).Append("\n");
-            sb.Append("  Collection: ").Append(Collection).Append("\n");
-            sb.Append("  Crt: ").Append(Crt).Append("\n");
-            sb.Append("  Staff: ").Append(Staff).Append("\n");
-            sb.Append("  Topic: ").Append(Topic).Append("\n");
-            sb.Append("  Blog: ").Append(Blog).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }

@@ -6,8 +6,8 @@ using Bangumi.Api.Core.Extension;
 using static Bangumi.Api.Core.Extension.StringExtension;
 using static Bangumi.Api.Core.Configuration;
 using Bangumi.Api.Core.Model;
-using Bangumi.Api.Core.Model.Subjects;
-using Bangumi.Api.Core.Model.Users;
+using Bangumi.Api.Core.Model.SubjectModel;
+using Bangumi.Api.Core.Model.UserModel;
 
 namespace Bangumi.Api.Core.Test
 {
