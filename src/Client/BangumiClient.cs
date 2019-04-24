@@ -25,11 +25,8 @@ namespace Bangumi.Api.Core.Client
 
         #region Header
 
-        public Dictionary<string, string> Headers { get; }
+        public Dictionary<string, string> Headers { get; set; }
 
-        public void AddHeader(string key, string value) => Headers.Add(key, value);
-        public void RemoveHeader(string key, string value) => Headers.Remove(key);
-        public void ClearHeader() => Headers.Clear();
         private Dictionary<string, string> DefaultHeaders() => new Dictionary<string, string>()
         {
             { "Accept", "application/json" },
