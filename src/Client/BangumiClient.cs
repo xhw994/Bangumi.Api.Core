@@ -15,6 +15,12 @@ namespace Bangumi.Api.Core.Client
     {
         private readonly RestClient _restClient;
 
+        /// <summary>
+        /// 查询验证器状态
+        /// </summary>
+        /// <remarks>
+        /// 注意这只代表此实例是否拥有<see cref="BangumiAuthenticator"/>，并不确保用户不需要进行验证。
+        /// </remarks>
         public bool Authenticated { get => _restClient?.Authenticator != null; }
 
         #region Header
@@ -32,21 +38,21 @@ namespace Bangumi.Api.Core.Client
 
         #endregion
 
-        public BangumiClient()
+        public BangumiClient(bool authenticate = false)
         {
             _restClient = new RestClient(ApiBaseUrl);
             Headers = DefaultHeaders();
 
             // Add authentication when appId is present.
-            if (!string.IsNullOrEmpty(AppId))
+            if (authenticate)
             {
-                _restClient.Authenticator = new BangumiAuthenticator();
+                Authenticate();
             }
         }
 
         public BangumiClient Authenticate()
         {
-            if (_restClient.Authenticator == null)
+            if (_restClient.Authenticator == null && !string.IsNullOrEmpty(AppId))
             {
                 _restClient.Authenticator = new BangumiAuthenticator();
             }

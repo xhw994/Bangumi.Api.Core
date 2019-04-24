@@ -15,7 +15,7 @@ namespace Bangumi.Api.Core.Client
 {
     public class BangumiAuthenticator : IAuthenticator
     {
-        // TODO: Implement state param
+        // TODO: Implement state param, Auto refresh?
 
         private string _authHeader;
         private bool _authorized;
