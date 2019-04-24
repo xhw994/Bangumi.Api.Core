@@ -4,7 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Bangumi.Api.Core.Extension;
 using static Bangumi.Api.Core.Extension.StringExtension;
-using Bangumi.Api.Core;
+using static Bangumi.Api.Core.Configuration;
 using Bangumi.Api.Core.Model;
 using Bangumi.Api.Core.Model.Subjects;
 using Bangumi.Api.Core.Model.Users;
@@ -19,21 +19,18 @@ namespace Bangumi.Api.Core.Test
         private readonly int _init_epoch = 1167609600; // 2007.1.1 00:00:00
 
         private DefaultBangumiService _service;
-        private readonly Configuration _config;
 
         public ApiService()
         {
             _service = new DefaultBangumiService();
-            _config = new Configuration();
         }
 
         [TestMethod]
         public void SetupConfiguration()
         {
             _service = new DefaultBangumiService();
-            Assert.IsNotNull(_service.Configuration?["Bangumi:AppId"], "Unable to get the configuration");
-            Console.WriteLine("Successfully get the configuration. As an example, the app ID is: " +
-                _service.Configuration["Bangumi:AppId"]);
+            Assert.IsNotNull(AppId, "Unable to get the configuration");
+            Console.WriteLine("Successfully get the configuration. As an example, the app ID is: " + AppId);
         }
 
         [TestMethod]
@@ -143,7 +140,7 @@ namespace Bangumi.Api.Core.Test
             int maxResult = 5;
             SubjectType type = SubjectType.Anime;
 
-            var res = _service.GetUserCollectionsByType(_username, SubjectType.Anime, _config.AppId, maxResult);
+            var res = _service.GetUserCollectionsByType(_username, SubjectType.Anime, AppId, maxResult);
             Assert.AreEqual(1, res.Count(), "The outer layer should only contain 1 element.");
 
             CollectionsByType collections = res.ElementAt(0);

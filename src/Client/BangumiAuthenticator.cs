@@ -77,6 +77,31 @@ namespace Bangumi.Api.Core.Client
         #region Access Token
 
         public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
+
+        private void RequestAccessToken(IRestClient client)
+        {
+            if (!string.IsNullOrEmpty(AccessToken))
+            {
+                RequestTokenRefresh(client);
+            }
+
+            // Compose the post request
+            string tokenUrl = "https://bgm.tv/oauth/access_token";
+            Dictionary<string, string> queryParams = new Dictionary<string, string>()
+            {
+                { "grant_type", "authorization_code" },
+                { "client_id", _appId },
+                { "client_secret", _appSecret },
+                { "code", AuthCode },
+                { "redirect_uri", "" }
+            };
+        }
+
+        private void RequestTokenRefresh(IRestClient client)
+        {
+
+        }
 
         #endregion
 

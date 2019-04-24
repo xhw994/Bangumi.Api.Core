@@ -2,23 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
 using static Bangumi.Api.Core.Extension.StringExtension;
+using static Bangumi.Api.Core.Configuration;
 
 namespace Bangumi.Api.Core.Client
 {
     public class BangumiClient
     {
-        public string ApiBasePath { get; } = "https://api.bgm.tv/";
+        private readonly RestClient _restClient;
+
         public bool Authenticated { get => _restClient?.Authenticator != null; }
 
-        /// <summary>
-        /// Gets or sets the RestClient.
-        /// </summary>
-        /// <value>An instance of the RestClient</value>
-        private readonly RestClient _restClient;
+        #region Header
 
         public Dictionary<string, string> Headers { get; }
 
@@ -26,15 +25,21 @@ namespace Bangumi.Api.Core.Client
         public void RemoveHeader(string key, string value) => Headers.Remove(key);
         public void ClearHeader() => Headers.Clear();
 
+        #endregion
+
         public BangumiClient()
         {
-            _restClient = new RestClient(ApiBasePath);
+            _restClient = new RestClient(ApiBaseUrl);
             Headers = DefaultHeaders();
+            if (!string.IsNullOrEmpty(AppId))
+            {
+                Authenticate(AppId, AppSecret);
+            }
         }
 
         public BangumiClient(string appId, string appSecret)
         {
-            _restClient = new RestClient(ApiBasePath);
+            _restClient = new RestClient(ApiBaseUrl);
             Headers = DefaultHeaders();
             Authenticate(appId, appSecret);
         }

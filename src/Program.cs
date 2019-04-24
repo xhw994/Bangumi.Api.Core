@@ -13,12 +13,7 @@ namespace Bangumi.Api.Core
         static void Main(string[] args)
         {
             DefaultBangumiService _service = new DefaultBangumiService();
-            Configuration config = new Configuration();
-
-            string username = "renkomei";
-            _service.Authenticate(config.AppId, config.AppSecret);
-            var res = _service.GetUserProgress(username, 253);
-            foreach (var r in res) Console.WriteLine(r);
+            
         }
     }
 }
