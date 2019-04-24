@@ -24,6 +24,11 @@ namespace Bangumi.Api.Core.Client
         public void AddHeader(string key, string value) => Headers.Add(key, value);
         public void RemoveHeader(string key, string value) => Headers.Remove(key);
         public void ClearHeader() => Headers.Clear();
+        private Dictionary<string, string> DefaultHeaders() => new Dictionary<string, string>()
+        {
+            { "Accept", "application/json" },
+            // { "Content-Type", "application/x-www-form-urlencoded" }
+        };
 
         #endregion
 
@@ -31,48 +36,24 @@ namespace Bangumi.Api.Core.Client
         {
             _restClient = new RestClient(ApiBaseUrl);
             Headers = DefaultHeaders();
+
+            // Add authentication when appId is present.
             if (!string.IsNullOrEmpty(AppId))
             {
-                Authenticate(AppId, AppSecret);
+                _restClient.Authenticator = new BangumiAuthenticator();
             }
         }
 
-        public BangumiClient(string appId, string appSecret)
+        public BangumiClient Authenticate()
         {
-            _restClient = new RestClient(ApiBaseUrl);
-            Headers = DefaultHeaders();
-            Authenticate(appId, appSecret);
-        }
-
-        private Dictionary<string, string> DefaultHeaders()
-        {
-            return new Dictionary<string, string>()
+            if (_restClient.Authenticator == null)
             {
-                { "Accept", "application/json" },
-                { "Content-Type", "application/x-www-form-urlencoded" }
-            };
-        }
-
-        public BangumiClient Authenticate(string appId, string appSecret)
-        {
-            // To lowercase values
-            appId = appId.ToLower();
-            appSecret = appSecret.ToLower();
-
-            // Value check, future need to check length
-            if (!IsAlphaNumeric(appId) || !appId.StartsWith("bgm"))
-            {
-                throw new ArgumentException($"Invalid application ID <{appId}>. Application IDs should start with `bgm` followed by alphanumeric values");
+                _restClient.Authenticator = new BangumiAuthenticator();
             }
-            if (!IsAlphaNumeric(appSecret))
-            {
-                throw new ArgumentException($"Invalid application secret. Application secrets should only contain alphanumeric values.");
-            }
-
-            // Add Authenticator
-            _restClient.Authenticator = new HttpBasicAuthenticator(appId, appSecret);
             return this;
         }
+
+        //public TokenStatusResponse GetAuthenticationStatus()
 
         public TResponse Request<TResponse>(BangumiRequest request)
         {
