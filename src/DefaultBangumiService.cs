@@ -103,7 +103,7 @@ namespace Bangumi.Api.Core
         {
             if (AppId == null)
             {
-                throw new ApiException(401, $"The client needs to be authenticated before calling {nameof(GetUserCollectionsByType)} without an '{nameof(AppId)}' argument.");
+                throw new InvalidOperationException($"{nameof(AppId)} is empty.");
             }
             return GetUserCollectionsByType(username, subjectType, AppId, maxResults);
         }
