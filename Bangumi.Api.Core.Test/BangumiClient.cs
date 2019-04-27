@@ -12,13 +12,9 @@ namespace Bangumi.Api.Core.Test
         [TestMethod]
         public void GetCodeFromListener()
         {
-            //string callbackUrl = "http://174.1.60.140:5994/";
-            string callbackUrl = "http://localhost:5994/";
-            CallbackListner listner = new CallbackListner(callbackUrl);
-
-            string code = listner.GetCode();
-            Assert.IsFalse(string.IsNullOrEmpty(code), "Listener returned empty code");
-            Console.WriteLine(code);
+            BangumiAuthenticator authenticator = new BangumiAuthenticator();
+            authenticator.RequestAuthCode();
+            Console.WriteLine(authenticator.AuthCode);
         }
     }
 }
