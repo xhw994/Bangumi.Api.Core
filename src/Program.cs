@@ -13,7 +13,10 @@ namespace Bangumi.Api.Core
         static void Main(string[] args)
         {
             DefaultBangumiService _service = new DefaultBangumiService();
-            
+            //string callbackUrl = "http://174.1.60.140:5994/";
+            BangumiAuthenticator authenticator = new BangumiAuthenticator();
+            authenticator.RequestAuthCode();
+            Console.WriteLine(authenticator.AuthCode);
         }
     }
 }

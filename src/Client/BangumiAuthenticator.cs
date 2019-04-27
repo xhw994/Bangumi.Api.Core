@@ -15,7 +15,7 @@ namespace Bangumi.Api.Core.Client
 {
     public class BangumiAuthenticator : IAuthenticator
     {
-        // TODO: Implement state param, Auto refresh?
+        // TODO: Implement state param, Auto refresh?, Add timeout when requesting code 3 min?
 
         private string _authHeader;
         private bool _authorized;
@@ -35,7 +35,7 @@ namespace Bangumi.Api.Core.Client
 
         #region Authorization code
 
-        private void RequestAuthCode()
+        public void RequestAuthCode()
         {
             CallbackListner listner = new CallbackListner(CallbackUrl);
 
