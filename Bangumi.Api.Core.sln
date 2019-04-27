@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bangumi.Api.Core", "src\Bangumi.Api.Core.csproj", "{8A2E6A65-AB38-421A-A109-9695E0996586}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bangumi.Api.Core", "Bangumi.Api.Core\Bangumi.Api.Core.csproj", "{8A2E6A65-AB38-421A-A109-9695E0996586}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bangumi.Api.Core.Test", "Bangumi.Api.Core.Test\Bangumi.Api.Core.Test.csproj", "{75844E16-E933-4420-9069-7C66261FCEB4}"
 	ProjectSection(ProjectDependencies) = postProject

@@ -261,6 +261,3 @@ __pycache__/
 *.pyc
 
 # Custom
-Bangumi.Api/appsettings.json
-/src/appsettings.json
-/src/ConfigurationNotAllowedToUpload.cs

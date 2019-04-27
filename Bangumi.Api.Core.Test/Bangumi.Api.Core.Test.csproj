@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Bangumi.Api.Core.csproj" />
+    <ProjectReference Include="..\Bangumi.Api.Core\Bangumi.Api.Core.csproj" />
   </ItemGroup>
 
 </Project>
