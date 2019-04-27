@@ -17,9 +17,6 @@ namespace Bangumi.Api.Core.Client
     {
         // TODO: Implement state param, Auto refresh?, Add timeout when requesting code 3 min?
 
-        private string _authHeader;
-        private bool _authorized;
-
         public BangumiAuthenticator()
         {
             // Value check, future need to check length and domain properties
