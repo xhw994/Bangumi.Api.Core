@@ -38,12 +38,15 @@ namespace Bangumi.Api.Core.Client
 
             string codeUrl = $"{AuthCodeUrl}?client_id={AppId}&response_type=code";
             OpenBrowser(codeUrl);
-            authcodeTime = DateTime.Now;
             AuthCode = listner.GetCode();
+            authcodeTime = DateTime.Now;
+            Console.WriteLine(authcodeTime + TimeSpan.FromMinutes(1));
+            Console.WriteLine(!string.IsNullOrEmpty(AuthCode));
+            Console.WriteLine(authcodeTime + TimeSpan.FromMinutes(1) > DateTime.Now);
         }
 
         public string AuthCode { get; private set; }
-        public bool AuthCodeExpired { get => !string.IsNullOrEmpty(AuthCode) && authcodeTime + TimeSpan.FromMinutes(1) > DateTime.Now; }
+        public bool AuthCodeExpired { get => string.IsNullOrEmpty(AuthCode) || authcodeTime + TimeSpan.FromMinutes(1) < DateTime.Now; }
         private DateTime authcodeTime;
 
         #endregion
@@ -52,9 +55,9 @@ namespace Bangumi.Api.Core.Client
 
         public string AccessToken { get; private set; }
         public string RefreshToken { get; private set; }
-        public bool TokenExpired { get => !string.IsNullOrEmpty(AccessToken) && tokenExpireTime > DateTime.Now; }
+        public bool TokenExpired { get => string.IsNullOrEmpty(AccessToken) || TokenExpireTime > DateTime.Now; }
         public bool Authenticated { get => TokenExpired; }
-        private DateTime tokenExpireTime;
+        public DateTime TokenExpireTime { get; private set; }
 
         public void RequestAccessToken(IRestClient client)
         {
@@ -89,10 +92,10 @@ namespace Bangumi.Api.Core.Client
             }
             AccessToken = tokenResponse.AccessToken;
             RefreshToken = tokenResponse.RefreshToken;
-            tokenExpireTime = now + TimeSpan.FromSeconds(tokenResponse.ExpiresIn.Value - 60); // Reduce 1 min for possible network issues.
+            TokenExpireTime = now + TimeSpan.FromSeconds(tokenResponse.ExpiresIn.Value - 60); // Reduce 1 min for possible network issues.
         }
 
-        private void RequestTokenRefresh(IRestClient client)
+        public void RequestTokenRefresh(IRestClient client)
         {
             // Compose the post request
             Dictionary<string, string> queryParams = new Dictionary<string, string>()
@@ -125,7 +128,7 @@ namespace Bangumi.Api.Core.Client
             }
             AccessToken = tokenResponse.AccessToken;
             RefreshToken = tokenResponse.RefreshToken;
-            tokenExpireTime = now + TimeSpan.FromSeconds(tokenResponse.ExpiresIn.Value - 60); // Reduce 1 min for possible network issues.
+            TokenExpireTime = now + TimeSpan.FromSeconds(tokenResponse.ExpiresIn.Value - 60); // Reduce 1 min for possible network issues.
         }
 
         #endregion
@@ -143,7 +146,7 @@ namespace Bangumi.Api.Core.Client
                 RequestAccessToken(client);
             }
             // Refresh token when it is only valid for no more than 5 minutes
-            else if (DateTime.Now + TimeSpan.FromMinutes(5) > tokenExpireTime)
+            else if (DateTime.Now + TimeSpan.FromMinutes(5) > TokenExpireTime)
             {
                 RequestTokenRefresh(client);
             }
