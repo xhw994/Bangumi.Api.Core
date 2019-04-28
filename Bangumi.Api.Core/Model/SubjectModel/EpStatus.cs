@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using System.ComponentModel;
 
 namespace Bangumi.Api.Core.Model.SubjectModel
 {
@@ -13,9 +14,13 @@ namespace Bangumi.Api.Core.Model.SubjectModel
     [DataContract]
     public enum EpStatus
     {
+        [Description("watched")]
         Watched = 1, // 看过
+        [Description("queue")]
         Queue = 2, //想看
+        [Description("drop")]
         Drop = 3, // 抛弃
+        [Description("remove")]
         Remove = 4, // 撤销
     }
 }

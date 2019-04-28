@@ -4,59 +4,38 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using System.ComponentModel;
 
-namespace Bangumi.Api.Core.Model {
-
-  /// <summary>
-  /// 响应状态（HTTP 状态码都为 200）
-  /// </summary>
-  [DataContract]
-  public class StatusCode {
-    /// <summary>
-    /// 当前请求的地址
-    /// </summary>
-    /// <value>当前请求的地址</value>
-    [DataMember(Name="request", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "request")]
-    public string Request { get; set; }
+namespace Bangumi.Api.Core.Model
+{
 
     /// <summary>
-    /// Gets or Sets Code
+    /// 状态码 &lt;br&gt; 200 OK &lt;br&gt; 202 Accepted &lt;br&gt; 304 Not Modified &lt;br&gt; 30401 Not Modified: Collection already exists &lt;br&gt; 400 Bad Request &lt;br&gt; 40001 Error: Nothing found with that ID &lt;br&gt; 401 Unauthorized &lt;br&gt; 40101 Error: Auth failed over 5 times &lt;br&gt; 40102 Error: Username is not an Email address &lt;br&gt; 405 Method Not Allowed &lt;br&gt; 404 Not Found
     /// </summary>
-    [DataMember(Name="code", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "code")]
-    public Code Code { get; set; }
-
-    /// <summary>
-    /// 状态信息
-    /// </summary>
-    /// <value>状态信息</value>
-    [DataMember(Name="error", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "error")]
-    public string Error { get; set; }
-
-
-    /// <summary>
-    /// Get the string presentation of the object
-    /// </summary>
-    /// <returns>string presentation of the object</returns>
-    public override string ToString()  {
-      var sb = new StringBuilder();
-      sb.Append("class StatusCode {\n");
-      sb.Append("  Request: ").Append(Request).Append("\n");
-      sb.Append("  Code: ").Append(Code).Append("\n");
-      sb.Append("  Error: ").Append(Error).Append("\n");
-      sb.Append("}\n");
-      return sb.ToString();
+    [DataContract]
+    public enum StatusCode
+    {
+        [Description("OK")]
+        OK = 200,
+        [Description("Accepted")]
+        Accepted = 202,
+        [Description("Not Modified")]
+        NotModified = 304,
+        [Description("Not Modified: Collection already exists")]
+        NotModifiedCollectionExists = 30401,
+        [Description("Bad Request")]
+        BadRequest = 400,
+        [Description("Error: Nothing found with that ID")]
+        NoMatch = 40001,
+        [Description("Unauthorized")]
+        Unauthorized = 401,
+        [Description("Error: Auth failed over 5 times")]
+        AuthFailed = 40101,
+        [Description("Error: Username is not an Email address")]
+        InvalidUserName = 40102,
+        [Description("Method Not Allowed")]
+        MethodNotAllowed = 405,
+        [Description("Not Found")]
+        NotFound = 404
     }
-
-    /// <summary>
-    /// Get the JSON string presentation of the object
-    /// </summary>
-    /// <returns>JSON string presentation of the object</returns>
-    public string ToJson() {
-      return JsonConvert.SerializeObject(this, Formatting.Indented);
-    }
-
-}
 }
