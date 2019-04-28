@@ -11,6 +11,7 @@ namespace Bangumi.Api.Core.Test
     public class BangumiClient
     {
         [TestMethod]
+        [Timeout(1000 * 60 * 2)]
         public void GetCodeFromListener()
         {
             BangumiAuthenticator authenticator = new BangumiAuthenticator();
@@ -20,6 +21,7 @@ namespace Bangumi.Api.Core.Test
         }
 
         [TestMethod]
+        [Timeout(1000 * 60 * 3)]
         public void GetAccessToken()
         {
             // Get Auth code
