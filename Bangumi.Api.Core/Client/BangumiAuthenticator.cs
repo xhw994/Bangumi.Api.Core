@@ -56,7 +56,7 @@ namespace Bangumi.Api.Core.Client
         public bool Authenticated { get => TokenExpired; }
         private DateTime tokenExpireTime;
 
-        private void RequestAccessToken(IRestClient client)
+        public void RequestAccessToken(IRestClient client)
         {
             // Compose the post request
             Dictionary<string, string> queryParams = new Dictionary<string, string>()
