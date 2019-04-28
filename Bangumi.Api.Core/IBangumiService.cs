@@ -82,11 +82,37 @@ namespace Bangumi.Api.Core
         IEnumerable<CollectionsByType> GetUserCollectionsStatus(string username, string appId);
 
         /// <summary>
-        /// 用户收视进度 用户收视进度
+        /// 用户收视进度
         /// </summary>
         /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param>
         /// <param name="subjectId">条目 ID &lt;br&gt; 获取指定条目收视进度</param>
         /// <returns>List&lt;UserProgressResponse&gt;</returns>
         IEnumerable<UserProgress> GetUserProgress(string username, int subjectId);
+
+        /// <summary>
+        /// 更新收视进度
+        /// </summary>
+        /// <param name="id">章节 ID</param>
+        /// <param name="status">收视类型，参考 [EpStatusType](#model-EpStatusType)</param>
+        /// <returns>StatusCode</returns>
+        StatusCode UpdateOneEpStatus(int id, EpStatus status);
+
+        /// <summary>
+        /// 更新收视进度
+        /// </summary>
+        /// <param name="id">章节 ID</param>
+        /// <param name="status">收视类型，参考 [EpStatusType](#model-EpStatusType)</param>
+        /// <param name="epId">使用 POST 批量更新 &lt;br&gt; 将章节以半角逗号分隔，如 &#x60;3697,3698,3699&#x60;。请求时 URL 中的 ep_id 为最后一个章节 ID</param>
+        /// <returns>StatusCode</returns>
+        StatusCode UpdateManyEpStatus(EpStatus status, params int[] ids);
+
+        /// <summary>
+        /// 批量更新收视进度
+        /// </summary>
+        /// <param name="subjectId">条目 ID</param>
+        /// <param name="watchedEps">如看到 123 话则 POST &#x60;123&#x60; &lt;br&gt; 书籍条目传 watched_eps 与 watched_vols 至少其一</param>
+        /// <param name="watchedVols">如看到第 3 卷则 POST &#x60;3&#x60;, 仅对书籍条目有效</param>
+        /// <returns>StatusCode</returns>
+        StatusCode UpdateSubjectEpStatus(int subjectId, int? watchedEps, int? watchedVols);
     }
 }

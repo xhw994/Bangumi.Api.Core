@@ -14,9 +14,15 @@ namespace Bangumi.Api.Core
         {
             DefaultBangumiService _service = new DefaultBangumiService();
             //string callbackUrl = "http://174.1.60.140:5994/";
-            BangumiAuthenticator authenticator = new BangumiAuthenticator();
-            authenticator.RequestAuthCode();
-            Console.WriteLine(authenticator.AuthCode);
+       
+            Console.WriteLine(ObjectType.Episode.ToString());
+        }
+
+        private enum ObjectType
+        {
+            Subject,
+            Episode,
+            Volume
         }
     }
 }

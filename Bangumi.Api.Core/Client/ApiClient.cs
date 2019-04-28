@@ -18,7 +18,6 @@ namespace Bangumi.Api.Core.Client
     /// </summary>
     public class ApiClient
     {
-        private readonly Dictionary<string, string> _defaultHeaderMap = new Dictionary<string, string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiClient" /> class.
@@ -45,10 +44,7 @@ namespace Bangumi.Api.Core.Client
         /// <summary>
         /// Gets the default header.
         /// </summary>
-        public Dictionary<string, string> DefaultHeader
-        {
-            get { return _defaultHeaderMap; }
-        }
+        public Dictionary<string, string> DefaultHeader { get; } = new Dictionary<string, string>();
 
         /// <summary>
         /// Makes the HTTP request (Sync).
@@ -73,7 +69,7 @@ namespace Bangumi.Api.Core.Client
             UpdateParamsForAuth(queryParams, headerParams, authSettings);
 
             // add default header, if any
-            foreach (var defaultHeader in _defaultHeaderMap)
+            foreach (var defaultHeader in DefaultHeader)
                 request.AddHeader(defaultHeader.Key, defaultHeader.Value);
 
             // add header parameter, if any
@@ -112,7 +108,7 @@ namespace Bangumi.Api.Core.Client
         /// <returns></returns>
         public void AddDefaultHeader(string key, string value)
         {
-            _defaultHeaderMap.Add(key, value);
+            DefaultHeader.Add(key, value);
         }
 
         /// <summary>

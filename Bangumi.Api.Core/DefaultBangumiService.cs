@@ -190,7 +190,7 @@ namespace Bangumi.Api.Core
                     return _client.Request<SubjectSmall>(request);
             }
         }
-       
+
         public SubjectEp GetSubjectEps(int id)
         {
             if (id < 1)
@@ -209,7 +209,7 @@ namespace Bangumi.Api.Core
 
         #region 搜索 Search
 
-        public SubjectSearchResult SearchSubjectByKeywords(string keywords, SubjectType type, ResponseGroup group = ResponseGroup.Small, int ? start = null, int? maxResults = null)
+        public SubjectSearchResult SearchSubjectByKeywords(string keywords, SubjectType type, ResponseGroup group = ResponseGroup.Small, int? start = null, int? maxResults = null)
         {
             if (string.IsNullOrWhiteSpace(keywords))
             {
@@ -237,6 +237,111 @@ namespace Bangumi.Api.Core
 
             BangumiRequest request = new BangumiRequest(path, Method.GET, false, queryParams);
             return _client.Request<SubjectSearchResult>(request);
+        }
+
+        #endregion
+
+        #region 进度 Progress
+
+        public StatusCode UpdateOneEpStatus(int id, EpStatus status)
+        {
+            // Verify the episode id is greater than 0.
+            if (id < 1)
+            {
+                throw new ArgumentException("Episode ID must be greater than 0.");
+            }
+
+            // Compose the request, note that somehow this is a GET request
+            string path = $"/ep/{id}/status/{status.ToDescriptionString()}";
+            BangumiRequest request = new BangumiRequest(path, Method.GET, true);
+
+            return _client.Request<StatusCode>(request);
+        }
+
+        public StatusCode UpdateManyEpStatus(EpStatus status, params int[] ids)
+        {
+            // Verify the IDs are not empty and are valid
+            if (ids == null || ids.Length == 0)
+            {
+                throw new ArgumentException("The episode IDs are empty.");
+            }
+            foreach (int id in ids)
+            {
+                if (id < 1)
+                {
+                    throw new ArgumentException("Episode ID must be greater than 0.");
+                }
+            }
+
+            // Compose the request
+            int lastId = ids[ids.Length - 1];
+            string path = $"/ep/{lastId}/status/{status.ToDescriptionString()}";
+            Dictionary<string, string> queryParams = new Dictionary<string, string>()
+            {
+                { "ep_id", string.Join(',', ids) }
+            };
+            BangumiRequest request = new BangumiRequest(path, Method.POST, true, queryParams);
+
+            return _client.Request<StatusCode>(request);
+        }
+
+        public StatusCode UpdateSubjectEpStatus(int subjectId, int? watchedEps, int? watchedVols = null)
+        {
+            // Validation
+            ValidateId(subjectId, ObjectType.Subject);
+            if (watchedEps != null) ValidateId(watchedEps.Value, ObjectType.Episode);
+            if (watchedVols != null) ValidateId(watchedVols.Value, ObjectType.Volume);
+            if (watchedEps == null && watchedVols == null)
+            {
+                throw new ArgumentNullException($"Both of {nameof(watchedEps)} and {nameof(watchedVols)} cannot be null.");
+            }
+
+            // Compose the request
+            string path = $"/subject/{subjectId}/update/";
+            Dictionary<string, string> queryParams = new Dictionary<string, string>();
+            if (watchedEps != null) queryParams.Add("watched_eps", watchedEps.Value.ToString());
+            if (watchedVols != null) queryParams.Add("watched_vols", watchedVols.Value.ToString());
+            BangumiRequest request = new BangumiRequest(path, Method.POST, true, queryParams);
+
+            return _client.Request<StatusCode>(request);
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private void ValidateId(int id, ObjectType type)
+        {
+            string typeString = type.ToString().ToLower();
+            // Validate the id is greater than 0.
+            if (id < 1)
+            {
+                throw new ArgumentException(typeString + " ID must be greater than 0.");
+            }
+        }
+
+        private void ValidateId(int[] ids, ObjectType type)
+        {
+            string typeString = type.ToString().ToLower();
+            // Validate the IDs are not empty and are valid
+            if (ids == null || ids.Length == 0)
+            {
+                throw new ArgumentException(typeString + " IDs are empty.");
+            }
+            foreach (int id in ids)
+            {
+                if (id < 1)
+                {
+                    throw new ArgumentException(typeString + " ID must be greater than 0.");
+                }
+            }
+        }
+
+        private enum ObjectType
+        {
+            Subject,
+            Episode,
+            Volume
         }
 
         #endregion

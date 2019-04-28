@@ -122,51 +122,9 @@ namespace Bangumi.Api.Core
         /// </summary>
         /// <param name="id">章节 ID</param> 
         /// <param name="status">收视类型，参考 [EpStatusType](#model-EpStatusType)</param> 
-        /// <returns>StatusCode</returns>            
-        public StatusCode EpStatusByIdAndStatusGet (int? id, string status)
-        {
-            
-            // verify the required parameter 'id' is set
-            if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling EpStatusByIdAndStatusGet");
-            
-            // verify the required parameter 'status' is set
-            if (status == null) throw new ApiException(400, "Missing required parameter 'status' when calling EpStatusByIdAndStatusGet");
-            
-    
-            var path = "/ep/{id}/status/{status}";
-            path = path.Replace("{format}", "json");
-            path = path.Replace("{" + "id" + "}", ApiClient.ParameterToString(id));
-path = path.Replace("{" + "status" + "}", ApiClient.ParameterToString(status));
-    
-            var queryParams = new Dictionary<string, string>();
-            var headerParams = new Dictionary<string, string>();
-            var formParams = new Dictionary<string, string>();
-            var fileParams = new Dictionary<string, FileParameter>();
-            string postBody = null;
-    
-                                                    
-            // authentication setting, if any
-            string[] authSettings = new string[] { "auth" };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-    
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling EpStatusByIdAndStatusGet: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling EpStatusByIdAndStatusGet: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return (StatusCode) ApiClient.Deserialize(response.Content, typeof(StatusCode), response.Headers);
-        }
-    
-        /// <summary>
-        /// 更新收视进度 更新收视进度
-        /// </summary>
-        /// <param name="id">章节 ID</param> 
-        /// <param name="status">收视类型，参考 [EpStatusType](#model-EpStatusType)</param> 
         /// <param name="epId">使用 POST 批量更新 &lt;br&gt; 将章节以半角逗号分隔，如 &#x60;3697,3698,3699&#x60;。请求时 URL 中的 ep_id 为最后一个章节 ID</param> 
         /// <returns>StatusCode</returns>            
-        public StatusCode EpStatusByIdAndStatusPost (int? id, string status, string epId)
+        public StatusCodeLong EpStatusByIdAndStatusPost (int? id, string status, string epId)
         {
             
             // verify the required parameter 'id' is set
@@ -200,51 +158,8 @@ path = path.Replace("{" + "status" + "}", ApiClient.ParameterToString(status));
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling EpStatusByIdAndStatusPost: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (StatusCode) ApiClient.Deserialize(response.Content, typeof(StatusCode), response.Headers);
+            return (StatusCodeLong) ApiClient.Deserialize(response.Content, typeof(StatusCodeLong), response.Headers);
         }
-       
-        /// <summary>
-        /// 批量更新收视进度 批量更新收视进度
-        /// </summary>
-        /// <param name="subjectId">条目 ID</param> 
-        /// <param name="watchedEps">如看到 123 话则 POST &#x60;123&#x60; &lt;br&gt; 书籍条目传 watched_eps 与 watched_vols 至少其一</param> 
-        /// <param name="watchedVols">如看到第 3 卷则 POST &#x60;3&#x60;, 仅对书籍条目有效</param> 
-        /// <returns>StatusCode</returns>            
-        public StatusCode SubjectUpdateWatchedEpsBySubjectIdPost (int? subjectId, string watchedEps, string watchedVols)
-        {
-            
-            // verify the required parameter 'subjectId' is set
-            if (subjectId == null) throw new ApiException(400, "Missing required parameter 'subjectId' when calling SubjectUpdateWatchedEpsBySubjectIdPost");
-            
-            // verify the required parameter 'watchedEps' is set
-            if (watchedEps == null) throw new ApiException(400, "Missing required parameter 'watchedEps' when calling SubjectUpdateWatchedEpsBySubjectIdPost");
-            
-    
-            var path = "/subject/{subject_id}/update/watched_eps";
-            path = path.Replace("{format}", "json");
-            path = path.Replace("{" + "subject_id" + "}", ApiClient.ParameterToString(subjectId));
-    
-            var queryParams = new Dictionary<string, string>();
-            var headerParams = new Dictionary<string, string>();
-            var formParams = new Dictionary<string, string>();
-            var fileParams = new Dictionary<string, FileParameter>();
-            string postBody = null;
-    
-             if (watchedEps != null) queryParams.Add("watched_eps", ApiClient.ParameterToString(watchedEps)); // query parameter
- if (watchedVols != null) queryParams.Add("watched_vols", ApiClient.ParameterToString(watchedVols)); // query parameter
-                                        
-            // authentication setting, if any
-            string[] authSettings = new string[] { "auth" };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-    
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling SubjectUpdateWatchedEpsBySubjectIdPost: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling SubjectUpdateWatchedEpsBySubjectIdPost: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return (StatusCode) ApiClient.Deserialize(response.Content, typeof(StatusCode), response.Headers);
-        }
+      
     }
 }
