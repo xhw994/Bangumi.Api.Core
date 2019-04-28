@@ -136,10 +136,7 @@ namespace Bangumi.Api.Core
                 throw new ArgumentException($"Missing required parameter {nameof(username)}");
             }
             // Validate the required parameter 'subjectId'
-            if (subjectId < 1)
-            {
-                throw new ArgumentException($"{nameof(subjectId)} must be greater than 0");
-            }
+            ValidateId(subjectId, ObjectType.Subject);
 
             // Compose the request
             string path = $"/user/{username}/progress";
@@ -165,10 +162,7 @@ namespace Bangumi.Api.Core
 
         public SubjectBase GetSubject(int id, ResponseGroup group = ResponseGroup.Small)
         {
-            if (id < 1)
-            {
-                throw new ArgumentException("Subject Id must be greater than 0");
-            }
+            ValidateId(id, ObjectType.Subject);
 
             // Compose the request
             string path = $"/subject/{id}";
@@ -193,10 +187,7 @@ namespace Bangumi.Api.Core
 
         public SubjectEp GetSubjectEps(int id)
         {
-            if (id < 1)
-            {
-                throw new ArgumentException("Subject Id must be greater than 0");
-            }
+            ValidateId(id, ObjectType.Subject);
 
             // Compose the request
             string path = $"/subject/{id}/ep";
@@ -245,11 +236,7 @@ namespace Bangumi.Api.Core
 
         public StatusCode UpdateOneEpStatus(int id, EpStatus status)
         {
-            // Verify the episode id is greater than 0.
-            if (id < 1)
-            {
-                throw new ArgumentException("Episode ID must be greater than 0.");
-            }
+            ValidateId(id, ObjectType.Episode);
 
             // Compose the request, note that somehow this is a GET request
             string path = $"/ep/{id}/status/{status.ToDescriptionString()}";
@@ -260,18 +247,7 @@ namespace Bangumi.Api.Core
 
         public StatusCode UpdateManyEpStatus(EpStatus status, params int[] ids)
         {
-            // Verify the IDs are not empty and are valid
-            if (ids == null || ids.Length == 0)
-            {
-                throw new ArgumentException("The episode IDs are empty.");
-            }
-            foreach (int id in ids)
-            {
-                if (id < 1)
-                {
-                    throw new ArgumentException("Episode ID must be greater than 0.");
-                }
-            }
+            ValidateId(ids, ObjectType.Episode);
 
             // Compose the request
             int lastId = ids[ids.Length - 1];
