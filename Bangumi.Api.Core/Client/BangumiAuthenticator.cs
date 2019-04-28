@@ -90,7 +90,6 @@ namespace Bangumi.Api.Core.Client
             AccessToken = tokenResponse.AccessToken;
             RefreshToken = tokenResponse.RefreshToken;
             TokenExpireTime = now + TimeSpan.FromSeconds(tokenResponse.ExpiresIn.Value - 60); // Reduce 1 min for possible network issues.
-            Console.WriteLine("Expires in: " + tokenResponse.ExpiresIn.Value);
         }
 
         public void RequestTokenRefresh(IRestClient client)
