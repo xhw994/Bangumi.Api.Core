@@ -40,9 +40,6 @@ namespace Bangumi.Api.Core.Client
             OpenBrowser(codeUrl);
             AuthCode = listner.GetCode();
             authcodeTime = DateTime.Now;
-            Console.WriteLine(authcodeTime + TimeSpan.FromMinutes(1));
-            Console.WriteLine(!string.IsNullOrEmpty(AuthCode));
-            Console.WriteLine(authcodeTime + TimeSpan.FromMinutes(1) > DateTime.Now);
         }
 
         public string AuthCode { get; private set; }
@@ -55,7 +52,7 @@ namespace Bangumi.Api.Core.Client
 
         public string AccessToken { get; private set; }
         public string RefreshToken { get; private set; }
-        public bool TokenExpired { get => string.IsNullOrEmpty(AccessToken) || TokenExpireTime > DateTime.Now; }
+        public bool TokenExpired { get => string.IsNullOrEmpty(AccessToken) || TokenExpireTime < DateTime.Now; }
         public bool Authenticated { get => TokenExpired; }
         public DateTime TokenExpireTime { get; private set; }
 
@@ -93,6 +90,7 @@ namespace Bangumi.Api.Core.Client
             AccessToken = tokenResponse.AccessToken;
             RefreshToken = tokenResponse.RefreshToken;
             TokenExpireTime = now + TimeSpan.FromSeconds(tokenResponse.ExpiresIn.Value - 60); // Reduce 1 min for possible network issues.
+            Console.WriteLine("Expires in: " + tokenResponse.ExpiresIn.Value);
         }
 
         public void RequestTokenRefresh(IRestClient client)
