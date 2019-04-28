@@ -51,9 +51,10 @@ namespace Bangumi.Api.Core.Client
 
             // Get code from URL
             string code = "";
-            if (requestUrl.Contains("code=")) // received request from bangumi.
+            string identifier = "?code=";
+            if (requestUrl.Contains(identifier)) // received request from bangumi.
             {
-                code = requestUrl.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries).Last();
+                code = requestUrl.Substring(requestUrl.IndexOf(identifier) + identifier.Length);
             }
 
             // Construct a response.
