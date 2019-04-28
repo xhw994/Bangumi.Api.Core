@@ -67,7 +67,7 @@ namespace Bangumi.Api.Core.Client
             // Close the output stream.
             output.Close();
 
-            Console.Write("completed!" + Environment.NewLine);
+            Console.Write("completed! The authentication code is: " + code + Environment.NewLine);
             return code;
         }
     }
