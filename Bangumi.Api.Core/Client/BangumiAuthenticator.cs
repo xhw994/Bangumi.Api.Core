@@ -34,7 +34,7 @@ namespace Bangumi.Api.Core.Client
 
         public void RequestAuthCode()
         {
-            CallbackListner listner = new CallbackListner(CallbackUrl);
+            CallbackListner listner = new CallbackListner("http://localhost:5994/");
 
             string codeUrl = $"{AuthCodeUrl}?client_id={AppId}&response_type=code";
             OpenBrowser(codeUrl);
