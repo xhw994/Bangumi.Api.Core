@@ -234,7 +234,7 @@ namespace Bangumi.Api.Core
 
         #region 进度 Progress
 
-        public StatusCode UpdateOneEpStatus(int id, EpStatus status)
+        public StatusCodeInfo UpdateOneEpStatus(int id, EpStatus status)
         {
             ValidateId(id, ObjectType.Episode);
 
@@ -242,10 +242,10 @@ namespace Bangumi.Api.Core
             string path = $"/ep/{id}/status/{status.ToDescriptionString()}";
             BangumiRequest request = new BangumiRequest(path, Method.GET, true);
 
-            return _client.Request<StatusCode>(request);
+            return _client.Request<StatusCodeInfo>(request);
         }
 
-        public StatusCode UpdateManyEpStatus(EpStatus status, params int[] ids)
+        public StatusCodeInfo UpdateManyEpStatus(EpStatus status, params int[] ids)
         {
             ValidateId(ids, ObjectType.Episode);
 
@@ -258,10 +258,10 @@ namespace Bangumi.Api.Core
             };
             BangumiRequest request = new BangumiRequest(path, Method.POST, true, queryParams);
 
-            return _client.Request<StatusCode>(request);
+            return _client.Request<StatusCodeInfo>(request);
         }
 
-        public StatusCode UpdateSubjectEpStatus(int subjectId, int? watchedEps, int? watchedVols = null)
+        public StatusCodeInfo UpdateSubjectEpStatus(int subjectId, int? watchedEps, int? watchedVols = null)
         {
             // Validation
             ValidateId(subjectId, ObjectType.Subject);
@@ -279,7 +279,7 @@ namespace Bangumi.Api.Core
             if (watchedVols != null) queryParams.Add("watched_vols", watchedVols.Value.ToString());
             BangumiRequest request = new BangumiRequest(path, Method.POST, true, queryParams);
 
-            return _client.Request<StatusCode>(request);
+            return _client.Request<StatusCodeInfo>(request);
         }
 
         #endregion

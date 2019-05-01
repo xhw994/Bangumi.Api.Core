@@ -124,7 +124,7 @@ namespace Bangumi.Api.Core
         /// <param name="status">收视类型，参考 [EpStatusType](#model-EpStatusType)</param> 
         /// <param name="epId">使用 POST 批量更新 &lt;br&gt; 将章节以半角逗号分隔，如 &#x60;3697,3698,3699&#x60;。请求时 URL 中的 ep_id 为最后一个章节 ID</param> 
         /// <returns>StatusCode</returns>            
-        public StatusCode EpStatusByIdAndStatusPost (int? id, string status, string epId)
+        public StatusCodeInfo EpStatusByIdAndStatusPost (int? id, string status, string epId)
         {
             
             // verify the required parameter 'id' is set
@@ -158,7 +158,7 @@ path = path.Replace("{" + "status" + "}", ApiClient.ParameterToString(status));
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling EpStatusByIdAndStatusPost: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (StatusCode) ApiClient.Deserialize(response.Content, typeof(StatusCode), response.Headers);
+            return (StatusCodeInfo) ApiClient.Deserialize(response.Content, typeof(StatusCodeInfo), response.Headers);
         }
       
     }
