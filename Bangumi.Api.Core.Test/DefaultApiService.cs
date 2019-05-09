@@ -20,7 +20,8 @@ namespace Bangumi.Api.Core.Test
 
         private DefaultBangumiService _service;
 
-        public ApiService()
+        [TestInitialize]
+        public void InitAndAuthorize()
         {
             _service = new DefaultBangumiService();
         }
