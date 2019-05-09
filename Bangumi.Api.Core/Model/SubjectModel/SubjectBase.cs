@@ -86,7 +86,7 @@ namespace Bangumi.Api.Core.Model.SubjectModel
         /// </summary>
         [DataMember(Name = "images", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "images")]
-        public Images4 Images { get; set; }
+        public Images Images { get; set; }
 
 
         /// <summary>
