@@ -132,6 +132,14 @@ namespace Bangumi.Api.Core.Client
 
         public void Authenticate(IRestClient client, IRestRequest request)
         {
+            OAuthAuthenticate(client);
+
+            // If everything is set, add `Authorization: Bear <Token>` to header
+            request.AddHeader("Authorization", $"Bearer {AccessToken}");
+        }
+
+        public void OAuthAuthenticate(IRestClient client)
+        {
             // Request Auth Token if not yet authenticated
             if (TokenExpired)
             {
@@ -147,11 +155,7 @@ namespace Bangumi.Api.Core.Client
             {
                 RequestTokenRefresh(client);
             }
-
-            // If everything is set, add `Authorization: Bear <Token>` to header
-            request.AddHeader("Authorization", $"Bearer {AccessToken}");
         }
-
 
         #region Helpers
 
