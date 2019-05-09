@@ -18,10 +18,11 @@ namespace Bangumi.Api.Core.Client
         /// <summary>
         /// 查询验证器状态
         /// </summary>
-        /// <remarks>
-        /// 注意这只代表此实例是否拥有<see cref="BangumiAuthenticator"/>，并不确保用户不需要进行验证。
-        /// </remarks>
-        public bool Authenticated { get => _restClient?.Authenticator != null; }
+        public bool Authenticated { get => Authenticator == null || Authenticator.Authenticated; }
+        private BangumiAuthenticator Authenticator {
+            get => (BangumiAuthenticator)_restClient.Authenticator;
+            set => _restClient.Authenticator = value;
+        }
 
         #region Header
 
@@ -66,10 +67,13 @@ namespace Bangumi.Api.Core.Client
             {
                 if (!Authenticated)
                 {
-                    throw new ApiException(401, $"The client needs to be authenticated for calling {nameof(request)}");
+                    BangumiAuthenticator authenticator = (BangumiAuthenticator)_restClient.Authenticator;
+                    authenticator.OAuthAuthenticate(_restClient);
+                    if (!authenticator.Authenticated)
+                    {
+                        throw new ApiException(401, $"The client needs to be authenticated for calling {nameof(request)}");
+                    }
                 }
-
-                // Add auth headers?
             }
 
             // Add default header, if any
