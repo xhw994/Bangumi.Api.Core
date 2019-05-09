@@ -42,7 +42,7 @@ namespace Bangumi.Api.Core.Model
         /// </summary>
         [DataMember(Name = "private", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "private")]
-        public Private Private { get; set; }
+        public Privacy Private { get; set; }
 
         /// <summary>
         /// 标签

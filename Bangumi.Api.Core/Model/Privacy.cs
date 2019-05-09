@@ -4,33 +4,19 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using System.ComponentModel;
 
-namespace Bangumi.Api.Core.Model {
-
-  /// <summary>
-  /// 
-  /// </summary>
-  [DataContract]
-  public class Privacy {
-
+namespace Bangumi.Api.Core.Model
+{
     /// <summary>
-    /// Get the string presentation of the object
+    /// 收藏隐私
     /// </summary>
-    /// <returns>string presentation of the object</returns>
-    public override string ToString()  {
-      var sb = new StringBuilder();
-      sb.Append("class Privacy {\n");
-      sb.Append("}\n");
-      return sb.ToString();
+    [DataContract]
+    public enum Privacy
+    {
+        [Description("public")]
+        Public = 0,
+        [Description("private")]
+        Private = 1
     }
-
-    /// <summary>
-    /// Get the JSON string presentation of the object
-    /// </summary>
-    /// <returns>JSON string presentation of the object</returns>
-    public string ToJson() {
-      return JsonConvert.SerializeObject(this, Formatting.Indented);
-    }
-
-}
 }
