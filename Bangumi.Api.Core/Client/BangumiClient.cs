@@ -24,18 +24,6 @@ namespace Bangumi.Api.Core.Client
             set => _restClient.Authenticator = value;
         }
 
-        #region Header
-
-        public Dictionary<string, string> Headers { get; set; }
-
-        private Dictionary<string, string> DefaultHeaders() => new Dictionary<string, string>()
-        {
-            { "Accept", "application/json" },
-            // { "Content-Type", "application/x-www-form-urlencoded" }
-        };
-
-        #endregion
-
         public BangumiClient(bool authenticate = false)
         {
             _restClient = new RestClient(ApiBaseUrl);
@@ -54,27 +42,20 @@ namespace Bangumi.Api.Core.Client
             {
                 _restClient.Authenticator = new BangumiAuthenticator();
             }
+            if (!Authenticated)
+            {
+                Authenticator.OAuthAuthenticate(_restClient);
+            }
+            if (!Authenticated)
+            {
+                throw new ApiException(401, "Authorization failed.");
+            }
             return this;
         }
-
-        //public TokenStatusResponse GetAuthenticationStatus()
 
         public TResponse Request<TResponse>(BangumiRequest request)
         {
             RestRequest restRequest = new RestRequest(request.Path, request.Method);
-
-            if (request.RequireAuth)
-            {
-                if (!Authenticated)
-                {
-                    BangumiAuthenticator authenticator = (BangumiAuthenticator)_restClient.Authenticator;
-                    authenticator.OAuthAuthenticate(_restClient);
-                    if (!authenticator.Authenticated)
-                    {
-                        throw new ApiException(401, $"The client needs to be authenticated for calling {nameof(request)}");
-                    }
-                }
-            }
 
             // Add default header, if any
             foreach (var header in Headers)
@@ -102,5 +83,17 @@ namespace Bangumi.Api.Core.Client
 
             return (TResponse)JsonConvert.DeserializeObject(response.Content, typeof(TResponse));
         }
+
+        #region Header
+
+        public Dictionary<string, string> Headers { get; set; }
+
+        private Dictionary<string, string> DefaultHeaders() => new Dictionary<string, string>()
+        {
+            { "Accept", "application/json" },
+            // { "Content-Type", "application/x-www-form-urlencoded" }
+        };
+
+        #endregion
     }
 }
