@@ -58,7 +58,7 @@ namespace Bangumi.Api.Core.Client
             }
 
             // Construct a response.
-            string responseString = "<HTML><BODY> Authentication completed! Please close the browser tab.</BODY></HTML>";
+            string responseString = "<HTML><BODY> Authorization code received! Please close the browser tab.</BODY></HTML>";
             byte[] buffer = Encoding.UTF8.GetBytes(responseString);
             // Write response from an output stream.
             HttpListenerResponse response = context.Response;
