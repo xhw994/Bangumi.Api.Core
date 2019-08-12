@@ -53,7 +53,7 @@ namespace Bangumi.Api.Core
             string path = $"/user/{username}/collection";
             Dictionary<string, string> queryParams = new Dictionary<string, string>()
             {
-                { "cat", (allWatching? "all_watching " : "watching ") },
+                { "cat", (allWatching? "all_watching" : "watching") },
                 { "responseGroup", (group == ResponseGroup.Small ? "small" : "medium") }
             };
             if (ids != null)
