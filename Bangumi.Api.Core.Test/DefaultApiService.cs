@@ -15,7 +15,6 @@ namespace Bangumi.Api.Core.Test
     public class ApiService
     {
         private readonly int _cowboy_bebop = 253;
-        private readonly string _username = "sai";
         private readonly int _init_epoch = 1167609600; // 2007.1.1 00:00:00
 
         private DefaultBangumiService _service;
@@ -112,8 +111,9 @@ namespace Bangumi.Api.Core.Test
         {
             IEnumerable<SubjectStatus> res = _service.GetUserCollection(userData.Username, true, ResponseGroup.Small);
             Assert.IsTrue(res != null && res.Count() > 0, "Empty collection response.");
-            Assert.AreEqual(1, res.Count(), "Incorrect collection count.");
-            SubjectStatus status = res.First();
+            Assert.AreEqual(2, res.Count(), "Incorrect collection count.");
+            SubjectStatus status = res.Where(s => s.SubjectId == bookStatusData.SubjectId).FirstOrDefault();
+            Assert.IsNotNull(status, "Response does not contain the target subject.");
 
             if (status != bookStatusData)
             {
@@ -122,24 +122,26 @@ namespace Bangumi.Api.Core.Test
                 Assert.AreEqual(bookStatusData.VolStatus, status.VolStatus, "Incorrect subject volume status.");
                 Assert.AreEqual(bookStatusData.EpStatus, status.EpStatus, "Incorrect subject episode status.");
                 Assert.AreEqual(bookStatusData.Lasttouch, status.Lasttouch, "Incorrect subject last touch time.");
-                // Assert.IsNotNull(status.Subject, "Incorrect subject details.");
             }
         }
 
         [TestMethod]
         public void GetUserCollectionMedium()
         {
-            var res = _service.GetUserCollection(_username, false, ResponseGroup.Medium);
-            Assert.AreNotEqual(0, res.Count(), "Empty response");
-            foreach (var sj in res)
-            {
-                Assert.IsFalse(string.IsNullOrEmpty(sj.Name), "Empty subject name");
-                Assert.IsFalse(sj.SubjectId < 1, "Invalid subject Id: " + sj.SubjectId);
-                Assert.IsFalse(sj.EpStatus < 0, "Invalid episode status: " + sj.EpStatus);
-                Assert.IsFalse(sj.VolStatus < 0, "Invalid volume status: " + sj.VolStatus);
-                Assert.IsFalse(sj.Lasttouch < _init_epoch, "Invalid last touch epoch: " + sj.Lasttouch);
+            var res = _service.GetUserCollection(userData.Username, false, ResponseGroup.Medium);
+            Assert.IsTrue(res != null && res.Count() > 0, "Empty collection response.");
+            Assert.AreEqual(1, res.Count(), "Incorrect collection count.");
+            SubjectStatus status = res.Where(s => s.SubjectId == animeStatusData.SubjectId).FirstOrDefault();
+            Assert.IsNotNull(status, "Response does not contain the target subject.");
 
-                Assert.IsNotNull(sj.Subject, "Null subject content");
+            if (status != animeStatusData)
+            {
+                Assert.AreEqual(animeStatusData.SubjectId, status.SubjectId, "Incorrect subject ID.");
+                Assert.AreEqual(animeStatusData.Name, status.Name, "Incorrect subject name.");
+                Assert.AreEqual(animeStatusData.VolStatus, status.VolStatus, "Incorrect subject volume status.");
+                Assert.AreEqual(animeStatusData.EpStatus, status.EpStatus, "Incorrect subject episode status.");
+                Assert.AreEqual(animeStatusData.Lasttouch, status.Lasttouch, "Incorrect subject last touch time.");
+                Assert.AreEqual(animeStatusData.Subject.Id, status.Subject.Id, "Incorrect subject details.");
             }
         }
 
@@ -149,7 +151,7 @@ namespace Bangumi.Api.Core.Test
             int maxResult = 5;
             SubjectType type = SubjectType.Anime;
 
-            var res = _service.GetUserCollectionsByType(_username, SubjectType.Anime, AppId, maxResult);
+            var res = _service.GetUserCollectionsByType(userData.Username, SubjectType.Anime, AppId, maxResult);
             Assert.AreEqual(1, res.Count(), "The outer layer should only contain 1 element.");
 
             CollectionsByType collections = res.ElementAt(0);
@@ -201,15 +203,19 @@ namespace Bangumi.Api.Core.Test
             EpStatus = 15,
             VolStatus = 45,
             Lasttouch = 1565588926,
-            Subject = subjectData
         };
 
         private static readonly SubjectStatus animeStatusData = new SubjectStatus
         {
-
+            SubjectId = 253,
+            Name = "カウボーイビバップ",
+            EpStatus = 0,
+            VolStatus = 0,
+            Lasttouch = 1565594084,
+            Subject = new SubjectSmall { Id = 253 }
         };
 
-        public static readonly SubjectSmall subjectData = new SubjectSmall
+        private static readonly SubjectLarge animeSubjectData = new SubjectLarge
         {
 
         };
