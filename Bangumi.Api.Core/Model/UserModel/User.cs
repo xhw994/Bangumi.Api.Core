@@ -46,8 +46,9 @@ namespace Bangumi.Api.Core.Model.UserModel
         public string Nickname { get; set; }
 
         /// <summary>
-        /// Gets or Sets Avatar
+        /// 头像组
         /// </summary>
+        /// <value>头像组</value>
         [DataMember(Name = "avatar", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "avatar")]
         public Avatar Avatar { get; set; }
@@ -95,6 +96,5 @@ namespace Bangumi.Api.Core.Model.UserModel
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
 }

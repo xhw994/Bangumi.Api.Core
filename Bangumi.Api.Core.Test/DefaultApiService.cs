@@ -30,8 +30,8 @@ namespace Bangumi.Api.Core.Test
         public void SetupConfiguration()
         {
             _service = new DefaultBangumiService();
-            Assert.IsNotNull(AppId, "Unable to get the configuration");
-            Console.WriteLine("Successfully get the configuration. As an example, the app ID is: " + AppId);
+            Assert.IsFalse(string.IsNullOrEmpty(AppId), $"Unable to read {nameof(AppId)} from configuration");
+            Assert.IsFalse(string.IsNullOrEmpty(AppSecret), $"Unable to read {nameof(AppSecret)} from configuration");
         }
 
         [TestMethod]
@@ -91,30 +91,38 @@ namespace Bangumi.Api.Core.Test
         [TestMethod]
         public void GetUser()
         {
-            var res = _service.GetUser(_username);
-            Assert.AreEqual(1, res.Id, "Incorrect Id");
-            Assert.AreEqual("http://bgm.tv/user/sai", res.Url, "Incorrect URL");
-            Assert.AreEqual(_username, res.Username, "Incorrect username");
-            Assert.AreEqual("Sai", res.Nickname, "Incorrect nickname");
-            Assert.AreEqual(UserGroup.SuperAdmin, res.Usergroup, "Incorrect user group");
-            Assert.IsFalse(string.IsNullOrEmpty(res.Sign), "Empty user signature");
-            bool validUrl = IsHttpOrHttpsUrl(res.Avatar.Small) && IsHttpOrHttpsUrl(res.Avatar.Medium) && IsHttpOrHttpsUrl(res.Avatar.Large);
-            Assert.IsTrue(validUrl, "One of the image is not a valid url");
-            Console.Write(res);
+            User res = _service.GetUser(userData.Username);
+            if (res != userData)
+            {
+                Assert.AreEqual(userData.Id, res.Id, "Incorrect Id.");
+                Assert.AreEqual(userData.Url, res.Url, "Incorrect URL.");
+                Assert.AreEqual(userData.Username, res.Username, "Incorrect username.");
+                Assert.AreEqual(userData.Nickname, res.Nickname, "Incorrect nickname.");
+                Assert.AreEqual(userData.Usergroup, res.Usergroup, "Incorrect user group.");
+                Assert.AreEqual(userData.Sign, res.Sign, "Incorrect signature.");
+                Assert.AreEqual(userData.Avatar.Large, res.Avatar.Large, "Incorrect large avatar.");
+                Assert.AreEqual(userData.Avatar.Medium, res.Avatar.Medium, "Incorrect medium avatar.");
+                Assert.AreEqual(userData.Avatar.Small, res.Avatar.Small, "Incorrect small avatar.");
+                Console.Write(res);
+            }
         }
 
         [TestMethod]
         public void GetUserCollectionSmall()
         {
-            var res = _service.GetUserCollection(_username, false, ResponseGroup.Small);
-            Assert.AreNotEqual(0, res.Count(), "Empty response");
-            foreach (var sj in res)
+            IEnumerable<SubjectStatus> res = _service.GetUserCollection(userData.Username, true, ResponseGroup.Small);
+            Assert.IsTrue(res != null && res.Count() > 0, "Empty collection response.");
+            Assert.AreEqual(1, res.Count(), "Incorrect collection count.");
+            SubjectStatus status = res.First();
+
+            if (status != bookStatusData)
             {
-                Assert.IsFalse(string.IsNullOrEmpty(sj.Name), "Empty subject name");
-                Assert.IsFalse(sj.SubjectId < 1, "Invalid subject Id: " + sj.SubjectId);
-                Assert.IsFalse(sj.EpStatus < 0, "Invalid episode status: " + sj.EpStatus);
-                Assert.IsFalse(sj.VolStatus < 0, "Invalid volume status: " + sj.VolStatus);
-                Assert.IsFalse(sj.Lasttouch < _init_epoch, "Invalid last touch epoch: " + sj.Lasttouch);
+                Assert.AreEqual(bookStatusData.SubjectId, status.SubjectId, "Incorrect subject ID.");
+                Assert.AreEqual(bookStatusData.Name, status.Name, "Incorrect subject name.");
+                Assert.AreEqual(bookStatusData.VolStatus, status.VolStatus, "Incorrect subject volume status.");
+                Assert.AreEqual(bookStatusData.EpStatus, status.EpStatus, "Incorrect subject episode status.");
+                Assert.AreEqual(bookStatusData.Lasttouch, status.Lasttouch, "Incorrect subject last touch time.");
+                // Assert.IsNotNull(status.Subject, "Incorrect subject details.");
             }
         }
 
@@ -168,5 +176,43 @@ namespace Bangumi.Api.Core.Test
             Assert.AreEqual(first.Status.Type, collected.ToDescriptionString(), "CollectionStatus type mismatch");
             // Will not bother validating CN name here because there are too much variants
         }
+
+        #region TestData
+        private static readonly User userData = new User
+        {
+            Id = 490658,
+            Username = "490658",
+            Nickname = "xhw994",
+            Url = "http://bgm.tv/user/490658",
+            Sign = "Pray4KyoAni",
+            Avatar = new Avatar
+            {
+                Large = "http://lain.bgm.tv/pic/user/l/icon.jpg",
+                Medium = "http://lain.bgm.tv/pic/user/m/icon.jpg",
+                Small = "http://lain.bgm.tv/pic/user/s/icon.jpg"
+            },
+            Usergroup = UserGroup.User
+        };
+
+        private static readonly SubjectStatus bookStatusData = new SubjectStatus
+        {
+            SubjectId = 27684,
+            Name = "ドラえもん",
+            EpStatus = 15,
+            VolStatus = 45,
+            Lasttouch = 1565588926,
+            Subject = subjectData
+        };
+
+        private static readonly SubjectStatus animeStatusData = new SubjectStatus
+        {
+
+        };
+
+        public static readonly SubjectSmall subjectData = new SubjectSmall
+        {
+
+        };
+        #endregion
     }
 }

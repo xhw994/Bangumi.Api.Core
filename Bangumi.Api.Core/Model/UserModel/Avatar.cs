@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 
 namespace Bangumi.Api.Core.Model.UserModel
 {
-
     /// <summary>
     /// 头像地址
     /// </summary>
@@ -15,26 +14,25 @@ namespace Bangumi.Api.Core.Model.UserModel
     public class Avatar
     {
         /// <summary>
-        /// Gets or Sets Large
+        /// 大号头像
         /// </summary>
         [DataMember(Name = "large", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "large")]
         public string Large { get; set; }
 
         /// <summary>
-        /// Gets or Sets Medium
+        /// 中号头像
         /// </summary>
         [DataMember(Name = "medium", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "medium")]
         public string Medium { get; set; }
 
         /// <summary>
-        /// Gets or Sets Small
+        /// 小号头像
         /// </summary>
         [DataMember(Name = "small", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "small")]
         public string Small { get; set; }
-
 
         /// <summary>
         /// Get the string presentation of the object
@@ -59,6 +57,5 @@ namespace Bangumi.Api.Core.Model.UserModel
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
 }
