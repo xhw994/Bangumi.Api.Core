@@ -14,7 +14,6 @@ namespace Bangumi.Api.Core.Test
     [TestClass]
     public class ApiService
     {
-        private readonly int _cowboy_bebop = 253;
         private readonly int _init_epoch = 1167609600; // 2007.1.1 00:00:00
 
         private DefaultBangumiService _service;
@@ -45,17 +44,23 @@ namespace Bangumi.Api.Core.Test
         }
 
         [TestMethod]
-        public void GetCowboyBeebopSubjectSmall()
+        public void GetAnimeSubjectSmall()
         {
-            SubjectSmall res = (SubjectSmall)_service.GetSubject(_cowboy_bebop);
-            Assert.AreEqual("カウボーイビバップ", res.Name);
-            Console.Write(res);
+            SubjectSmall res = (SubjectSmall)_service.GetSubject(animeSubjectData.Id.Value);
+            Assert.AreEqual(animeSubjectData.Id, res.Id, "Incorrect subject ID.");
+            Assert.AreEqual(animeSubjectData.Name, res.Name, "Incorrect subject name.");
+            Assert.AreEqual(animeSubjectData.NameCn, res.NameCn, "Incorrect subject Chinese name.");
+            Assert.AreEqual(animeSubjectData.Url, res.Url, "Incorrect subject URL.");
+            Assert.AreEqual(animeSubjectData.Type, res.Type, "Incorrect subject type.");
+            Assert.AreEqual(animeSubjectData.Eps, res.Eps, "Incorrect subject episode count.");
+            Assert.AreEqual(animeSubjectData.AirDate, res.AirDate, "Incorrect subject airing date.");
+            Assert.AreEqual(animeSubjectData.AirWeekday, res.AirWeekday, "Incorrect subject airing weekday.");
         }
 
         [TestMethod]
         public void GetCowboyBeebopSubjectMedium()
         {
-            SubjectMedium res = (SubjectMedium)_service.GetSubject(_cowboy_bebop, ResponseGroup.Medium);
+            SubjectMedium res = (SubjectMedium)_service.GetSubject(animeSubjectData.Id.Value, ResponseGroup.Medium);
             Assert.IsTrue(res.Crt.Count > 0, "The character list is empty");
             Assert.IsTrue(res.Staff.Count > 0, "The staff list is empty");
             Console.Write(res);
@@ -64,7 +69,7 @@ namespace Bangumi.Api.Core.Test
         [TestMethod]
         public void GetCowboyBeebopSubjectLarge()
         {
-            SubjectLarge res = (SubjectLarge)_service.GetSubject(_cowboy_bebop, ResponseGroup.Large);
+            SubjectLarge res = (SubjectLarge)_service.GetSubject(animeSubjectData.Id.Value, ResponseGroup.Large);
             Assert.IsTrue(res.Topic.Count > 0, "The character list is empty");
             Assert.IsTrue(res.Blog.Count > 0, "The staff list is empty");
             Console.Write(res);
@@ -73,7 +78,7 @@ namespace Bangumi.Api.Core.Test
         [TestMethod]
         public void GetCowboyBeebopSubjectEp()
         {
-            SubjectEp res = _service.GetSubjectEps(_cowboy_bebop);
+            SubjectEp res = _service.GetSubjectEps(animeSubjectData.Id.Value);
             Assert.IsTrue(res.Eps.Count > 0, "The episode list is empty");
             Console.Write(res);
         }
@@ -215,9 +220,16 @@ namespace Bangumi.Api.Core.Test
             Subject = new SubjectSmall { Id = 253 }
         };
 
-        private static readonly SubjectLarge animeSubjectData = new SubjectLarge
+        private static readonly SubjectBase animeSubjectData = new SubjectBase
         {
-
+            Id = 253,
+            Url = "http://bgm.tv/subject/253",
+            Type = SubjectType.Anime,
+            Name = "カウボーイビバップ",
+            NameCn = "星际牛仔",
+            Eps = 26,
+            AirDate = "1998-10-23",
+            AirWeekday = 5,
         };
         #endregion
     }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using static Bangumi.Api.Core.Extension.StringExtension;
 
 namespace Bangumi.Api.Core
 {
@@ -19,11 +20,27 @@ namespace Bangumi.Api.Core
         /// <summary>
         /// 注册应用时获取的ID
         /// </summary>
-        public static string AppId { get => _config["Bangumi:AppId"]; }
+        /// <value>appsettings.json文件中定义的值。如果未定义则为<see langword="null"/></value>
+        public static string AppId
+        {
+            get
+            {
+                string id = _config["Bangumi:AppId"];
+                return (id != null && IsAlphaNumeric(id) && id.StartsWith("bgm")) ? id : null;
+            }
+        }
         /// <summary>
         /// 注册应用时获取的密钥
         /// </summary>
-        public static string AppSecret { get => _config["Bangumi:AppSecret"]; }
+        /// <value>appsettings.json文件中定义的值。如果未定义则为<see langword="null"/></value>
+        public static string AppSecret
+        {
+            get
+            {
+                string secret = _config["Bangumi:AppSecret"];
+                return (secret != null && !IsAlphaNumeric(secret)) ? null : secret;
+            }
+        }
         /// <summary>
         /// 在后台设置的回调地址，用于OAuth认证
         /// </summary>
@@ -32,7 +49,7 @@ namespace Bangumi.Api.Core
         /// 在后台设置的应用主页地址
         /// </summary>
         public static string AppUrl { get => _config["Bangumi:AppUrl"]; }
-        
+
         /// <summary>
         /// Bangumi API 基础地址
         /// </summary>

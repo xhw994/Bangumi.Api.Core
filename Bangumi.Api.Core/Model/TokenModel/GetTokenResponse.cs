@@ -62,7 +62,7 @@ namespace Bangumi.Api.Core.Model.TokenModel
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class Images {\n");
+            sb.Append("class Token {\n");
             sb.Append("  AccessToken: ").Append(AccessToken).Append("\n");
             sb.Append("  ExpiresIn: ").Append(ExpiresIn).Append("\n");
             sb.Append("  TokenType: ").Append(TokenType).Append("\n");
