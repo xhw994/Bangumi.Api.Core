@@ -9,11 +9,6 @@ namespace Bangumi.Api.Core.Model.TokenModel
     public class AuthCode
     {
         /// <summary>
-        /// Gets or Sets RequestTime
-        /// </summary>
-        [DataMember(Name = "request_time", EmitDefaultValue = false)]
-        public DateTime RequestTime { get; set; }
-        /// <summary>
         /// Gets or Sets ReceiveTime
         /// </summary>
         [DataMember(Name = "receive_time", EmitDefaultValue = false)]

@@ -17,19 +17,6 @@ namespace Bangumi.Api.Core.Client
     {
         // TODO: Implement state param, Auto refresh?, Add timeout when requesting code 3 min?
 
-        public BangumiAuthenticator() : base(null)
-        {
-            // Value check, future need to check length and domain properties
-            if (AppId == null)
-            {
-                throw new ArgumentException($"Invalid application ID <{AppId}>. Application IDs should start with `bgm` followed by alphanumeric values");
-            }
-            if (!IsAlphaNumeric(AppSecret))
-            {
-                throw new ArgumentException($"Invalid application secret <{AppSecret}>. Application secrets should only contain alphanumeric values.");
-            }
-        }
-
         private string AuthorizationValue { get => "Bearer " + AccessToken; }
 
         public BangumiAuthenticator(string accessToken) : base(accessToken) { }
@@ -42,173 +29,19 @@ namespace Bangumi.Api.Core.Client
             }
         }
 
-        #region Authorization code
-
         public void RequestAuthCode()
         {
-            CallbackListner listner = new CallbackListner("http://localhost:5994/");
-
-            string codeUrl = $"{AuthCodeUrl}?client_id={AppId}&response_type=code";
-            OpenBrowser(codeUrl);
-            AuthCode = listner.GetCode();
-            authcodeTime = DateTime.Now;
+            throw new NotImplementedException();
         }
-
-        public string AuthCode { get; private set; }
-        public bool AuthCodeExpired { get => string.IsNullOrEmpty(AuthCode) || authcodeTime + TimeSpan.FromMinutes(1) < DateTime.Now; }
-        private DateTime authcodeTime;
-
-        #endregion
-
-        #region Access Token
-
-        public string AccessToken { get; private set; }
-        public string RefreshToken { get; private set; }
-        public bool TokenExpired { get => string.IsNullOrEmpty(AccessToken) || TokenExpireTime < DateTime.Now; }
-        public bool Authenticated { get => TokenExpired; }
-        public DateTime TokenExpireTime { get; private set; } = DateTime.Now + TimeSpan.FromMinutes(5);
 
         public void RequestAccessToken(IRestClient client)
         {
-            // Compose the post request
-            Dictionary<string, string> queryParams = new Dictionary<string, string>()
-            {
-                { "grant_type", "authorization_code" },
-                { "client_id", AppId },
-                { "client_secret", AppSecret },
-                { "code", AuthCode },
-                { "redirect_uri", CallbackUrl }
-            };
-            RestRequest request = ComposePostRequest(TokenUrl, queryParams);
-
-            // Get the response
-            DateTime now = DateTime.Now;
-            IRestResponse response = client.Execute(request);
-            if ((int)response.StatusCode >= 400)
-            {
-                throw new ApiException((int)response.StatusCode, $"There is an error when requesting access token: " + response.Content, response.Content);
-            }
-            else if (response.StatusCode == 0)
-            {
-                throw new ApiException((int)response.StatusCode, $"There is an error when requesting access token: " + response.ErrorMessage, response.ErrorMessage);
-            }
-            
-            // Deserialize response to token and update fields
-            GetTokenResponse tokenResponse = (GetTokenResponse)JsonConvert.DeserializeObject(response.Content, typeof(GetTokenResponse));
-            if (string.IsNullOrEmpty(tokenResponse.AccessToken) || string.IsNullOrEmpty(tokenResponse.RefreshToken) || !tokenResponse.ExpiresIn.HasValue)
-            {
-                throw new ApiException(400, "Invalid response from server: " + tokenResponse.ToString());
-            }
-            AccessToken = tokenResponse.AccessToken;
-            RefreshToken = tokenResponse.RefreshToken;
-            TokenExpireTime = now + TimeSpan.FromSeconds(tokenResponse.ExpiresIn.Value - 60); // Reduce 1 min for possible network issues.
+            throw new NotImplementedException();
         }
 
         public void RequestTokenRefresh(IRestClient client)
         {
-            // Compose the post request
-            Dictionary<string, string> queryParams = new Dictionary<string, string>()
-            {
-                { "grant_type", "authorization_code" },
-                { "client_id", AppId },
-                { "client_secret", AppSecret },
-                { "refresh_token", RefreshToken },
-                { "redirect_uri", CallbackUrl }
-            };
-            RestRequest request = ComposePostRequest(TokenUrl, queryParams);
-
-            // Get the response
-            DateTime now = DateTime.Now;
-            IRestResponse response = client.Execute(request);
-            if ((int)response.StatusCode >= 400)
-            {
-                throw new ApiException((int)response.StatusCode, $"There is an error when requesting token refresh: " + response.Content, response.Content);
-            }
-            else if (response.StatusCode == 0)
-            {
-                throw new ApiException((int)response.StatusCode, $"There is an error when requesting token refresh: " + response.ErrorMessage, response.ErrorMessage);
-            }
-
-            // Deserialize response to token and update fields
-            RefreshTokenResponse tokenResponse = (RefreshTokenResponse)JsonConvert.DeserializeObject(response.Content, typeof(RefreshTokenResponse));
-            if (string.IsNullOrEmpty(tokenResponse.AccessToken) || string.IsNullOrEmpty(tokenResponse.RefreshToken) || !tokenResponse.ExpiresIn.HasValue)
-            {
-                throw new ApiException(400, "Invalid response from server: " + tokenResponse.ToString());
-            }
-            AccessToken = tokenResponse.AccessToken;
-            RefreshToken = tokenResponse.RefreshToken;
-            TokenExpireTime = now + TimeSpan.FromSeconds(tokenResponse.ExpiresIn.Value - 60); // Reduce 1 min for possible network issues.
+            throw new NotImplementedException();
         }
-
-        #endregion
-
-        public void OAuthAuthenticate(IRestClient client)
-        {
-            // Request Auth Token if not yet authenticated
-            if (TokenExpired)
-            {
-                // If AuthCode is expired, request AuthCode first
-                if (AuthCodeExpired)
-                {
-                    RequestAuthCode();
-                }
-                RequestAccessToken(client);
-            }
-            // Refresh token when it is only valid for no more than 5 minutes
-            else if (DateTime.Now + TimeSpan.FromMinutes(5) > TokenExpireTime)
-            {
-                RequestTokenRefresh(client);
-            }
-        }
-
-        #region Helpers
-
-        private void OpenBrowser(string url)
-        {
-            try
-            {
-                Process.Start(url);
-            }
-            catch
-            {
-                // hack because of this: https://github.com/dotnet/corefx/issues/10361
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    ProcessStartInfo psi = new ProcessStartInfo
-                    {
-                        FileName = "cmd",
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        UseShellExecute = false,
-                        CreateNoWindow = true,
-                        Arguments = $"/c start {url.Replace("&", "^&")}"
-                    };
-                    Process.Start(psi);
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    Process.Start("xdg-open", url);
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    Process.Start("open", url);
-                }
-                else
-                {
-                    throw;
-                }
-            }
-        }
-
-        private RestRequest ComposePostRequest(string url, Dictionary<string, string> queryParams)
-        {
-            RestRequest request = new RestRequest(url, Method.POST);
-            request.AddHeader("Accept", "application/json");
-            foreach (var param in queryParams)
-            {
-                request.AddParameter(param.Key, param.Value, ParameterType.GetOrPost);
-            }
-            return request;
-        }
-        #endregion
     }
 }

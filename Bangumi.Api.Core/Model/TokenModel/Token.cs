@@ -10,7 +10,7 @@ namespace Bangumi.Api.Core.Model.TokenModel
     /// 换取 Access Token
     /// </summary>
     [DataContract]
-    public class GetTokenResponse
+    public class Token
     {
         /// <summary>
         /// Gets or Sets AccessToken
@@ -24,7 +24,7 @@ namespace Bangumi.Api.Core.Model.TokenModel
         /// </summary>
         [DataMember(Name = "expires_in", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "expires_in")]
-        public int? ExpiresIn { get; set; }
+        public int ExpiresIn { get; set; }
 
         /// <summary>
         /// Gets or Sets TokenType, this should be 'Bearer'
@@ -54,6 +54,12 @@ namespace Bangumi.Api.Core.Model.TokenModel
         [JsonProperty(PropertyName = "user_id")]
         public string UserId { get; set; }
 
+        public DateTime ReceiveTime { get; set; }
+        public bool Expired
+        {
+            get => string.IsNullOrEmpty(AccessToken) ||
+                ReceiveTime + TimeSpan.FromSeconds(ExpiresIn - 60) < DateTime.Now; // Reduce 1 min for possible network issues. }
+        }
 
         /// <summary>
         /// Get the string presentation of the object
