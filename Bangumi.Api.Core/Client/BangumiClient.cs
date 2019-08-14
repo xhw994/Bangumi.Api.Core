@@ -8,6 +8,7 @@ using RestSharp;
 using RestSharp.Authenticators;
 using static Bangumi.Api.Core.Extension.StringExtension;
 using static Bangumi.Api.Core.Configuration;
+using Bangumi.Api.Core.Model.TokenModel;
 
 namespace Bangumi.Api.Core.Client
 {
@@ -18,7 +19,6 @@ namespace Bangumi.Api.Core.Client
         /// <summary>
         /// 查询验证器状态
         /// </summary>
-        public bool Authenticated { get => Authenticator == null || Authenticator.Authenticated; }
         private BangumiAuthenticator Authenticator {
             get => (BangumiAuthenticator)_restClient.Authenticator;
             set => _restClient.Authenticator = value;
@@ -42,13 +42,9 @@ namespace Bangumi.Api.Core.Client
             {
                 _restClient.Authenticator = new BangumiAuthenticator();
             }
-            if (!Authenticated)
+            if (!Authenticator.Authenticated)
             {
                 Authenticator.OAuthAuthenticate(_restClient);
-            }
-            if (!Authenticated)
-            {
-                throw new ApiException(401, "Authorization failed.");
             }
             return this;
         }
@@ -69,6 +65,11 @@ namespace Bangumi.Api.Core.Client
                 {
                     restRequest.AddParameter(param.Key, param.Value, ParameterType.GetOrPost);
                 }
+            }
+
+            if (request.RequireAuth)
+            {
+                Authenticate();
             }
 
             IRestResponse response = _restClient.Execute(restRequest);
@@ -93,6 +94,17 @@ namespace Bangumi.Api.Core.Client
             { "Accept", "application/json" },
             // { "Content-Type", "application/x-www-form-urlencoded" }
         };
+
+        #endregion
+
+        #region Authentication
+
+        public AuthCode AuthCode { get; private set; }
+
+
+
+
+
 
         #endregion
     }

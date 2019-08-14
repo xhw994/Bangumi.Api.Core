@@ -13,20 +13,32 @@ using Newtonsoft.Json;
 
 namespace Bangumi.Api.Core.Client
 {
-    public class BangumiAuthenticator : IAuthenticator
+    public class BangumiAuthenticator : OAuth2Authenticator
     {
         // TODO: Implement state param, Auto refresh?, Add timeout when requesting code 3 min?
 
-        public BangumiAuthenticator()
+        public BangumiAuthenticator() : base(null)
         {
             // Value check, future need to check length and domain properties
-            if (!IsAlphaNumeric(AppId) || !AppId.StartsWith("bgm"))
+            if (AppId == null)
             {
                 throw new ArgumentException($"Invalid application ID <{AppId}>. Application IDs should start with `bgm` followed by alphanumeric values");
             }
             if (!IsAlphaNumeric(AppSecret))
             {
                 throw new ArgumentException($"Invalid application secret <{AppSecret}>. Application secrets should only contain alphanumeric values.");
+            }
+        }
+
+        private string AuthorizationValue { get => "Bearer " + AccessToken; }
+
+        public BangumiAuthenticator(string accessToken) : base(accessToken) { }
+
+        public override void Authenticate(IRestClient client, IRestRequest request)
+        {
+            if (!request.Parameters.Any(p => p.Name.Equals("Authorization", StringComparison.OrdinalIgnoreCase)))
+            {
+                request.AddParameter("Authorization", AuthorizationValue, ParameterType.HttpHeader);
             }
         }
 
@@ -54,7 +66,7 @@ namespace Bangumi.Api.Core.Client
         public string RefreshToken { get; private set; }
         public bool TokenExpired { get => string.IsNullOrEmpty(AccessToken) || TokenExpireTime < DateTime.Now; }
         public bool Authenticated { get => TokenExpired; }
-        public DateTime TokenExpireTime { get; private set; }
+        public DateTime TokenExpireTime { get; private set; } = DateTime.Now + TimeSpan.FromMinutes(5);
 
         public void RequestAccessToken(IRestClient client)
         {
@@ -130,14 +142,6 @@ namespace Bangumi.Api.Core.Client
 
         #endregion
 
-        public void Authenticate(IRestClient client, IRestRequest request)
-        {
-            OAuthAuthenticate(client);
-
-            // If everything is set, add `Authorization: Bear <Token>` to header
-            request.AddHeader("Authorization", $"Bearer {AccessToken}");
-        }
-
         public void OAuthAuthenticate(IRestClient client)
         {
             // Request Auth Token if not yet authenticated
@@ -205,7 +209,6 @@ namespace Bangumi.Api.Core.Client
             }
             return request;
         }
-
         #endregion
     }
 }
