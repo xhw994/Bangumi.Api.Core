@@ -1,16 +1,14 @@
-﻿using System;
-using System.Web;
-using System.Collections.Generic;
-using RestSharp;
-using Bangumi.Api.Core.Client;
-using Bangumi.Api.Core.Model;
+﻿using Bangumi.Api.Core.Client;
 using Bangumi.Api.Core.Extension;
+using Bangumi.Api.Core.Model;
 using Bangumi.Api.Core.Model.SubjectModel;
 using Bangumi.Api.Core.Model.UserModel;
-using static Bangumi.Api.Core.Configuration;
+using RestSharp;
+using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Microsoft.Extensions.Configuration;
-using System.IO;
+using System.Web;
+using static Bangumi.Api.Core.Configuration;
 
 namespace Bangumi.Api.Core
 {
@@ -245,7 +243,7 @@ namespace Bangumi.Api.Core
             return _client.Request<StatusCodeInfo>(request);
         }
 
-        public StatusCodeInfo UpdateManyEpStatus(EpStatus status, params int[] ids)
+        public StatusCodeInfo UpdateMultipleEpStatus(int[] ids, EpStatus status)
         {
             ValidateId(ids, ObjectType.Episode);
 
@@ -261,21 +259,17 @@ namespace Bangumi.Api.Core
             return _client.Request<StatusCodeInfo>(request);
         }
 
-        public StatusCodeInfo UpdateSubjectEpStatus(int subjectId, int? watchedEps, int? watchedVols = null)
+        public StatusCodeInfo BatchUpdateSubjectEpStatus(int subjectId, int watchedEps, int? watchedVols)
         {
             // Validation
             ValidateId(subjectId, ObjectType.Subject);
-            if (watchedEps != null) ValidateId(watchedEps.Value, ObjectType.Episode);
+            ValidateId(watchedEps, ObjectType.Episode);
             if (watchedVols != null) ValidateId(watchedVols.Value, ObjectType.Volume);
-            if (watchedEps == null && watchedVols == null)
-            {
-                throw new ArgumentNullException($"Both of {nameof(watchedEps)} and {nameof(watchedVols)} cannot be null.");
-            }
 
             // Compose the request
             string path = $"/subject/{subjectId}/update/";
             Dictionary<string, string> queryParams = new Dictionary<string, string>();
-            if (watchedEps != null) queryParams.Add("watched_eps", watchedEps.Value.ToString());
+            queryParams.Add("watched_eps", watchedEps.ToString());
             if (watchedVols != null) queryParams.Add("watched_vols", watchedVols.Value.ToString());
             BangumiRequest request = new BangumiRequest(path, Method.POST, true, queryParams);
 

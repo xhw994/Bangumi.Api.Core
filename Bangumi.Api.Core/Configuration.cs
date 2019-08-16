@@ -1,8 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using static Bangumi.Api.Core.Extension.StringExtension;
 
 namespace Bangumi.Api.Core
@@ -55,12 +52,16 @@ namespace Bangumi.Api.Core
         /// </summary>
         public static string ApiBaseUrl { get => _config["Api:BaseUrl"]; }
         /// <summary>
-        /// 请求 Code的地址
+        /// 请求Code的地址
         /// </summary>
         public static string AuthCodeUrl { get => _config["Api:AuthCodeUrl"]; }
         /// <summary>
-        /// 请求 Access Token 的地址
+        /// 请求Access Token的地址
         /// </summary>
         public static string TokenUrl { get => _config["Api:TokenUrl"]; }
+        /// <summary>
+        /// 查询授权信息的地址
+        /// </summary>
+        public static string TokenStatusUrl { get => _config["Api:TokenStatusUrl"]; }
     }
 }

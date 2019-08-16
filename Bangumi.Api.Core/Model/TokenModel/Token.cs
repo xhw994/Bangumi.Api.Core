@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -58,7 +57,7 @@ namespace Bangumi.Api.Core.Model.TokenModel
         public bool Expired
         {
             get => string.IsNullOrEmpty(AccessToken) ||
-                ReceiveTime + TimeSpan.FromSeconds(ExpiresIn - 60) < DateTime.Now; // Reduce 1 min for possible network issues. }
+                ReceiveTime + TimeSpan.FromSeconds(ExpiresIn) < DateTime.Now;
         }
 
         /// <summary>

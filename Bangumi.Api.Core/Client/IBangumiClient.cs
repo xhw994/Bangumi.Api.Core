@@ -12,5 +12,6 @@ namespace Bangumi.Api.Core.Client
         AuthCode RequestCode();
         Token RequestToken(AuthCode code);
         Token RefreshToken(Token refreshToken);
+        TokenStatus GetTokenStatus(Token token);
     }
 }

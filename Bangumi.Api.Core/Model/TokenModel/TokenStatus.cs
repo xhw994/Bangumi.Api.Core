@@ -1,6 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -10,7 +8,7 @@ namespace Bangumi.Api.Core.Model.TokenModel
     /// 查询授权信息
     /// </summary>
     [DataContract]
-    public class TokenStatusResponse
+    public class TokenStatus
     {
         /// <summary>
         /// Gets or Sets AccessToken
@@ -31,7 +29,7 @@ namespace Bangumi.Api.Core.Model.TokenModel
         /// </summary>
         [DataMember(Name = "expires", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "expires")]
-        public int? Expires { get; set; }
+        public int Expires { get; set; }
 
         /// <summary>
         /// Gets or Sets Scope, this should be null
@@ -55,7 +53,7 @@ namespace Bangumi.Api.Core.Model.TokenModel
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class Images {\n");
+            sb.Append("class TokenStatus {\n");
             sb.Append("  AccessToken: ").Append(AccessToken).Append("\n");
             sb.Append("  ClientId: ").Append(ClientId).Append("\n");
             sb.Append("  Expires: ").Append(Expires).Append("\n");

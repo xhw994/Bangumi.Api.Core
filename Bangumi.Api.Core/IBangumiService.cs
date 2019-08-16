@@ -104,7 +104,7 @@ namespace Bangumi.Api.Core
         /// <param name="status">收视类型，参考 [EpStatusType](#model-EpStatusType)</param>
         /// <param name="epId">使用 POST 批量更新 &lt;br&gt; 将章节以半角逗号分隔，如 &#x60;3697,3698,3699&#x60;。请求时 URL 中的 ep_id 为最后一个章节 ID</param>
         /// <returns>StatusCode</returns>
-        StatusCodeInfo UpdateManyEpStatus(EpStatus status, params int[] ids);
+        StatusCodeInfo UpdateMultipleEpStatus(int[] ids, EpStatus status);
 
         /// <summary>
         /// 批量更新收视进度
@@ -113,6 +113,6 @@ namespace Bangumi.Api.Core
         /// <param name="watchedEps">如看到 123 话则 POST &#x60;123&#x60; &lt;br&gt; 书籍条目传 watched_eps 与 watched_vols 至少其一</param>
         /// <param name="watchedVols">如看到第 3 卷则 POST &#x60;3&#x60;, 仅对书籍条目有效</param>
         /// <returns>StatusCode</returns>
-        StatusCodeInfo UpdateSubjectEpStatus(int subjectId, int? watchedEps, int? watchedVols);
+        StatusCodeInfo BatchUpdateSubjectEpStatus(int subjectId, int watchedEps, int? watchedVols);
     }
 }

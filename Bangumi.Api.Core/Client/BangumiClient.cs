@@ -1,51 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using Microsoft.Extensions.Configuration;
+﻿using Bangumi.Api.Core.Model.TokenModel;
 using Newtonsoft.Json;
 using RestSharp;
-using RestSharp.Authenticators;
-using static Bangumi.Api.Core.Extension.StringExtension;
-using static Bangumi.Api.Core.Configuration;
-using Bangumi.Api.Core.Model.TokenModel;
-using System.Net;
-using System.Text;
-using System.IO;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Net;
 using System.Runtime.InteropServices;
+using System.Text;
+using static Bangumi.Api.Core.Configuration;
 
 namespace Bangumi.Api.Core.Client
 {
+    // TODO: Implement state param, Auto refresh?, Add timeout when requesting code 3 min?
     public class BangumiClient : IBangumiClient
     {
-        private readonly RestClient _restClient;
-
-        /// <summary>
-        /// 查询验证器状态
-        /// </summary>
-        private BangumiAuthenticator Authenticator
-        {
-            get => (BangumiAuthenticator)_restClient.Authenticator;
-            set => _restClient.Authenticator = value;
-        }
+        private readonly RestClient _restClient = new RestClient(ApiBaseUrl);
 
         public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>
         {
             { "Accept", "application/json" },
         };
-
-        public BangumiClient(bool authenticate = false)
-        {
-            _restClient = new RestClient(ApiBaseUrl);
-
-            if (authenticate)
-            {
-                AuthCode = RequestCode();
-                Token = RequestToken(AuthCode);
-                _restClient.Authenticator = new BangumiAuthenticator(Token.AccessToken);
-            }
-        }
 
         public TResponse Request<TResponse>(BangumiRequest request)
         {
@@ -67,7 +42,7 @@ namespace Bangumi.Api.Core.Client
 
             if (request.RequireAuth)
             {
-                if (Token.Expired)
+                if (Token == null || Token.Expired)
                 {
                     // If AuthCode is expired, request AuthCode first
                     if (AuthCode == null || AuthCode.Expired)
@@ -75,6 +50,10 @@ namespace Bangumi.Api.Core.Client
                         AuthCode = RequestCode();
                     }
                     Token = RequestToken(AuthCode);
+                }
+                if (_restClient.Authenticator == null || ((BangumiAuthenticator)_restClient.Authenticator).AccessToken != Token.AccessToken)
+                {
+                    _restClient.Authenticator = new BangumiAuthenticator(Token.AccessToken);
                 }
             }
 
@@ -94,6 +73,37 @@ namespace Bangumi.Api.Core.Client
         #region Authentication
         public AuthCode AuthCode { get; private set; }
         public Token Token { get; private set; }
+        public TokenStatus TokenStatus
+        {
+            get
+            {
+                if (TokenStatus == null && !Token.Expired)
+                {
+                    return GetTokenStatus(Token);
+                }
+                return null;
+            }
+        }
+
+        public Token RequestToken()
+        {
+            if (AuthCode == null || AuthCode.Expired)
+            {
+                AuthCode = RequestCode();
+            }
+            Token = RequestToken(AuthCode);
+            return Token;
+        }
+
+        public Token RefreshToken()
+        {
+            if (Token == null || Token.Expired)
+            {
+                throw new InvalidOperationException("Cannot refresh empty token.");
+            }
+            Token = RefreshToken(Token);
+            return Token;
+        }
 
         public AuthCode RequestCode()
         {
@@ -163,63 +173,61 @@ namespace Bangumi.Api.Core.Client
                 { "code",  authCode.Code },
                 { "redirect_uri", CallbackUrl }
             };
-            RestRequest request = ComposePostRequest(TokenUrl, queryParams);
+            BangumiRequest request = new BangumiRequest(TokenUrl, Method.POST, false, queryParams);
 
             // Get the response
             DateTime now = DateTime.Now;
-            IRestResponse response = _restClient.Execute(request);
-            if ((int)response.StatusCode >= 400)
-            {
-                throw new ApiException((int)response.StatusCode, $"There is an error when requesting access token: " + response.Content, response.Content);
-            }
-            else if (response.StatusCode == 0)
-            {
-                throw new ApiException((int)response.StatusCode, $"There is an error when requesting access token: " + response.ErrorMessage, response.ErrorMessage);
-            }
-
-            // Deserialize response to token and update fields
-            Token token = (Token)JsonConvert.DeserializeObject(response.Content, typeof(Token));
-            if (string.IsNullOrEmpty(token.AccessToken) || string.IsNullOrEmpty(token.RefreshToken))
-            {
-                throw new ApiException(400, "Invalid response from server: " + token.ToString());
-            }
+            Token token = Request<Token>(request);
             token.ReceiveTime = now;
             return token;
         }
 
         public Token RefreshToken(Token token)
         {
+            if (token == null || string.IsNullOrEmpty(token.AccessToken))
+            {
+                throw new ArgumentException("Empty token", nameof(token));
+            }
+            if (token.Expired)
+            {
+                throw new ArgumentException("Token already expired", nameof(token));
+            }
+
             // Compose the post request
             Dictionary<string, string> queryParams = new Dictionary<string, string>()
             {
-                { "grant_type", "authorization_code" },
+                { "grant_type", "refresh_token" },
                 { "client_id", AppId },
                 { "client_secret", AppSecret },
                 { "refresh_token", token.RefreshToken },
                 { "redirect_uri", CallbackUrl }
             };
-            RestRequest request = ComposePostRequest(TokenUrl, queryParams);
+            BangumiRequest request = new BangumiRequest(TokenUrl, Method.POST, false, queryParams);
 
             // Get the response
             DateTime now = DateTime.Now;
-            IRestResponse response = _restClient.Execute(request);
-            if ((int)response.StatusCode >= 400)
-            {
-                throw new ApiException((int)response.StatusCode, $"There is an error when requesting token refresh: " + response.Content, response.Content);
-            }
-            else if (response.StatusCode == 0)
-            {
-                throw new ApiException((int)response.StatusCode, $"There is an error when requesting token refresh: " + response.ErrorMessage, response.ErrorMessage);
-            }
-
-            // Deserialize response to token and update fields
-            Token newToken = (Token)JsonConvert.DeserializeObject(response.Content, typeof(Token));
-            if (string.IsNullOrEmpty(newToken.AccessToken) || string.IsNullOrEmpty(newToken.RefreshToken))
-            {
-                throw new ApiException(400, "Invalid response from server: " + newToken.ToString());
-            }
+            Token newToken = Request<Token>(request);
             newToken.ReceiveTime = now;
             return newToken;
+        }
+
+        public TokenStatus GetTokenStatus(Token token)
+        {
+            if (token == null || string.IsNullOrEmpty(token.AccessToken))
+            {
+                throw new ArgumentException("Empty token", nameof(token));
+            }
+
+            // Compose the post request
+            Dictionary<string, string> queryParams = new Dictionary<string, string>()
+            {
+                { "access_token", token.AccessToken }
+            };
+            BangumiRequest request = new BangumiRequest(TokenStatusUrl, Method.POST, false, queryParams);
+
+            // Get the response
+            TokenStatus status = Request<TokenStatus>(request);
+            return status;
         }
 
         #endregion

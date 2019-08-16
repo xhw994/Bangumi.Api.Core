@@ -1,47 +1,62 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Bangumi.Api.Core.Model.TokenModel;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Bangumi.Api.Core.Client;
-using RestSharp;
+using System.Threading;
 
 namespace Bangumi.Api.Core.Test
 {
     [TestClass]
     public class BangumiClient
     {
-        //[TestMethod]
-        //[Timeout(1000 * 60 * 2)]
-        //public void GetCodeFromListener()
-        //{
-        //    BangumiAuthenticator authenticator = new BangumiAuthenticator();
-        //    authenticator.RequestAuthCode();
-        //    Assert.IsFalse(string.IsNullOrEmpty(authenticator.AuthCode), "Empty auth code");
-        //    Console.WriteLine("The auth code is: " + authenticator.AuthCode);
-        //}
+        [TestMethod]
+        [Timeout(1000 * 60 * 2)]
+        public void GetCode()
+        {
+            Client.BangumiClient client = new Client.BangumiClient();
+            AuthCode code = client.RequestCode();
 
-        //[TestMethod]
-        //[Timeout(1000 * 60 * 3)]
-        //public void GetAccessToken()
-        //{
-        //    // Get Auth code
-        //    BangumiAuthenticator authenticator = new BangumiAuthenticator();
-        //    authenticator.RequestAuthCode();
-        //    Assert.IsFalse(string.IsNullOrEmpty(authenticator.AuthCode), "Empty auth code");
-        //    Console.WriteLine("The auth code is: " + authenticator.AuthCode);
+            Assert.IsFalse(code == null || string.IsNullOrEmpty(code.Code), "Empty auth code");
+        }
 
-        //    // Get token
-        //    Assert.IsFalse(authenticator.AuthCodeExpired, "Auth code has expired");
-        //    var restClient = new RestClient(Configuration.ApiBaseUrl);
-        //    authenticator.RequestAccessToken(restClient);
+        [TestMethod]
+        [Timeout(1000 * 60 * 3)]
+        public void GetAccessToken()
+        {
+            Client.BangumiClient client = new Client.BangumiClient();
+            Token token = client.RequestToken();
 
-        //    // Output
-        //    Console.WriteLine("The access token is: " + authenticator.AccessToken);
-        //    Assert.IsFalse(string.IsNullOrEmpty(authenticator.AccessToken), "Empty access token");
-        //    Console.WriteLine("The refresh token is: " + authenticator.AccessToken);
-        //    Assert.IsFalse(string.IsNullOrEmpty(authenticator.RefreshToken), "Empty refresh token");
-        //    Console.WriteLine("The token expires on: " + authenticator.TokenExpireTime);
-        //    Assert.IsFalse(authenticator.TokenExpired, "Token has expired");
-        //}
+            Assert.IsNotNull(token, "Empty token response.");
+            Assert.IsFalse(string.IsNullOrEmpty(token.AccessToken), "Empty access token");
+            Assert.IsFalse(string.IsNullOrEmpty(token.RefreshToken), "Empty refresh token");
+            Assert.IsFalse(token.Expired, "Token has expired");
+        }
+
+        [TestMethod]
+        [Timeout(1000 * 60 * 4)]
+        public void RefreshToken()
+        {
+            Client.BangumiClient client = new Client.BangumiClient();
+            client.RequestToken();
+            Thread.Sleep(TimeSpan.FromSeconds(10));
+            Token refresh = client.RefreshToken();
+
+            Assert.IsNotNull(refresh, "Empty token response.");
+            Assert.IsFalse(string.IsNullOrEmpty(refresh.AccessToken), "Empty access token");
+            Assert.IsFalse(string.IsNullOrEmpty(refresh.RefreshToken), "Empty refresh token");
+            Assert.IsFalse(refresh.Expired, "Token has expired");
+        }
+
+        [TestMethod]
+        [Timeout(1000 * 60 * 3)]
+        public void GetTokenStatus()
+        {
+            Client.BangumiClient client = new Client.BangumiClient();
+            client.RequestToken();
+            Thread.Sleep(TimeSpan.FromSeconds(10));
+            TokenStatus status = client.TokenStatus;
+
+            Assert.IsNotNull(status, "Empty token response.");
+            Assert.IsFalse(string.IsNullOrEmpty(status.AccessToken), "Empty access token");
+        }
     }
 }
