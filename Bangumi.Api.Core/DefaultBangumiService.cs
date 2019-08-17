@@ -17,9 +17,7 @@ namespace Bangumi.Api.Core
         private readonly BangumiClient _client;
 
         #region Init
-
         public DefaultBangumiService() => _client = new BangumiClient();
-
         #endregion
 
         #region 用户 User
@@ -150,7 +148,6 @@ namespace Bangumi.Api.Core
         #endregion
 
         #region 条目 Subject
-
         public IEnumerable<CalendarResponse> GetDailyCalendar()
         {
             BangumiRequest request = new BangumiRequest("/calendar");
@@ -158,12 +155,18 @@ namespace Bangumi.Api.Core
             return _client.Request<IEnumerable<CalendarResponse>>(request);
         }
 
-        public SubjectBase GetSubject(int id, ResponseGroup group = ResponseGroup.Small)
+        public SubjectBase GetSubject(int subject_id, ResponseGroup? group)
         {
-            ValidateId(id, ObjectType.Subject);
+            if (group == null) return GetSubject(subject_id, ResponseGroup.Small);
+            return GetSubject(subject_id, group.Value);
+        }
+
+        public SubjectBase GetSubject(int subjectId, ResponseGroup group = ResponseGroup.Small)
+        {
+            ValidateId(subjectId, ObjectType.Subject);
 
             // Compose the request
-            string path = $"/subject/{id}";
+            string path = $"/subject/{subjectId }";
             var queryParams = new Dictionary<string, string>()
             {
                 {"responseGroup", group.ToDescriptionString() }
@@ -183,17 +186,16 @@ namespace Bangumi.Api.Core
             }
         }
 
-        public SubjectEp GetSubjectEps(int id)
+        public SubjectEp GetSubjectWithEpisodes(int subjectId)
         {
-            ValidateId(id, ObjectType.Subject);
+            ValidateId(subjectId, ObjectType.Subject);
 
             // Compose the request
-            string path = $"/subject/{id}/ep";
+            string path = $"/subject/{subjectId}/ep";
             BangumiRequest request = new BangumiRequest(path);
 
             return _client.Request<SubjectEp>(request);
         }
-
         #endregion
 
         #region 搜索 Search

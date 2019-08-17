@@ -78,7 +78,7 @@ namespace Bangumi.Api.Core.Test
         [TestMethod]
         public void GetCowboyBeebopSubjectEp()
         {
-            SubjectEp res = _service.GetSubjectEps(animeSubjectData.Id.Value);
+            SubjectEp res = _service.GetSubjectWithEpisodes(animeSubjectData.Id.Value);
             Assert.IsTrue(res.Eps.Count > 0, "The episode list is empty");
             Console.Write(res);
         }
