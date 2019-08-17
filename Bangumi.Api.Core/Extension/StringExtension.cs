@@ -65,5 +65,22 @@ namespace Bangumi.Api.Core.Extension
         public static bool IsHttpOrHttpsUrl(string source) => Uri.TryCreate(source, UriKind.Absolute, out Uri url) && (url.Scheme == Uri.UriSchemeHttp || url.Scheme == Uri.UriSchemeHttps);
 
         public static bool IsAlphaNumeric(string s) => !string.IsNullOrEmpty(s) && s.All(c => char.IsLetterOrDigit(c) && (c < 128));
+
+        public static bool HaveSameElements(IEnumerable<string> source1, IEnumerable<string> source2)
+        {
+            if (source1 == null ^ source2 == null) return false;
+            if (source1 == null) return true;
+
+            HashSet<string> set = new HashSet<string>();
+            foreach (string s in source1)
+            {
+                if (!set.Contains(s)) set.Add(s);
+            }
+            foreach (string s in source2)
+            {
+                if (!set.Contains(s)) return false;
+            }
+            return true;
+        }
     }
 }

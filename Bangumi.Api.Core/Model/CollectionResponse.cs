@@ -9,7 +9,7 @@ using Bangumi.Api.Core.Model.UserModel;
 namespace Bangumi.Api.Core.Model
 {
     /// <summary>
-    /// 
+    /// 条目收藏信息
     /// </summary>
     [DataContract]
     public class CollectionResponse
@@ -19,7 +19,7 @@ namespace Bangumi.Api.Core.Model
         /// </summary>
         [DataMember(Name = "status", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "status")]
-        public CollectionStatus Status { get; set; }
+        public CollectionStatusInfo Status { get; set; }
 
         /// <summary>
         /// 评分
@@ -27,7 +27,7 @@ namespace Bangumi.Api.Core.Model
         /// <value>评分</value>
         [DataMember(Name = "rating", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "rating")]
-        public int? Rating { get; set; }
+        public int Rating { get; set; }
 
         /// <summary>
         /// 评论
@@ -50,7 +50,7 @@ namespace Bangumi.Api.Core.Model
         /// <value>标签</value>
         [DataMember(Name = "tag", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "tag")]
-        public List<string> Tag { get; set; }
+        public IEnumerable<string> Tag { get; set; }
 
         /// <summary>
         /// 完成话数
@@ -58,7 +58,7 @@ namespace Bangumi.Api.Core.Model
         /// <value>完成话数</value>
         [DataMember(Name = "ep_status", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "ep_status")]
-        public int? EpStatus { get; set; }
+        public int EpStatus { get; set; }
 
         /// <summary>
         /// 上次更新时间
@@ -66,7 +66,7 @@ namespace Bangumi.Api.Core.Model
         /// <value>上次更新时间</value>
         [DataMember(Name = "lasttouch", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "lasttouch")]
-        public int? Lasttouch { get; set; }
+        public int Lasttouch { get; set; }
 
         /// <summary>
         /// Gets or Sets User

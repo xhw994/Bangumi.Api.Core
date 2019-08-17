@@ -146,7 +146,7 @@ namespace Bangumi.Api.Core.Client
                 output.Write(buffer, 0, buffer.Length);
             }
 
-            Console.Write("completed! The authentication code is: " + code + Environment.NewLine);
+            Console.Write("completed!" + Environment.NewLine);
             AuthCode authCode = new AuthCode
             {
                 Code = code,
@@ -179,6 +179,7 @@ namespace Bangumi.Api.Core.Client
             DateTime now = DateTime.Now;
             Token token = Request<Token>(request);
             token.ReceiveTime = now;
+            Console.WriteLine("The token is: " + token.AccessToken);
             return token;
         }
 

@@ -267,15 +267,49 @@ namespace Bangumi.Api.Core
             if (watchedVols != null) ValidateId(watchedVols.Value, ObjectType.Volume);
 
             // Compose the request
-            string path = $"/subject/{subjectId}/update/";
-            Dictionary<string, string> queryParams = new Dictionary<string, string>();
-            queryParams.Add("watched_eps", watchedEps.ToString());
+            string path = $"/subject/{subjectId}/update";
+            Dictionary<string, string> queryParams = new Dictionary<string, string>
+            {
+                { "watched_eps", watchedEps.ToString() }
+            };
             if (watchedVols != null) queryParams.Add("watched_vols", watchedVols.Value.ToString());
             BangumiRequest request = new BangumiRequest(path, Method.POST, true, queryParams);
 
             return _client.Request<StatusCodeInfo>(request);
         }
 
+        #endregion
+
+        #region 收藏 Collection
+        public CollectionResponse GetUserSubjectDetail(int subjectId)
+        {
+            ValidateId(subjectId, ObjectType.Subject);
+
+            // Compose the request
+            string path = $"/collection/{subjectId}";
+            BangumiRequest request = new BangumiRequest(path, Method.GET, true);
+
+            return _client.Request<CollectionResponse>(request);
+        }
+
+        public CollectionResponse CreateOrUpdateCollection(int subjectId, CollectionStatus status, string comment, string tags, int? rating, Privacy? privacy)
+        {
+            ValidateId(subjectId, ObjectType.Subject);
+
+            // Compose the request
+            string path = $"/collection/{subjectId}/update";
+            Dictionary<string, string> queryParams = new Dictionary<string, string>
+            {
+                { "status ", status.ToDescriptionString() }
+            };
+            if (comment != null) queryParams.Add("comment", comment);
+            if (tags != null) queryParams.Add("tags", tags);
+            if (rating != null) queryParams.Add("rating", rating.ToString());
+            if (privacy != null) queryParams.Add("privacy", ((int)privacy.Value).ToString());
+            BangumiRequest request = new BangumiRequest(path, Method.POST, true, queryParams);
+
+            return _client.Request<CollectionResponse>(request);
+        }
         #endregion
 
         #region Helpers

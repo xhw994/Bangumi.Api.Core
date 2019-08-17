@@ -36,5 +36,63 @@ namespace Bangumi.Api.Core.Extension
                     throw new ArgumentException($"The given {nameof(SubjectType)} value is out of range");
             }
         }
+
+        public static string ToCnName(this CollectionStatus status, SubjectType subjectType)
+        {
+            switch (status)
+            {
+                case CollectionStatus.Wish:
+                    switch (subjectType)
+                    {
+                        case SubjectType.Book:
+                            return "想读";
+                        case SubjectType.Anime:
+                        case SubjectType.Real:
+                            return "想看";
+                        case SubjectType.Music:
+                            return "想听";
+                        case SubjectType.Game:
+                            return "想玩";
+                        default:
+                            throw new ArgumentException($"The given {nameof(SubjectType)} value is out of range");
+                    }
+                case CollectionStatus.Collect:
+                    switch (subjectType)
+                    {
+                        case SubjectType.Book:
+                            return "读过";
+                        case SubjectType.Anime:
+                        case SubjectType.Real:
+                            return "看过";
+                        case SubjectType.Music:
+                            return "听过";
+                        case SubjectType.Game:
+                            return "玩过";
+                        default:
+                            throw new ArgumentException($"The given {nameof(SubjectType)} value is out of range");
+                    }
+                case CollectionStatus.Do:
+                    switch (subjectType)
+                    {
+                        case SubjectType.Book:
+                            return "在读";
+                        case SubjectType.Anime:
+                        case SubjectType.Real:
+                            return "在看";
+                        case SubjectType.Music:
+                            return "在听";
+                        case SubjectType.Game:
+                            return "在玩";
+                        default:
+                            throw new ArgumentException($"The given {nameof(SubjectType)} value is out of range");
+                    }
+                case CollectionStatus.OnHold:
+                    return "搁置";
+                case CollectionStatus.Dropped:
+                    return "抛弃";
+                default:
+                    throw new ArgumentException($"The given {nameof(CollectionStatus)} value is out of range");
+            }
+        }
     }
 }

@@ -1,10 +1,5 @@
-using System;
-using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace Bangumi.Api.Core.Model.UserModel
 {
@@ -22,7 +17,7 @@ namespace Bangumi.Api.Core.Model.UserModel
         Do = 3,
         [Description("on_hold")] // 搁置
         OnHold = 4,
-        [Description("air")] // 抛弃
+        [Description("dropped")] // 抛弃
         Dropped = 5
     }
 }

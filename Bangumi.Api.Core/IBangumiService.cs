@@ -114,5 +114,24 @@ namespace Bangumi.Api.Core
         /// <param name="watchedVols">如看到第 3 卷则 POST &#x60;3&#x60;, 仅对书籍条目有效</param>
         /// <returns>StatusCode</returns>
         StatusCodeInfo BatchUpdateSubjectEpStatus(int subjectId, int watchedEps, int? watchedVols);
+
+        /// <summary>
+        /// 获取指定条目收藏信息
+        /// </summary>
+        /// <param name="subjectId">条目 ID</param>
+        /// <returns>条目收藏信息</returns>
+        CollectionResponse GetUserSubjectDetail(int subjectId);
+
+        /// <summary>
+        /// 添加或更新收藏
+        /// </summary>
+        /// <param name="subjectId">条目 ID</param>
+        /// <param name="status">条目状态</param>
+        /// <param name="comment">简评</param>
+        /// <param name="tags">标签（以半角空格分割）</param>
+        /// <param name="rating">评分 &lt;br&gt; 1-10</param>
+        /// <param name="privacy">收藏隐私 &lt;br&gt; 0 &#x3D; 公开 &lt;br&gt; 1 &#x3D; 私密</param>
+        /// <returns>更新后的条目收藏信息</returns>
+        CollectionResponse CreateOrUpdateCollection(int subjectId, CollectionStatus status, string comment, string tags, int? rating, Privacy? privacy);
     }
 }
