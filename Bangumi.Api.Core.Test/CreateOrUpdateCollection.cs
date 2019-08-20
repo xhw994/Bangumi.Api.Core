@@ -1,7 +1,7 @@
 ﻿using Bangumi.Api.Core.Extension;
 using Bangumi.Api.Core.Model;
-using Bangumi.Api.Core.Model.SubjectModel;
-using Bangumi.Api.Core.Model.UserModel;
+using Bangumi.Api.Core.Model.Subject;
+using Bangumi.Api.Core.Model.User;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading;

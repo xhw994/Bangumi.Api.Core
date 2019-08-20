@@ -1,8 +1,8 @@
 ﻿using Bangumi.Api.Core.Client;
 using Bangumi.Api.Core.Extension;
 using Bangumi.Api.Core.Model;
-using Bangumi.Api.Core.Model.SubjectModel;
-using Bangumi.Api.Core.Model.UserModel;
+using Bangumi.Api.Core.Model.Subject;
+using Bangumi.Api.Core.Model.User;
 using RestSharp;
 using System;
 using System.Collections.Generic;

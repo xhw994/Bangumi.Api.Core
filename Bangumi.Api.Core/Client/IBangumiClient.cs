@@ -1,5 +1,5 @@
 ﻿using Bangumi.Api.Core.Client;
-using Bangumi.Api.Core.Model.TokenModel;
+using Bangumi.Api.Core.Model.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -1,5 +1,5 @@
 ﻿using Bangumi.Api.Core.Model;
-using Bangumi.Api.Core.Model.SubjectModel;
+using Bangumi.Api.Core.Model.Subject;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Bangumi.Api.Core.Test

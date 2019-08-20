@@ -1,4 +1,4 @@
-﻿using Bangumi.Api.Core.Model.TokenModel;
+﻿using Bangumi.Api.Core.Model.Authentication;
 using Newtonsoft.Json;
 using RestSharp;
 using System;

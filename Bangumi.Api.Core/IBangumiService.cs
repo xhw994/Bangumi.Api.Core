@@ -1,11 +1,7 @@
-﻿using System;
+﻿using Bangumi.Api.Core.Model;
+using Bangumi.Api.Core.Model.Subject;
+using Bangumi.Api.Core.Model.User;
 using System.Collections.Generic;
-using System.Text;
-using RestSharp;
-using Bangumi.Api.Core.Client;
-using Bangumi.Api.Core.Model;
-using Bangumi.Api.Core.Model.SubjectModel;
-using Bangumi.Api.Core.Model.UserModel;
 
 namespace Bangumi.Api.Core
 {

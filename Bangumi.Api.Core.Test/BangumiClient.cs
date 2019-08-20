@@ -1,4 +1,4 @@
-﻿using Bangumi.Api.Core.Model.TokenModel;
+﻿using Bangumi.Api.Core.Model.Authentication;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading;
