@@ -12,72 +12,73 @@ namespace Bangumi.Api.Core
     {
         #region 用户 User
         /// <summary>
-        /// 用户信息
+        /// 获取用户基础信息。
         /// </summary>
-        /// <param name="username">用户名，也可使用 UID</param>
-        /// <returns>用户信息</returns>
+        /// <param name="username">用户名，也可使用 UID。此为必须参数。</param>
+        /// <returns>用户信息。</returns>
         User GetUser(string username);
 
         /// <summary>
-        /// 用户收藏
+        /// 获取用户收藏列表。
         /// </summary>
-        /// <param name="username">用户名，也可使用 UID</param>
-        /// <param name="allWatching">收藏类型 &lt;br&gt; False - watching &#x3D; 在看的动画与三次元条目 &lt;br&gt; True - all_watching &#x3D; 在看的动画三次元与书籍条目</param> 
-        /// <param name="ids">收藏条目 ID &lt;br&gt; 批量查询收藏状态，将条目 ID 以半角逗号分隔，如 1,2,4,6</param> 
-        /// <param name="responseGroup">medium / small &lt;br&gt; 默认为 medium。small 时不返回条目详细信息</param> 
-        /// <returns>用户收藏</returns>            
-        IEnumerable<SubjectStatus> GetUserCollection(string username, bool allWatching, string ids, ResponseGroup group);
+        /// <param name="username">用户名，也可使用 UID。此为必须参数。</param>
+        /// <param name="allWatching">收藏类型。如果值为"watching"，返回在看的动画与三次元条目。如果为"all_watching"，返回在看的动画三次元与书籍条目。此为必须参数。如值不匹配则默认为在看。</param> 
+        /// <param name="ids">收藏条目ID。如果批量查询收藏状态，将条目ID以半角逗号分隔，如 1,2,4,6。</param> 
+        /// <param name="responseGroup">返回内容的格式。目前可以选择meduim或者small，默认为 medium。small时不返回条目详细信息。</param>
+        /// <returns>用户收藏。</returns>            
+        IEnumerable<SubjectStatus> GetCollection(string username, string allWatching, string ids, string responseGroup);
 
         /// <summary>
-        /// 用户收藏概览
+        /// 获取用户指定类型的收藏概览，固定返回最近更新的收藏，不支持翻页。
         /// </summary>
-        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param> 
-        /// <param name="subjectType">条目类型，详见 [SubjectTypeName](#model-SubjectTypeName)</param> 
-        /// <param name="appId">[https://bgm.tv/dev/app](https://bgm.tv/dev/app) 申请到的 App ID</param> 
-        /// <param name="maxResults">显示条数 &lt;br&gt; 最多 25</param> 
-        /// <returns>List&lt;UserCollectionsResponse&gt;</returns>            
-        IEnumerable<CollectionsByType> GetUserCollectionsByType(string username, SubjectType subjectType, string appId, int? maxResults);
+        /// <param name="username">用户名，也可使用 UID。此为必须参数。</param>
+        /// <param name="subjectType">条目类型，详见<see cref="SubjectType"/>。此为必须参数。</param> 
+        /// <param name="appId">申请到的App ID。此为必须参数。</param> 
+        /// <param name="maxResults">显示条数。最多25条。</param> 
+        /// <returns>用户收藏概览。</returns>            
+        IEnumerable<CollectionsByType> GetCollectionsByType(string username, string subjectType, string appId, int? maxResults);
 
         /// <summary>
-        /// 用户收藏统计
+        /// 获取用户所有收藏信息。
         /// </summary>
-        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param>
-        /// <param name="appId">[https://bgm.tv/dev/app](https://bgm.tv/dev/app) 申请到的 App ID</param>
-        /// <returns>List&lt;UserCollectionsStatusResponse&gt;</returns>
-        IEnumerable<CollectionsByType> GetUserCollectionsStatus(string username, string appId);
+        /// <param name="username">用户名，也可使用 UID。此为必须参数。</param>
+        /// <param name="appId">申请到的App ID。此为必须参数。</param> 
+        /// <returns>用户收藏统计。</returns>
+        IEnumerable<CollectionsByType> GetCollectionsStatus(string username, string appId);
 
         /// <summary>
-        /// 用户收视进度
+        /// 获取用户收视进度。
         /// </summary>
-        /// <param name="username">用户名 &lt;br&gt; 也可使用 UID</param>
-        /// <param name="subjectId">条目 ID &lt;br&gt; 获取指定条目收视进度</param>
-        /// <returns>List&lt;UserProgressResponse&gt;</returns>
-        IEnumerable<UserProgress> GetUserProgress(string username, int subjectId);
+        /// <param name="username">用户名，也可使用 UID。此为必须参数。</param>
+        /// <param name="subjectId">收藏条目ID。</param>
+        /// <returns>用户收视进度。</returns>
+        IEnumerable<UserProgress> GetProgress(string username, int subjectId);
         #endregion
 
         #region 条目 Subject
+        /// <summary>
+        /// 获取条目信息。
+        /// </summary>
+        /// <param name="subjectId">条目 ID。</param>
+        /// <param name="responseGroup">返回数据大小，可选small、medium、large，默认为small。</param>
+        /// <returns>条目信息。根据<paramref name="group"/>的值，返回<see cref="SubjectSmall"/>，<see cref="SubjectMedium"/>，或<see cref="SubjectLarge"/>。需要进行相应的类型转换。</returns>
+        SubjectBase GetSubject(int subjectId, string responseGroup);
+
+        /// <summary>
+        /// 获取带章节数据的条目信息。
+        /// </summary>
+        /// <param name="subjectId">条目 ID。</param> 
+        /// <returns>带章节数据的条目信息。</returns>            
+        SubjectEp GetSubjectWithEpisodes(int subjectId);
+
         /// <summary>
         /// 每日放送
         /// </summary>
         /// <returns>每日放送</returns>
         IEnumerable<CalendarResponse> GetDailyCalendar();
-
-        /// <summary>
-        /// 条目信息
-        /// </summary>
-        /// <param name="subjectId">条目 ID</param>
-        /// <param name="responseGroup">返回数据大小，参考<see cref="ResponseGroup"/> 默认为 <see cref="ResponseGroup.Small"/></param>
-        /// <returns>条目信息</returns>
-        SubjectBase GetSubject(int subjectId, ResponseGroup? group);
-
-        /// <summary>
-        /// 章节数据
-        /// </summary>
-        /// <param name="subjectId">条目 ID</param> 
-        /// <returns>SubjectEpResponse</returns>            
-        SubjectEp GetSubjectWithEpisodes(int subjectId);
         #endregion
 
+        #region 搜索
         /// <summary>
         /// 条目搜索
         /// </summary>
@@ -88,6 +89,7 @@ namespace Bangumi.Api.Core
         /// <param name="maxResults">每页条数 &lt;br&gt; 最多 25</param>
         /// <returns>SearchSubjectResponse</returns>
         SubjectSearchResult SearchSubjectByKeywords(string keywords, SubjectType type, ResponseGroup group, int? start, int? maxResults);
+        #endregion
 
         /// <summary>
         /// 更新收视进度

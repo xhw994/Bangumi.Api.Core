@@ -13,9 +13,9 @@ namespace Bangumi.Api.Core.Test
     [TestClass]
     public class ApiService
     {
-        private readonly int _init_epoch = 1167609600; // 2007.1.1 00:00:00
+        // private readonly int _init_epoch = 1167609600; // 2007.1.1 00:00:00
 
-        private DefaultBangumiService _service;
+        private IBangumiService _service;
 
         [TestInitialize]
         public void InitAndAuthorize()
@@ -26,7 +26,6 @@ namespace Bangumi.Api.Core.Test
         [TestMethod]
         public void SetupConfiguration()
         {
-            _service = new DefaultBangumiService();
             Assert.IsFalse(string.IsNullOrEmpty(AppId), $"Unable to read {nameof(AppId)} from configuration");
             Assert.IsFalse(string.IsNullOrEmpty(AppSecret), $"Unable to read {nameof(AppSecret)} from configuration");
         }
@@ -45,7 +44,7 @@ namespace Bangumi.Api.Core.Test
         [TestMethod]
         public void GetAnimeSubjectSmall()
         {
-            SubjectSmall res = (SubjectSmall)_service.GetSubject(animeSubjectData.Id.Value);
+            SubjectSmall res = (SubjectSmall)_service.GetSubject(animeSubjectData.Id.Value, ResponseGroup.Small.ToDescriptionString());
             Assert.AreEqual(animeSubjectData.Id, res.Id, "Incorrect subject ID.");
             Assert.AreEqual(animeSubjectData.Name, res.Name, "Incorrect subject name.");
             Assert.AreEqual(animeSubjectData.NameCn, res.NameCn, "Incorrect subject Chinese name.");
@@ -59,7 +58,7 @@ namespace Bangumi.Api.Core.Test
         [TestMethod]
         public void GetCowboyBeebopSubjectMedium()
         {
-            SubjectMedium res = (SubjectMedium)_service.GetSubject(animeSubjectData.Id.Value, ResponseGroup.Medium);
+            SubjectMedium res = (SubjectMedium)_service.GetSubject(animeSubjectData.Id.Value, ResponseGroup.Medium.ToDescriptionString());
             Assert.IsTrue(res.Crt.Count > 0, "The character list is empty");
             Assert.IsTrue(res.Staff.Count > 0, "The staff list is empty");
             Console.Write(res);
@@ -68,7 +67,7 @@ namespace Bangumi.Api.Core.Test
         [TestMethod]
         public void GetCowboyBeebopSubjectLarge()
         {
-            SubjectLarge res = (SubjectLarge)_service.GetSubject(animeSubjectData.Id.Value, ResponseGroup.Large);
+            SubjectLarge res = (SubjectLarge)_service.GetSubject(animeSubjectData.Id.Value, ResponseGroup.Large.ToDescriptionString());
             Assert.IsTrue(res.Topic.Count > 0, "The character list is empty");
             Assert.IsTrue(res.Blog.Count > 0, "The staff list is empty");
             Console.Write(res);
@@ -86,7 +85,7 @@ namespace Bangumi.Api.Core.Test
         public void SearchByMadomagiKeyword()
         {
             string xf = "小圆 新房昭之";
-            var res = _service.SearchSubjectByKeywords(xf, SubjectType.Anime);
+            var res = _service.SearchSubjectByKeywords(xf, SubjectType.Anime, ResponseGroup.Small, null, null);
             Assert.IsTrue(res.Results > 0 && res.List.Count > 4, "The search result is empty");
             Console.Write(res);
         }
@@ -113,7 +112,7 @@ namespace Bangumi.Api.Core.Test
         [TestMethod]
         public void GetUserCollectionSmall()
         {
-            IEnumerable<SubjectStatus> res = _service.GetUserCollection(userData.Username, true, ResponseGroup.Small);
+            IEnumerable<SubjectStatus> res = _service.GetCollection(userData.Username, "all_watching", null, ResponseGroup.Small.ToDescriptionString());
             Assert.IsTrue(res != null && res.Count() > 0, "Empty collection response.");
             Assert.AreEqual(2, res.Count(), "Incorrect collection count.");
             SubjectStatus status = res.Where(s => s.SubjectId == bookStatusData.SubjectId).FirstOrDefault();
@@ -132,7 +131,7 @@ namespace Bangumi.Api.Core.Test
         [TestMethod]
         public void GetUserCollectionMedium()
         {
-            var res = _service.GetUserCollection(userData.Username, false, ResponseGroup.Medium);
+            var res = _service.GetCollection(userData.Username, "watching", null, ResponseGroup.Medium.ToDescriptionString());
             Assert.IsTrue(res != null && res.Count() > 0, "Empty collection response.");
             Assert.AreEqual(1, res.Count(), "Incorrect collection count.");
             SubjectStatus status = res.Where(s => s.SubjectId == animeStatusData.SubjectId).FirstOrDefault();
@@ -155,7 +154,7 @@ namespace Bangumi.Api.Core.Test
             int maxResult = 5;
             SubjectType type = SubjectType.Anime;
 
-            var res = _service.GetUserCollectionsByType(userData.Username, SubjectType.Anime, AppId, maxResult);
+            var res = _service.GetCollectionsByType(userData.Username, SubjectType.Anime.ToDescriptionString(), AppId, maxResult);
             Assert.AreEqual(1, res.Count(), "The outer layer should only contain 1 element.");
 
             CollectionsByType collections = res.ElementAt(0);

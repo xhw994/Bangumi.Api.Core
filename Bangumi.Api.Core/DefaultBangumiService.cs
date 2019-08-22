@@ -21,9 +21,9 @@ namespace Bangumi.Api.Core
         #endregion
 
         #region 用户 User
-
         public User GetUser(string username)
         {
+            // Validation.
             if (string.IsNullOrWhiteSpace(username))
             {
                 throw new ArgumentException($"Missing required parameter {nameof(username)} when calling {nameof(GetUser)}");
@@ -35,53 +35,72 @@ namespace Bangumi.Api.Core
             return _client.Request<User>(request);
         }
 
-        public IEnumerable<SubjectStatus> GetUserCollection(string username, bool allWatching = false, string ids = null, ResponseGroup group = ResponseGroup.Medium)
+        public IEnumerable<SubjectStatus> GetCollection(string username, string allWatching, string ids, string responseGroup)
         {
+            // Validation.
             if (string.IsNullOrWhiteSpace(username))
             {
                 throw new ArgumentException($"Missing required parameter {nameof(username)}");
+            }
+            if (string.IsNullOrEmpty(allWatching))
+            {
+                throw new ArgumentException($"Missing required parameter {nameof(allWatching)}");
             }
             if (ids != null && new Regex(@"(\d+,)*\d+").IsMatch(ids) == false)
             {
                 throw new ArgumentException($"Invalid required parameter: {nameof(ids)} should contain positive numbers seperated by commas");
             }
 
+            // Compose the request.
             string path = $"/user/{username}/collection";
             Dictionary<string, string> queryParams = new Dictionary<string, string>()
             {
-                { "cat", (allWatching? "all_watching" : "watching") },
-                { "responseGroup", (group == ResponseGroup.Small ? "small" : "medium") }
+                { "cat", allWatching },
+                { "responseGroup", responseGroup }
             };
             if (ids != null)
             {
                 queryParams.Add("ids", ids);
             }
-
             BangumiRequest request = new BangumiRequest(path, Method.GET, false, queryParams);
+
             return _client.Request<IEnumerable<SubjectStatus>>(request);
         }
 
-        public IEnumerable<SubjectStatus> GetUserCollection(string username, bool allWatching = false, ResponseGroup group = ResponseGroup.Medium, params int[] ids)
+        public IEnumerable<SubjectStatus> GetCollection(string username, bool allWatching = false, string ids = null, ResponseGroup responseGroup = ResponseGroup.Medium)
         {
-            string idstr = (ids == null || ids.Length == 0) ? null : string.Join(",", ids);
-            return GetUserCollection(username, allWatching, idstr, group);
+            string aw = allWatching ? "watching" : "all_watching";
+            string gp = responseGroup == ResponseGroup.Small ? "small" : "medium";
+            return GetCollection(username, aw, ids, gp);
         }
 
-        public IEnumerable<CollectionsByType> GetUserCollectionsByType(string username, SubjectType subjectType, string appId, int? maxResults = null)
+        public IEnumerable<SubjectStatus> GetCollection(string username, bool allWatching = false, int[] ids = null, ResponseGroup responseGroup = ResponseGroup.Medium)
         {
-            // Verify the required parameter 'username' is set
+            string idstr = (ids == null || ids.Length == 0) ? null : string.Join(",", ids);
+            string gp = responseGroup == ResponseGroup.Small ? "small" : "medium";
+            return GetCollection(username, "all_watching", idstr, gp);
+        }
+
+        public IEnumerable<CollectionsByType> GetCollectionsByType(string username, string subjectType, string appId, int? maxResults)
+        {
+            // Verify the required parameter 'username' is set.
             if (string.IsNullOrWhiteSpace(username))
             {
                 throw new ArgumentException($"Missing required parameter {nameof(username)}");
             }
-            // Verify the required parameter 'appId' is set
+            // Verify the required parameter 'subjectType' is set.
+            if (string.IsNullOrEmpty(subjectType))
+            {
+                throw new ArgumentException($"Missing required parameter {nameof(subjectType)}");
+            }
+            // Verify the required parameter 'appId' is set.
             if (string.IsNullOrWhiteSpace(appId))
             {
                 throw new ArgumentException($"Missing required parameter {nameof(appId)}");
             }
 
-            // Compose the request
-            string path = $"/user/{username}/collections/{subjectType.ToDescriptionString()}";
+            // Compose the request.
+            string path = $"/user/{username}/collections/{subjectType}";
             Dictionary<string, string> queryParams = new Dictionary<string, string>()
             {
                 { "app_id", appId }
@@ -90,41 +109,50 @@ namespace Bangumi.Api.Core
             {
                 queryParams.Add("max_results", maxResults.ToString());
             }
-            BangumiRequest request = new BangumiRequest(path, Method.GET, false, queryParams); // Setting requireAuth = false because appSecret is not a required param
+            BangumiRequest request = new BangumiRequest(path, Method.GET, false, queryParams);
 
             return _client.Request<IEnumerable<CollectionsByType>>(request);
         }
 
-        public IEnumerable<CollectionsByType> GetUserCollectionsByType(string username, SubjectType subjectType, int? maxResults = null)
+        public IEnumerable<CollectionsByType> GetCollectionsByType(string username, SubjectType subjectType, int? maxResults = null)
         {
             if (AppId == null)
             {
                 throw new InvalidOperationException($"{nameof(AppId)} is empty.");
             }
-            return GetUserCollectionsByType(username, subjectType, AppId, maxResults);
+            return GetCollectionsByType(username, subjectType.ToDescriptionString(), AppId, maxResults);
         }
 
-        public IEnumerable<CollectionsByType> GetUserCollectionsStatus(string username, string appId = null)
+        public IEnumerable<CollectionsByType> GetCollectionsStatus(string username, string appId)
         {
             // Verify the required parameter 'username' is set
             if (string.IsNullOrWhiteSpace(username))
             {
                 throw new ArgumentException($"Missing required parameter {nameof(username)}");
             }
-            // Verify the required parameter 'appId' is set
-            if (string.IsNullOrEmpty(appId) && string.IsNullOrEmpty(appId))
+            // Verify the required parameter 'appId' is set.
+            if (string.IsNullOrWhiteSpace(appId))
             {
-                throw new ApiException(401, $"The client needs to be authenticated before calling {nameof(GetUserCollectionsStatus)} without an '{nameof(AppId)}' argument.");
+                throw new ArgumentException($"Missing required parameter {nameof(appId)}");
             }
 
             // Compose the request
             string path = $"/user/{username}/collections/status";
-            BangumiRequest request = new BangumiRequest(path); // Setting requireAuth = false because appSecret is not a required param
+            BangumiRequest request = new BangumiRequest(path);
 
             return _client.Request<IEnumerable<CollectionsByType>>(request);
         }
 
-        public IEnumerable<UserProgress> GetUserProgress(string username, int subjectId)
+        public IEnumerable<CollectionsByType> GetCollectionsStatus(string username)
+        {
+            if (AppId == null)
+            {
+                throw new InvalidOperationException($"{nameof(AppId)} is empty.");
+            }
+            return GetCollectionsStatus(username, AppId);
+        }
+
+        public IEnumerable<UserProgress> GetProgress(string username, int subjectId)
         {
             // Verify the required parameter 'username' is set
             if (string.IsNullOrWhiteSpace(username))
@@ -144,46 +172,38 @@ namespace Bangumi.Api.Core
 
             return _client.Request<IEnumerable<UserProgress>>(request);
         }
-
         #endregion
 
         #region 条目 Subject
-        public IEnumerable<CalendarResponse> GetDailyCalendar()
+        public SubjectBase GetSubject(int subjectId, string responseGroup)
         {
-            BangumiRequest request = new BangumiRequest("/calendar");
-
-            return _client.Request<IEnumerable<CalendarResponse>>(request);
-        }
-
-        public SubjectBase GetSubject(int subject_id, ResponseGroup? group)
-        {
-            if (group == null) return GetSubject(subject_id, ResponseGroup.Small);
-            return GetSubject(subject_id, group.Value);
-        }
-
-        public SubjectBase GetSubject(int subjectId, ResponseGroup group = ResponseGroup.Small)
-        {
+            // Validation.
             ValidateId(subjectId, ObjectType.Subject);
 
             // Compose the request
             string path = $"/subject/{subjectId }";
             var queryParams = new Dictionary<string, string>()
             {
-                {"responseGroup", group.ToDescriptionString() }
+                {"responseGroup", responseGroup }
             };
             BangumiRequest request = new BangumiRequest(path, Method.GET, false, queryParams);
 
+            if (responseGroup == null) return GetSubject(subjectId, ResponseGroup.Small);
+            return GetSubject(subjectId, responseGroup);
+        }
+
+        public SubjectBase GetSubject(int subjectId, ResponseGroup responseGroup = ResponseGroup.Small)
+        {
             // Return based on response group
-            switch (group)
+            string group;
+            switch (responseGroup)
             {
-                case ResponseGroup.Large:
-                    return _client.Request<SubjectLarge>(request);
-                case ResponseGroup.Medium:
-                    return _client.Request<SubjectMedium>(request);
+                case ResponseGroup.Large: group = "large"; break;
+                case ResponseGroup.Medium: group = "medium"; break;
                 default:
-                case ResponseGroup.Small:
-                    return _client.Request<SubjectSmall>(request);
+                case ResponseGroup.Small: group = "small"; break;
             }
+            return GetSubject(subjectId, group);
         }
 
         public SubjectEp GetSubjectWithEpisodes(int subjectId)
@@ -195,6 +215,13 @@ namespace Bangumi.Api.Core
             BangumiRequest request = new BangumiRequest(path);
 
             return _client.Request<SubjectEp>(request);
+        }
+
+        public IEnumerable<CalendarResponse> GetDailyCalendar()
+        {
+            BangumiRequest request = new BangumiRequest("/calendar");
+
+            return _client.Request<IEnumerable<CalendarResponse>>(request);
         }
         #endregion
 
