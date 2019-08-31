@@ -35,121 +35,90 @@ namespace Bangumi.Api.Core
             return _client.Request<User>(request);
         }
 
-        public IEnumerable<SubjectStatus> GetCollection(string username, string allWatching, string ids, string responseGroup)
+        public IEnumerable<SubjectStatus> GetCollection(string username, bool allWatching = false, int[] ids = null, ResponseGroup responseGroup = ResponseGroup.Medium)
         {
             // Validation.
             if (string.IsNullOrWhiteSpace(username))
             {
                 throw new ArgumentException($"Missing required parameter {nameof(username)}");
             }
-            if (string.IsNullOrEmpty(allWatching))
-            {
-                throw new ArgumentException($"Missing required parameter {nameof(allWatching)}");
-            }
-            if (ids != null && new Regex(@"(\d+,)*\d+").IsMatch(ids) == false)
-            {
-                throw new ArgumentException($"Invalid required parameter: {nameof(ids)} should contain positive numbers seperated by commas");
-            }
 
             // Compose the request.
             string path = $"/user/{username}/collection";
             Dictionary<string, string> queryParams = new Dictionary<string, string>()
             {
-                { "cat", allWatching },
-                { "responseGroup", responseGroup }
+                { "cat", allWatching ? "all_watching" : "watching" },
+                { "responseGroup", responseGroup.ToDescriptionString() }
             };
-            if (ids != null)
+            if (ids != null && ids.Length > 0)
             {
-                queryParams.Add("ids", ids);
+                queryParams.Add("ids", string.Join(",", ids));
             }
-            BangumiRequest request = new BangumiRequest(path, Method.GET, false, queryParams);
+            BangumiRequest request = new BangumiRequest(path, queryParams: queryParams);
 
             return _client.Request<IEnumerable<SubjectStatus>>(request);
         }
 
-        public IEnumerable<SubjectStatus> GetCollection(string username, bool allWatching = false, string ids = null, ResponseGroup responseGroup = ResponseGroup.Medium)
+        public IEnumerable<CollectionsByType> GetCollectionsByType(string username, SubjectType subjectType, int? maxResults = null)
         {
-            string aw = allWatching ? "watching" : "all_watching";
-            string gp = responseGroup == ResponseGroup.Small ? "small" : "medium";
-            return GetCollection(username, aw, ids, gp);
-        }
-
-        public IEnumerable<SubjectStatus> GetCollection(string username, bool allWatching = false, int[] ids = null, ResponseGroup responseGroup = ResponseGroup.Medium)
-        {
-            string idstr = (ids == null || ids.Length == 0) ? null : string.Join(",", ids);
-            string gp = responseGroup == ResponseGroup.Small ? "small" : "medium";
-            return GetCollection(username, "all_watching", idstr, gp);
-        }
-
-        public IEnumerable<CollectionsByType> GetCollectionsByType(string username, string subjectType, string appId, int? maxResults)
-        {
-            // Verify the required parameter 'username' is set.
+            // Verify 'AppId' exists.
+            if (AppId == null)
+            {
+                throw new ArgumentException($"{nameof(AppId)} is empty.", nameof(AppId));
+            }
+            // Verify the required argument 'username' is set.
             if (string.IsNullOrWhiteSpace(username))
             {
-                throw new ArgumentException($"Missing required parameter {nameof(username)}");
+                throw new ArgumentException($"Missing required parameter {nameof(username)}", nameof(username));
             }
-            // Verify the required parameter 'subjectType' is set.
-            if (string.IsNullOrEmpty(subjectType))
+            // Max result cannot be greater than 25.
+            if (maxResults != null && maxResults.Value > 25)
             {
-                throw new ArgumentException($"Missing required parameter {nameof(subjectType)}");
+                maxResults = 25;
             }
-            // Verify the required parameter 'appId' is set.
-            if (string.IsNullOrWhiteSpace(appId))
+            // Max result cannot be smaller than 1.
+            if (maxResults != null && maxResults.Value < 1)
             {
-                throw new ArgumentException($"Missing required parameter {nameof(appId)}");
+                maxResults = null;
             }
 
             // Compose the request.
-            string path = $"/user/{username}/collections/{subjectType}";
+            string path = $"/user/{username}/collections/{subjectType.ToDescriptionString()}";
             Dictionary<string, string> queryParams = new Dictionary<string, string>()
             {
-                { "app_id", appId }
+                { "app_id", AppId }
             };
             if (maxResults != null)
             {
                 queryParams.Add("max_results", maxResults.ToString());
             }
-            BangumiRequest request = new BangumiRequest(path, Method.GET, false, queryParams);
-
-            return _client.Request<IEnumerable<CollectionsByType>>(request);
-        }
-
-        public IEnumerable<CollectionsByType> GetCollectionsByType(string username, SubjectType subjectType, int? maxResults = null)
-        {
-            if (AppId == null)
-            {
-                throw new InvalidOperationException($"{nameof(AppId)} is empty.");
-            }
-            return GetCollectionsByType(username, subjectType.ToDescriptionString(), AppId, maxResults);
-        }
-
-        public IEnumerable<CollectionsByType> GetCollectionsStatus(string username, string appId)
-        {
-            // Verify the required parameter 'username' is set
-            if (string.IsNullOrWhiteSpace(username))
-            {
-                throw new ArgumentException($"Missing required parameter {nameof(username)}");
-            }
-            // Verify the required parameter 'appId' is set.
-            if (string.IsNullOrWhiteSpace(appId))
-            {
-                throw new ArgumentException($"Missing required parameter {nameof(appId)}");
-            }
-
-            // Compose the request
-            string path = $"/user/{username}/collections/status";
-            BangumiRequest request = new BangumiRequest(path);
+            BangumiRequest request = new BangumiRequest(path, queryParams: queryParams);
 
             return _client.Request<IEnumerable<CollectionsByType>>(request);
         }
 
         public IEnumerable<CollectionsByType> GetCollectionsStatus(string username)
         {
+            // Verify the required parameter 'AppId' is set.
             if (AppId == null)
             {
-                throw new InvalidOperationException($"{nameof(AppId)} is empty.");
+                throw new ArgumentException($"Missing required argument {nameof(AppId)}", nameof(AppId));
             }
-            return GetCollectionsStatus(username, AppId);
+            // Verify the required parameter 'username' is set
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                throw new ArgumentException($"Missing required argument {nameof(username)}", nameof(username));
+            }
+
+            // Compose the request
+            string path = $"/user/{username}/collections/status";
+            Dictionary<string, string> queryParams = new Dictionary<string, string>()
+            {
+                { "app_id", AppId }
+            };
+            BangumiRequest request = new BangumiRequest(path, queryParams: queryParams);
+
+            return _client.Request<IEnumerable<CollectionsByType>>(request);
         }
 
         public IEnumerable<UserProgress> GetProgress(string username, int subjectId)
@@ -175,7 +144,7 @@ namespace Bangumi.Api.Core
         #endregion
 
         #region 条目 Subject
-        public SubjectBase GetSubject(int subjectId, string responseGroup)
+        public SubjectBase GetSubject(int subjectId, ResponseGroup responseGroup = ResponseGroup.Small)
         {
             // Validation.
             ValidateId(subjectId, ObjectType.Subject);
@@ -184,29 +153,14 @@ namespace Bangumi.Api.Core
             string path = $"/subject/{subjectId }";
             var queryParams = new Dictionary<string, string>()
             {
-                {"responseGroup", responseGroup }
+                {"responseGroup", responseGroup.ToDescriptionString() }
             };
-            BangumiRequest request = new BangumiRequest(path, Method.GET, false, queryParams);
+            BangumiRequest request = new BangumiRequest(path, queryParams: queryParams);
 
-            if (responseGroup == null) return GetSubject(subjectId, ResponseGroup.Small);
-            return GetSubject(subjectId, responseGroup);
+            return GetSubject(subjectId, ResponseGroup.Small);
         }
 
-        public SubjectBase GetSubject(int subjectId, ResponseGroup responseGroup = ResponseGroup.Small)
-        {
-            // Return based on response group
-            string group;
-            switch (responseGroup)
-            {
-                case ResponseGroup.Large: group = "large"; break;
-                case ResponseGroup.Medium: group = "medium"; break;
-                default:
-                case ResponseGroup.Small: group = "small"; break;
-            }
-            return GetSubject(subjectId, group);
-        }
-
-        public SubjectEp GetSubjectWithEpisodes(int subjectId)
+        public SubjectEp GetSubjectAndEpisodes(int subjectId)
         {
             ValidateId(subjectId, ObjectType.Subject);
 
@@ -226,34 +180,33 @@ namespace Bangumi.Api.Core
         #endregion
 
         #region 搜索 Search
-
-        public SubjectSearchResult SearchSubjectByKeywords(string keywords, SubjectType type, ResponseGroup group = ResponseGroup.Small, int? start = null, int? maxResults = null)
+        public SubjectSearchResult SearchSubjectByKeywords(string keywords, SubjectType type, ResponseGroup responseGroup = ResponseGroup.Small, int start = 0, int maxResults = 10)
         {
             if (string.IsNullOrWhiteSpace(keywords))
             {
                 throw new ArgumentException("Missing required parameter 'keywords'");
-            }
-            if (maxResults > 25)
-            {
-                maxResults = 25;
             }
 
             string path = $"/search/subject/{HttpUtility.UrlEncode(keywords)}";
             var queryParams = new Dictionary<string, string>()
             {
                 { "type", type.ToDescriptionString() },
-                { "responseGroup", group.ToDescriptionString() }
+                { "responseGroup", responseGroup.ToDescriptionString() }
             };
-            if (start != null)
+            if (start > 0)
             {
-                queryParams.Add("start", Convert.ToString(start));
+                queryParams.Add("start", start.ToString());
             }
-            if (maxResults != null)
+            if (maxResults > 0 && maxResults != 10)
             {
-                queryParams.Add("max_results", Convert.ToString(maxResults));
+                if (maxResults > 25)
+                {
+                    maxResults = 25;
+                }
+                queryParams.Add("max_results", maxResults.ToString());
             }
 
-            BangumiRequest request = new BangumiRequest(path, Method.GET, false, queryParams);
+            BangumiRequest request = new BangumiRequest(path, queryParams: queryParams);
             return _client.Request<SubjectSearchResult>(request);
         }
 

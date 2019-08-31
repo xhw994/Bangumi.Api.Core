@@ -22,7 +22,7 @@ namespace Bangumi.Api.Core.Model.Subject
         /// <value>总条数</value>
         [DataMember(Name = "results", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "results")]
-        public int? Results { get; set; }
+        public int Results { get; set; }
 
         /// <summary>
         /// 结果列表

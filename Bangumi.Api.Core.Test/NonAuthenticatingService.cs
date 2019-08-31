@@ -11,7 +11,7 @@ using static Bangumi.Api.Core.Configuration;
 namespace Bangumi.Api.Core.Test
 {
     [TestClass]
-    public class ApiService
+    public class NonAuthenticatingService
     {
         // private readonly int _init_epoch = 1167609600; // 2007.1.1 00:00:00
 
@@ -44,7 +44,7 @@ namespace Bangumi.Api.Core.Test
         [TestMethod]
         public void GetAnimeSubjectSmall()
         {
-            SubjectSmall res = (SubjectSmall)_service.GetSubject(animeSubjectData.Id.Value, ResponseGroup.Small.ToDescriptionString());
+            SubjectSmall res = (SubjectSmall)_service.GetSubject(animeSubjectData.Id.Value, ResponseGroup.Small);
             Assert.AreEqual(animeSubjectData.Id, res.Id, "Incorrect subject ID.");
             Assert.AreEqual(animeSubjectData.Name, res.Name, "Incorrect subject name.");
             Assert.AreEqual(animeSubjectData.NameCn, res.NameCn, "Incorrect subject Chinese name.");
@@ -56,18 +56,18 @@ namespace Bangumi.Api.Core.Test
         }
 
         [TestMethod]
-        public void GetCowboyBeebopSubjectMedium()
+        public void GetAnimeSubjectMedium()
         {
-            SubjectMedium res = (SubjectMedium)_service.GetSubject(animeSubjectData.Id.Value, ResponseGroup.Medium.ToDescriptionString());
+            SubjectMedium res = (SubjectMedium)_service.GetSubject(animeSubjectData.Id.Value, ResponseGroup.Medium);
             Assert.IsTrue(res.Crt.Count > 0, "The character list is empty");
             Assert.IsTrue(res.Staff.Count > 0, "The staff list is empty");
             Console.Write(res);
         }
 
         [TestMethod]
-        public void GetCowboyBeebopSubjectLarge()
+        public void GetAnimeSubjectLarge()
         {
-            SubjectLarge res = (SubjectLarge)_service.GetSubject(animeSubjectData.Id.Value, ResponseGroup.Large.ToDescriptionString());
+            SubjectLarge res = (SubjectLarge)_service.GetSubject(animeSubjectData.Id.Value, ResponseGroup.Large);
             Assert.IsTrue(res.Topic.Count > 0, "The character list is empty");
             Assert.IsTrue(res.Blog.Count > 0, "The staff list is empty");
             Console.Write(res);
@@ -76,16 +76,16 @@ namespace Bangumi.Api.Core.Test
         [TestMethod]
         public void GetCowboyBeebopSubjectEp()
         {
-            SubjectEp res = _service.GetSubjectWithEpisodes(animeSubjectData.Id.Value);
+            SubjectEp res = _service.GetSubjectAndEpisodes(animeSubjectData.Id.Value);
             Assert.IsTrue(res.Eps.Count > 0, "The episode list is empty");
             Console.Write(res);
         }
 
         [TestMethod]
-        public void SearchByMadomagiKeyword()
+        public void SearchSubject()
         {
             string xf = "小圆 新房昭之";
-            var res = _service.SearchSubjectByKeywords(xf, SubjectType.Anime, ResponseGroup.Small, null, null);
+            var res = _service.SearchSubjectByKeywords(xf, SubjectType.Anime, ResponseGroup.Small);
             Assert.IsTrue(res.Results > 0 && res.List.Count > 4, "The search result is empty");
             Console.Write(res);
         }
@@ -110,11 +110,11 @@ namespace Bangumi.Api.Core.Test
         }
 
         [TestMethod]
-        public void GetUserCollectionSmall()
+        public void GetCollectionSmall()
         {
-            IEnumerable<SubjectStatus> res = _service.GetCollection(userData.Username, "all_watching", null, ResponseGroup.Small.ToDescriptionString());
+            IEnumerable<SubjectStatus> res = _service.GetCollection(userData.Username, true, null, ResponseGroup.Small);
             Assert.IsTrue(res != null && res.Count() > 0, "Empty collection response.");
-            Assert.AreEqual(2, res.Count(), "Incorrect collection count.");
+            Assert.AreEqual(3, res.Count(), "Incorrect collection count.");
             SubjectStatus status = res.Where(s => s.SubjectId == bookStatusData.SubjectId).FirstOrDefault();
             Assert.IsNotNull(status, "Response does not contain the target subject.");
 
@@ -129,9 +129,9 @@ namespace Bangumi.Api.Core.Test
         }
 
         [TestMethod]
-        public void GetUserCollectionMedium()
+        public void GetCollectionMedium()
         {
-            var res = _service.GetCollection(userData.Username, "watching", null, ResponseGroup.Medium.ToDescriptionString());
+            var res = _service.GetCollection(userData.Username, false, null, ResponseGroup.Medium);
             Assert.IsTrue(res != null && res.Count() > 0, "Empty collection response.");
             Assert.AreEqual(1, res.Count(), "Incorrect collection count.");
             SubjectStatus status = res.Where(s => s.SubjectId == animeStatusData.SubjectId).FirstOrDefault();
@@ -143,18 +143,18 @@ namespace Bangumi.Api.Core.Test
                 Assert.AreEqual(animeStatusData.Name, status.Name, "Incorrect subject name.");
                 Assert.AreEqual(animeStatusData.VolStatus, status.VolStatus, "Incorrect subject volume status.");
                 Assert.AreEqual(animeStatusData.EpStatus, status.EpStatus, "Incorrect subject episode status.");
-                Assert.AreEqual(animeStatusData.Lasttouch, status.Lasttouch, "Incorrect subject last touch time.");
+                Assert.IsTrue(animeStatusData.Lasttouch < status.Lasttouch, "Incorrect subject last touch time.");
                 Assert.AreEqual(animeStatusData.Subject.Id, status.Subject.Id, "Incorrect subject details.");
             }
         }
 
         [TestMethod]
-        public void GetUserCollectionsByType()
+        public void GetCollectionsByType()
         {
             int maxResult = 5;
             SubjectType type = SubjectType.Anime;
 
-            var res = _service.GetCollectionsByType(userData.Username, SubjectType.Anime.ToDescriptionString(), AppId, maxResult);
+            var res = _service.GetCollectionsByType(userData.Username, SubjectType.Anime, maxResult);
             Assert.AreEqual(1, res.Count(), "The outer layer should only contain 1 element.");
 
             CollectionsByType collections = res.ElementAt(0);
@@ -180,6 +180,12 @@ namespace Bangumi.Api.Core.Test
             Collect first = collects.First(c => c.Status.Id == collected);
             Assert.AreEqual(first.Status.Type, collected.ToDescriptionString(), "CollectionStatus type mismatch");
             // Will not bother validating CN name here because there are too much variants
+        }
+
+        [TestMethod]
+        public void GetCollectionStatus()
+        {
+            IEnumerable<CollectionsByType> status = _service.GetCollectionsStatus(userData.Username);
         }
 
         #region TestData
